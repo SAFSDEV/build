@@ -110,8 +110,8 @@
     <!-- 3rd Party Libraries to be included for SAFS -->
     <!--                                             -->
     <path id="safs.classpath" >
-        <fileset dir="${libs}"  includes="**/*.jar **/*.zip"  />
         <fileset dir="${installlibs}"    includes="*.jar,*.zip"        />
+    	<fileset dir="${libs}"  includes="**/*.jar **/*.zip"  />
     </path>
 
     <property name="safs.classpath"  refid="safs.classpath" />
