@@ -24,21 +24,21 @@
   </target>
   
   
-  <!--                                                -->
+  <!--       SOURCEFORGE CVS NO LONGER USED           -->
   <!--              cvscheckout                       -->
   <!-- Get/Update all sourcecode from SourceForge CVS -->
   <!--                                                -->
   <!-- Moved source/TCAFS to git.clone.tcafs          -->
   <!--                                                -->
-  <target name="_internal.checkout" depends="_git.checkout" >
+  <!-- target name="_internal.checkout" depends="_git.checkout" >
     <cvs command="get -r MAIN" 
          cvsroot="${cvsroot}"
          package="source/android
                   source/common/com
-				  source/common/eclipse
-				  source/common/install
-				  source/common/keywords
-				  source/common/META-INF
+		  source/common/eclipse
+		  source/common/install
+		  source/common/keywords
+		  source/common/META-INF
                   source/common/org
                   source/common/org/safs
                   source/common/org/w3c
@@ -61,15 +61,49 @@
     <move todir="${safssource}"  preservelastmodified="true" >
         <fileset dir="${safssource}/org/safs" includes="**ResourceBundle*.properties,
                                                         *ResourceBundle*.properties.txt"/></move>
-  </target>
+  </target 
+  -->
 
 
   <!--                                                -->
   <!--              _git.checkout                     -->
+  <!--   renamed    _internal.checkout                -->
   <!--                                                -->
   <!-- Get/Update all sourcecode from GitHUb          -->
   <!--                                                -->
-  <target name="_git.checkout" depends="git.clone.tcafs" />
+  <target name="_internal.checkout" depends="git.clone.build,
+                                             git.clone.tcafs,
+                                             git.clone.keywords,
+                                             git.clone.metainf,
+                                             git.clone.stafinf,
+                                             git.clone.core,
+                                             git.clone.seplus,
+                                             git.clone.droid.remotecontrol,
+                                             git.clone.droid.engine,
+                                             git.clone.droid.messenger">
+                                        
+    <mkdir dir="${rrafssource}"/>
+    <mkdir dir="${safssource}"/>
+    <mkdir dir="${droidengine}"/>
+    <mkdir dir="${droidmessenger}"/>
+    
+    <move todir="${source}/rrafs" preservelastmodified="true" >
+        <fileset dir="${git.wdir.core}/rrafs/" /></move>
+    <move todir="${safssource}" preservelastmodified="true" >
+        <fileset dir="${git.wdir.core}/src/" /></move>
+    <move todir="${safssource}" preservelastmodified="true" >
+        <fileset dir="${git.wdir.droid.remotecontrol}/src/" /></move>
+    <move todir="${droidengine}" preservelastmodified="true" >
+        <fileset dir="${git.wdir.droid.engine}/" /></move>
+    <move todir="${droidmessenger}" preservelastmodified="true" >
+        <fileset dir="${git.wdir.droid.messenger}/" /></move>
+    
+    <delete dir="${git.wdir.core}" />
+    <delete dir="${git.wdir.droid.remotecontrol}" />
+    <delete dir="${git.wdir.droid.engine}" />
+    <delete dir="${git.wdir.droid.messenger}" />
+      
+  </target>
 
 
   <!--                                                -->
@@ -754,24 +788,84 @@
    </target>
    
    
-   <target name="git.clone.tcafs" description="Clone TCAFS from GitHub SAFSDEV/TCAFS" >
-       <property name="git.repo.tree" value="${git.wdir.tcafs}" />
-       <property name="git.repo.url" value="${git.repo.tcafs}" />
-       <property name="git.repo.branch" value="${git.branch.tcafs}" />
+   <target name="git.clone.build" description="Clone from GitHub SAFSDEV/build" >
+       <var name="git.repo.tree" value="${git.wdir.build}" />
+       <var name="git.repo.url" value="${git.repo.build}" />
+       <var name="git.repo.branch" value="${git.branch.build}" />
+       <antcall target="git.repo.clone" />
+       <delete dir="build" />
+   </target>
+
+   <target name="git.clone.tcafs" description="Clone from GitHub SAFSDEV/TCAFS" >
+       <var name="git.repo.tree" value="${git.wdir.tcafs}" />
+       <var name="git.repo.url" value="${git.repo.tcafs}" />
+       <var name="git.repo.branch" value="${git.branch.tcafs}" />
        <antcall target="git.repo.clone" />
        <delete dir="TCAFS" />
-       <!-- delete>  
-       
-           File IO cannot see the source/TCAFS directory, so we cannot delete
-           the .gitattributes and .gitignore files in the source/TCAFS dir!
-           Lots of variations tried, none worked.  
-           Directory does NOT exist until AFTER a REFRESH of Windows Explorer?
-           
-           <fileset dir="${git.wdir.tcafs}" includes="*gitattributes *gitignore" />
-           <fileset dir="source/TCAFS" includes="*gitattributes *gitignore" />
-           
-           </delete 
-       -->
+   </target>
+
+   <target name="git.clone.core" description="Clone from GitHub SAFSDEV/Core" >
+       <var name="git.repo.tree" value="${git.wdir.core}" />
+       <var name="git.repo.url" value="${git.repo.core}" />
+       <var name="git.repo.branch" value="${git.branch.core}" />
+       <antcall target="git.repo.clone" />
+       <delete dir="Core" />
+   </target>
+
+   <target name="git.clone.keywords" description="Clone from GitHub SAFSDEV/keywords" >
+       <var name="git.repo.tree" value="${git.wdir.keywords}" />
+       <var name="git.repo.url" value="${git.repo.keywords}" />
+       <var name="git.repo.branch" value="${git.branch.keywords}" />
+       <antcall target="git.repo.clone" />
+       <delete dir="keywords" />
+   </target>
+
+   <target name="git.clone.metainf" description="Clone from GitHub SAFSDEV/META-INF" >
+       <var name="git.repo.tree" value="${git.wdir.metainf}" />
+       <var name="git.repo.url" value="${git.repo.metainf}" />
+       <var name="git.repo.branch" value="${git.branch.metainf}" />
+       <antcall target="git.repo.clone" />
+       <delete dir="META-INF" />
+   </target>
+
+   <target name="git.clone.stafinf" description="Clone from GitHub SAFSDEV/STAF-INF" >
+       <var name="git.repo.tree" value="${git.wdir.stafinf}" />
+       <var name="git.repo.url" value="${git.repo.stafinf}" />
+       <var name="git.repo.branch" value="${git.branch.stafinf}" />
+       <antcall target="git.repo.clone" />
+       <delete dir="STAF-INF" />
+   </target>
+
+   <target name="git.clone.seplus" description="Clone from GitHub SAFSDEV/SeleniumPlus-Plugin" >
+       <var name="git.repo.tree" value="${git.wdir.seplus}" />
+       <var name="git.repo.url" value="${git.repo.seplus}" />
+       <var name="git.repo.branch" value="${git.branch.seplus}" />
+       <antcall target="git.repo.clone" />
+       <delete dir="SeleniumPlus-Plugin" />
+   </target>
+
+   <target name="git.clone.droid.remotecontrol" description="Clone from GitHub SAFSDEV/SAFS-Android-Remote-Control" >
+       <var name="git.repo.tree" value="${git.wdir.droid.remotecontrol}" />
+       <var name="git.repo.url" value="${git.repo.droid.remotecontrol}" />
+       <var name="git.repo.branch" value="${git.branch.droid.remotecontrol}" />
+       <antcall target="git.repo.clone" />
+       <delete dir="SAFS-Android-Remote-Control" />
+   </target>
+
+   <target name="git.clone.droid.engine" description="Clone from GitHub SAFSDEV/SAFS-Android-Engine" >
+       <var name="git.repo.tree" value="${git.wdir.droid.engine}" />
+       <var name="git.repo.url" value="${git.repo.droid.engine}" />
+       <var name="git.repo.branch" value="${git.branch.droid.engine}" />
+       <antcall target="git.repo.clone" />
+       <delete dir="SAFS-Android-Engine" />
+   </target>
+
+   <target name="git.clone.droid.messenger" description="Clone from GitHub SAFSDEV/SAFS-Android-Messenger" >
+       <var name="git.repo.tree" value="${git.wdir.droid.messenger}" />
+       <var name="git.repo.url" value="${git.repo.droid.messenger}" />
+       <var name="git.repo.branch" value="${git.branch.droid.messenger}" />
+       <antcall target="git.repo.clone" />
+       <delete dir="SAFS-Android-Messenger" />
    </target>
 
 
