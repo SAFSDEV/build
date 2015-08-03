@@ -71,8 +71,7 @@
   <!--                                                -->
   <!-- Get/Update all sourcecode from GitHUb          -->
   <!--                                                -->
-  <target name="_internal.checkout" depends="git.clone.build,
-                                             git.clone.tcafs,
+  <target name="_internal.checkout" depends="git.clone.tcafs,
                                              git.clone.keywords,
                                              git.clone.metainf,
                                              git.clone.stafinf,
@@ -806,14 +805,6 @@
    </target>
    
    
-   <target name="git.clone.build" description="Clone from GitHub SAFSDEV/build" >
-       <var name="git.repo.tree" value="${git.wdir.build}" />
-       <var name="git.repo.url" value="${git.repo.build}" />
-       <var name="git.repo.branch" value="${git.branch.build}" />
-       <antcall target="git.repo.clone" />
-       <delete dir="build" />
-   </target>
-
    <target name="git.clone.tcafs" description="Clone from GitHub SAFSDEV/TCAFS" >
        <var name="git.repo.tree" value="${git.wdir.tcafs}" />
        <var name="git.repo.url" value="${git.repo.tcafs}" />
@@ -894,40 +885,4 @@
        <delete dir="SAFS-Android-SampleSpinner" />
    </target>
 
-
-  <!--                                                                                      -->
-  <!--                                  git.repo.clone                                      -->
-  <!--                                                                                      -->
-  <!--  Execute a GIT clone specified.                                                      -->
-  <!--                                                                                      -->
-  <!--  Example command-line invocation:                                                    -->
-  <!--                                                                                      -->
-  <!--  git -work-tree source/TCAFS clone git://github.com/SAFSDEV/TCAFS -b master          -->
-  <!--                                                                                      -->
-  <!--  requires: ${git.repo.tree}                                                          -->
-  <!--            ${git.repo.url}                                                           -->
-  <!--            ${git.repo.branch}                                                        -->
-  <!--                                                                                      -->
-  <!--  Which will be used as shown below:                                                  -->
-  <!--                                                                                      -->
-  <!--  git -work-tree ${git.repo.tree} clone git://${git.repo.url} -b ${git.repo.branch}   -->
-  <!--                                                                                      -->
-  <target name="git.repo.clone"                                  
-          description="Clone a Repository from a Git URL" >
-          
-      <exec executable="git" 
-            failifexecutionfails="true"
-            failonerror="true"
-            errorproperty="" >
-            
-          <arg value="--work-tree"           />  
-          <arg value="${git.repo.tree}"      />
-          <arg value="clone"                 />  
-          <arg value="${git.repo.url}" />
-          <arg value="-b"                    />
-          <arg value="${git.repo.branch}"    />
-          
-      </exec>
-  </target>
-       
 </project>
