@@ -80,28 +80,46 @@
                                              git.clone.seplus,
                                              git.clone.droid.remotecontrol,
                                              git.clone.droid.engine,
-                                             git.clone.droid.messenger">
+                                             git.clone.droid.messenger,
+                                             git.clone.droid.sample">
                                         
     <mkdir dir="${rrafssource}"/>
     <mkdir dir="${safssource}"/>
     <mkdir dir="${droidengine}"/>
     <mkdir dir="${droidmessenger}"/>
+    <mkdir dir="${droidsample}"/>
+    <mkdir dir="${droidprojectlibs}"/>
     
     <move todir="${source}/rrafs" preservelastmodified="true" >
         <fileset dir="${git.wdir.core}/rrafs/" /></move>
     <move todir="${safssource}" preservelastmodified="true" >
         <fileset dir="${git.wdir.core}/src/" /></move>
+    
+    <!-- move _default_ to root of safssource -->
+    <move todir="${safssource}"  preservelastmodified="true" >
+        <fileset dir="${safssource}/_default_/" /></move>
+    <copy todir="${safssource}/org/safs"  preservelastmodified="true" >
+        <fileset dir="${safssource}" includes="*.dat,safsjvmagent.properties"/></copy>
+    <delete dir="${safssource}/_default_" />
+    <!-- end of move _default_ to root of safssource -->
+    
     <move todir="${safssource}" preservelastmodified="true" >
         <fileset dir="${git.wdir.droid.remotecontrol}/src/" /></move>
+    <move todir="${droidprojectlibs}" preservelastmodified="true" >
+        <fileset dir="${git.wdir.droid.remotecontrol}/libs/" /></move>
     <move todir="${droidengine}" preservelastmodified="true" >
         <fileset dir="${git.wdir.droid.engine}/" /></move>
     <move todir="${droidmessenger}" preservelastmodified="true" >
         <fileset dir="${git.wdir.droid.messenger}/" /></move>
+    <move todir="${droidsample}" preservelastmodified="true" >
+        <fileset dir="${git.wdir.droid.sample}/" /></move>
+
     
     <delete dir="${git.wdir.core}" />
     <delete dir="${git.wdir.droid.remotecontrol}" />
     <delete dir="${git.wdir.droid.engine}" />
     <delete dir="${git.wdir.droid.messenger}" />
+    <delete dir="${git.wdir.droid.sample}" />
       
   </target>
 
@@ -866,6 +884,14 @@
        <var name="git.repo.branch" value="${git.branch.droid.messenger}" />
        <antcall target="git.repo.clone" />
        <delete dir="SAFS-Android-Messenger" />
+   </target>
+
+   <target name="git.clone.droid.sample" description="Clone from GitHub SAFSDEV/SAFS-Android-SampleSpinner" >
+       <var name="git.repo.tree" value="${git.wdir.droid.sample}" />
+       <var name="git.repo.url" value="${git.repo.droid.sample}" />
+       <var name="git.repo.branch" value="${git.branch.droid.sample}" />
+       <antcall target="git.repo.clone" />
+       <delete dir="SAFS-Android-SampleSpinner" />
    </target>
 
 
