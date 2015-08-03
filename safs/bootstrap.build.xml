@@ -19,11 +19,13 @@
   </target>
                                            
   <target name="git.clone.build" description="Clone from GitHub SAFSDEV/build" >
-       <var name="git.repo.tree" value="safsdev.build" />
-       <var name="git.repo.url" value="git://github.com/SAFSDEV/build" />
-       <var name="git.repo.branch" value="master" />
-       <antcall target="git.repo.clone" />
-       <delete dir="build" />
+      <delete dir="build" />
+      <delete dir="safsdev.build" />
+      <var name="git.repo.tree" value="safsdev.build" />
+      <var name="git.repo.url" value="git://github.com/SAFSDEV/build" />
+      <var name="git.repo.branch" value="master" />
+      <antcall target="git.repo.clone" />
+      <delete dir="build" />
   </target>
 
   <!--                                                                                      -->
