@@ -77,6 +77,7 @@
                                              git.clone.stafinf,
                                              git.clone.core,
                                              git.clone.seplus,
+                                             git.clone.seplus.features,
                                              git.clone.droid.remotecontrol,
                                              git.clone.droid.engine,
                                              git.clone.droid.messenger,
@@ -851,6 +852,14 @@
        <var name="git.repo.branch" value="${git.branch.seplus}" />
        <antcall target="git.repo.clone" />
        <delete dir="SeleniumPlus-Plugin" />
+   </target>
+
+   <target name="git.clone.seplus.features" description="Clone from GitHub SAFSDEV/SeleniumPlus-Plugin-Features" >
+       <var name="git.repo.tree" value="${git.wdir.seplus.features}" />
+       <var name="git.repo.url" value="${git.repo.seplus.features}" />
+       <var name="git.repo.branch" value="${git.branch.seplus.features}" />
+       <antcall target="git.repo.clone" />
+       <delete dir="SeleniumPlus-Plugin-Features" />
    </target>
 
    <target name="git.clone.droid.remotecontrol" description="Clone from GitHub SAFSDEV/SAFS-Android-Remote-Control" >
