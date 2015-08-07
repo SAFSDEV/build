@@ -123,7 +123,7 @@
   <!--                                                                                      -->
   <target name="git.release.create" description="Create Git release" >
       <!-- DO NOT show usertoken in the command line output, only echo following line during debug -->
-      <!-- echo>curl -i -H "Content-Type: application/json" -H "Authorization: token ${env.git.usertoken}" -X POST -d @${git.release.json} ${git.release.url}</echo -->
+      <!-- echo>curl -i -k -H "Content-Type: application/json" -H "Authorization: token ${env.git.usertoken}" -X POST -d @${git.release.json} ${git.release.url}</echo -->
   	
       <exec executable="curl" 
             failifexecutionfails="true"
@@ -210,4 +210,62 @@
 
   </target>
        
+  <!--                                                                                      -->
+  <!--                                  git.updatesite.file.token                           -->
+  <!--                                                                                      -->
+  <!--  Execute a GET request to retrieve the SHA code for a file in a repository directory -->
+  <!--  https://developer.github.com/v3/repos/contents/#get-contents                        -->
+  <!--                                                                                      -->
+  <!--  Example command-line invocation:                                                    -->
+  <!--                                                                                      -->
+  <!--  curl -i -k -H "Content-Type: application/json" https://api.github.com/repos/safsdev/updatesite/contents/safs          -->
+  <!--  curl -i -k -H "Content-Type: application/json" https://api.github.com/repos/safsdev/updatesite/contents/seleniumplus  -->
+  <!--                                                                                      -->
+  <!--  requires: ${git.update.content.query}       (the query URL as shown above)          -->
+  <!--            ${git.update.content.filename}    (the name of the file in the directory  -->
+  <!--                                               to get the SHA token for)              -->
+  <!--                                                                                      -->
+  <!--  Which will be used as shown below:                                                  -->
+  <!--                                                                                      -->
+  <!--  curl -i -k -H "Content-Type: application/json" ${git.update.content.query}          -->
+  <!--                                                                                      -->
+  <!--  Then we parse the output to locate the file assets SHA token value.                 -->
+  <!--                                                                                      -->
+  <!--  return:   ${exec.rc}                                                                -->
+  <!--            ${exec.output}                                                            -->
+  <!--            ${exec.error}                                                             -->
+  <!--            ${git.update.file.sha}                                                    -->
+  <!--                                                                                      -->
+  <!--                                                                                      -->
+  <target name="git.updatesite.file.token" description="GET SHA token for a file in a repo. " >
+      <!-- only echo following line during debug -->
+      <!-- echo>curl -i -k -H "Content-Type: application/json" ${git.update.content.query}</echo -->
+  	
+      <exec executable="curl" 
+            failifexecutionfails="true"
+            failonerror="true"
+	    resultproperty="exec.rc"
+      	    outputproperty="exec.output"
+            errorproperty="exec.error" >
+            
+          <arg value="-i"/>
+          <arg value="-k"/>
+          <arg value="-H"/>  
+          <arg value="Content-Type: application/json"/>
+          <arg value="${git.update.content.query}"/>
+          
+      </exec>
+
+      <!-- TODO -->
+      <!-- We need to first find the portion of the response for our specific content.filename            -->
+      <!-- Then we must find the "sha": value for that content filename.                                  -->
+      <!-- This is only complicated by the fact that there can be more than 1 file in the response array. -->
+
+      <!-- propertyregex property="git.release.id"
+              input="${exec.output}"
+              regexp='"id": (\d+)'
+              select="\1"
+              casesensitive="false" / -->  		
+  </target>
+	
 </project>
