@@ -92,7 +92,55 @@
 }
       </echo>
   </target>
+	
+  <!--                                                          -->
+  <!-- create updatesafs.json for release.                      -->
+  <!-- TODO: convert the zip file to a base64 enconded string and set it to "content" -->
+  <!--                                                          -->
+  <target name="create.updatesafs.json" description="Create safsupdate.json for GitHub SAFSDEV/UpdateSite/safs/SAFS.LIB.UPDATE.ZIP" >
+  	<echo>In create.updatesafs.json, sha: ${git.update.file.sha}</echo>
+      <echo file="${git.update.safs.json}">
+ {
+   "message": "Automatically committed by script.",
+   "committer": {
+     "name": "safsdev",
+     "email": "safsdev@yourCompany.com"
+   },
+   "content": "bXkgdXBkYXRlZCBmaWxlIGNvbnRlbnRz",
+   "sha": ${git.update.file.sha}
+ }
+      </echo>
+  </target>
 
+  <!--                                                          -->
+  <!-- Push SAFS update zip file into github                    -->
+  <!--                                                          -->
+  <target name="git.updatesite.safs"  description="Push SAFS update at GitHub SAFSDEV/UpdateSite/safs" >
+  	  <!-- Get zip file's 'sha code' -->
+      <var name="git.update.content.query" value="${git.update.safs.content.query}"/>
+      <var name="git.update.content.filename" value="${git.update.safs.content.lib}" />
+      <antcallback target="git.updatesite.file.token" return="exec.rc, exec.output, exec.error, git.update.file.sha"/>
+      <!-- echo>${exec.output}</echo -->
+      <echo>exec.rc: ${exec.rc}</echo>
+      <!-- echo>exec.error: ${exec.error}</echo -->
+
+      <!-- Create updatesafs.json file with 'sha code' -->
+      <antcall target="create.updatesafs.json"/>
+  	
+      <!-- Update the zip file with 'sha code' -->
+  	  <var name="git.update.json" value="${git.update.safs.json}"/>
+  	  <var name="git.update.url" value="${git.update.safs.content.put}/${git.update.safs.content.lib}"/>
+      <antcallback target="git.update.file" return="exec.rc, exec.output, exec.error"/>
+  	  <echo>exec.rc: ${exec.output}</echo>
+  	
+      <!-- TODO Do we still need to push the commit in previosu step? -->
+  	
+  </target>
+
+	
+  <!--=========================================================================================================-->
+  <!--====================          common ant scripts to call as a function              =====================-->
+  <!--=========================================================================================================-->
 
   <!--                                                                                      -->
   <!--                                  git.release.create                                  -->
@@ -106,9 +154,13 @@
   <!--  curl -i -k -H "Content-Type: application/json" -H "Authorization: token OAUTH-TOKEN" -X POST -d @seleniumplusrelease.json https://api.github.com/repos/safsdev/SeleniumPlus-Plugin/releases     -->
   <!--                                                                                      -->
   <!--                                                                                      -->
-  <!--  requires: ${env.git.usertoken}                                                      -->
+  <!--  requires:                                                                           -->
+  <!--            ${env.git.usertoken}                                                      -->
   <!--            ${git.release.json}                                                       -->
   <!--            ${git.release.url}                                                        -->
+  <!--                                                                                      -->
+  <!--  Which will be used as shown below:                                                  -->
+  <!--  curl -i -k -H "Content-Type: application/json" -H "Authorization: token ${env.git.usertoken}" -X POST -d @${git.release.json} ${git.release.url}  -->
   <!--                                                                                      -->
   <!--  return:                                                                             -->
   <!--            ${exec.rc}                                                                -->
@@ -116,10 +168,6 @@
   <!--            ${exec.error}                                                             -->
   <!--            ${git.release.id}                                                         -->
   <!--                                                                                      -->
-  <!--                                                                                      -->
-  <!--  Which will be used as shown below:                                                  -->
-  <!--                                                                                      -->
-  <!--  curl -i -k -H "Content-Type: application/json" -H "Authorization: token ${env.git.usertoken}" -X POST -d @${git.release.json} ${git.release.url}  -->
   <!--                                                                                      -->
   <target name="git.release.create" description="Create Git release" >
       <!-- DO NOT show usertoken in the command line output, only echo following line during debug -->
@@ -165,7 +213,8 @@
   <!--  curl -i -k -H "Content-Type: application/zip" -H "Authorization: token OAUTH-TOKEN" -data-binary @path/to/SAFSWinReleaseCandidate.ZIP -X POST https://uploads.github.com/repos/safsdev/core/releases/1628246/assets?name=SAFSWinReleaseCandidate.ZIP                  -->
   <!--  curl -i -k -H "Content-Type: application/zip" -H "Authorization: token OAUTH-TOKEN" -data-binary @path/to/SeleniumPlusReleaseCandidate.ZIP -X POST https://uploads.github.com/repos/safsdev/SeleniumPlus-Plugin/releases/1628304?name=SeleniumPlusReleaseCandidate.ZIP     -->
   <!--                                                                                      -->
-  <!--  requires: ${env.git.usertoken}                                                      -->
+  <!--  requires:                                                                           -->
+  <!--            ${env.git.usertoken}                                                      -->
   <!--            ${git.release.id}                                                         -->
   <!--            ${git.release.uploads.url}                                                -->
   <!--            ${git.release.asset.data}                                                 -->
@@ -173,14 +222,13 @@
   <!--            ${git.release.asset.name}                                                 -->
   <!--            ${git.release.asset.label} not used yet                                   -->
   <!--                                                                                      -->
+  <!--  Which will be used as shown below:                                                  -->
+  <!--  curl -i -k -H "Content-Type: ${git.release.asset.type}" -H "Authorization: token ${env.git.usertoken}" -data-binary @${git.release.asset.data} -X POST ${git.release.uploads.url}/${git.release.id}/assets?name=${git.release.asset.name}&label=${git.release.asset.label}  -->
+  <!--                                                                                      -->
   <!--  return:                                                                             -->
   <!--            ${exec.rc}                                                                -->
   <!--            ${exec.output}                                                            -->
   <!--            ${exec.error}                                                             -->	
-  <!--                                                                                      -->
-  <!--  Which will be used as shown below:                                                  -->
-  <!--                                                                                      -->
-  <!--  curl -i -H "Content-Type: ${git.release.asset.type}" -H "Authorization: token ${env.git.usertoken}" -data-binary @${git.release.asset.data} -X POST ${git.release.uploads.url}/${git.release.id}/assets?name=${git.release.asset.name}&label=${git.release.asset.label}  -->
   <!--                                                                                      -->
   <target name="git.release.upload.asset" description="Upload asset for a Git release" >
       <!-- DO NOT show usertoken in the command line output, only echo following line during debug -->
@@ -190,8 +238,8 @@
       <exec executable="curl" 
             failifexecutionfails="true"
             failonerror="true"
-  	    resultproperty="exec.rc"
-  	    outputproperty="exec.output"
+  	        resultproperty="exec.rc"
+  	        outputproperty="exec.output"
             errorproperty="exec.error" >
             
           <arg value="-i"/>
@@ -226,7 +274,6 @@
   <!--                                               to get the SHA token for)              -->
   <!--                                                                                      -->
   <!--  Which will be used as shown below:                                                  -->
-  <!--                                                                                      -->
   <!--  curl -i -k -H "Content-Type: application/json" ${git.update.content.query}          -->
   <!--                                                                                      -->
   <!--  Then we parse the output to locate the file assets SHA token value.                 -->
@@ -244,7 +291,7 @@
       <exec executable="curl" 
             failifexecutionfails="true"
             failonerror="true"
-	    resultproperty="exec.rc"
+	        resultproperty="exec.rc"
       	    outputproperty="exec.output"
             errorproperty="exec.error" >
             
@@ -259,6 +306,7 @@
       <!-- We need to first find the portion of the response for our specific content.filename            -->
       <!-- Then we must find the "sha": value for that content filename.                                  -->
       <!-- This is only complicated by the fact that there can be more than 1 file in the response array. -->
+	
 
       <propertyregex property="git.update.file.sha"
               input="${exec.output}"
@@ -266,6 +314,64 @@
               select="\2"
               casesensitive="false" />
 
+  	  <!--echo>${exec.output}</echo-->
+  	  <!-- only echo following line during debug -->
+  	  <echo>For file ${git.update.content.filename}, the git.update.file.sha: ${git.update.file.sha}</echo>
   </target>
 	
+  <!--                                                                                      -->
+  <!--                                  git.update.file                                     -->
+  <!--                                                                                      -->
+  <!--  Execute a post request to update a file in repository on github                     -->
+  <!--  https://developer.github.com/v3/repos/contents/#update-a-file                       -->
+  <!--                                                                                      -->
+  <!--  Example command-line invocation:                                                    -->
+  <!--                                                                                      -->
+  <!--  curl -i -k -H "Content-Type: application/json" -H "Authorization: token OAUTH-TOKEN" -X POST -d @updatesafs.json https://api.github.com/repos/safsdev/updatesite/contents/safs/SAFS.LIB.UPDATE.ZIP                          -->
+  <!--  curl -i -k -H "Content-Type: application/json" -H "Authorization: token OAUTH-TOKEN" -X POST -d @updateseleniumplus.json https://api.github.com/repos/safsdev/updatesite/contents/seleniumplus/SEPLUS.LIB.UPDATE.ZIP        -->
+  <!--  curl -i -k -H "Content-Type: application/json" -H "Authorization: token OAUTH-TOKEN" -X POST -d @updateseleniumplusplugin.json https://api.github.com/repos/safsdev/updatesite/contents/seleniumplus/SEPLUS.PLUGIN.UPDATE.ZIP     -->
+  <!--                                                                                      -->
+  <!--  requires:                                                                           -->
+  <!--            ${env.git.usertoken}                                                      -->
+  <!--            ${git.update.json}                                                        -->
+  <!--            ${git.update.url}                                                         -->
+  <!--                                                                                      -->
+  <!--  Which will be used as shown below:                                                  -->
+  <!--  curl -i -k -H "Content-Type: application/json" -H "Authorization: token ${env.git.usertoken}" -X POST -d @${git.update.json} ${git.update.url}  -->
+  <!--                                                                                      -->
+  <!--  return:                                                                             -->
+  <!--            ${exec.rc}                                                                -->
+  <!--            ${exec.output}                                                            -->
+  <!--            ${exec.error}                                                             -->
+  <!--                                                                                      -->
+  <!--                                                                                      -->
+  <target name="git.update.file" description="Update a file in repository" >
+      <!-- DO NOT show usertoken in the command line output, only echo following line during debug -->
+      <!-- echo>curl -i -k -H "Content-Type: application/json" -H "Authorization: token ${env.git.usertoken}" -X POST -d @${git.update.json} ${git.update.url}</echo -->
+  	
+      <exec executable="curl" 
+            failifexecutionfails="true"
+            failonerror="true"
+	        resultproperty="exec.rc"
+      	    outputproperty="exec.output"
+            errorproperty="exec.error" >
+            
+          <arg value="-i"/>
+          <arg value="-k"/>
+          <arg value="-H"/>  
+          <arg value="Content-Type: application/json"/>
+          <arg value="-H"/>
+          <arg value="Authorization: token ${env.git.usertoken}"/>
+          <arg value="-X"/>  
+          <arg value="POST"/>
+          <arg value="-d"/>
+          <arg value="@${git.update.json}"/>
+          <arg value="${git.update.url}"/>
+          
+      </exec>
+  	
+	  <!-- only echo following line during debug -->
+	  <!--echo>${exec.output}</echo-->
+  		
+  </target>
 </project>
