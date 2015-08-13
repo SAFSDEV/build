@@ -46,8 +46,8 @@
      "name": "safsdev",
      "email": "safsdev@sas.com"
    },
-   "content": ${base64.encoded.content},
-   "sha": ${git.update.file.sha}
+   "content": "${base64.encoded.content}",
+   "sha": "${git.update.file.sha}"
  }
     </echo>
   </target>
@@ -64,9 +64,9 @@
   	  <var name="git.update.json" value="${git.update.safs.json}"/>
   	  <var name="git.update.url" value="${git.update.safs.content.put}/${git.update.safs.content.lib}"/>
       <antcallback target="git.update.file" return="exec.rc, exec.output, exec.error"/>
-  	  <echo>exec.rc: ${exec.output}</echo>
-  	
-      <!-- TODO Do we still need to push the commit in previosu step? -->
+  	  <echo>exec.rc: ${exec.rc}</echo>
+  	  <!--echo>exec.output: ${exec.output}</echo-->
+  	  <!--echo>exec.error: ${exec.error}</echo-->
   	
   </target>
 
@@ -139,14 +139,14 @@
   <!--                                                                                      -->
   <!--                                  git.update.file                                     -->
   <!--                                                                                      -->
-  <!--  Execute a post request to update a file in repository on github                     -->
+  <!--  Execute a put request to update a file in repository on github                     -->
   <!--  https://developer.github.com/v3/repos/contents/#update-a-file                       -->
   <!--                                                                                      -->
   <!--  Example command-line invocation:                                                    -->
   <!--                                                                                      -->
-  <!--  curl -i -k -H "Content-Type: application/json" -H "Authorization: token OAUTH-TOKEN" -X POST -d @updatesafs.json https://api.github.com/repos/safsdev/updatesite/contents/safs/SAFS.LIB.UPDATE.ZIP                          -->
-  <!--  curl -i -k -H "Content-Type: application/json" -H "Authorization: token OAUTH-TOKEN" -X POST -d @updateseleniumplus.json https://api.github.com/repos/safsdev/updatesite/contents/seleniumplus/SEPLUS.LIB.UPDATE.ZIP        -->
-  <!--  curl -i -k -H "Content-Type: application/json" -H "Authorization: token OAUTH-TOKEN" -X POST -d @updateseleniumplusplugin.json https://api.github.com/repos/safsdev/updatesite/contents/seleniumplus/SEPLUS.PLUGIN.UPDATE.ZIP     -->
+  <!--  curl -i -k -H "Content-Type: application/json" -H "Authorization: token OAUTH-TOKEN" -X PUT -d @updatesafs.json https://api.github.com/repos/safsdev/updatesite/contents/safs/SAFS.LIB.UPDATE.ZIP                          -->
+  <!--  curl -i -k -H "Content-Type: application/json" -H "Authorization: token OAUTH-TOKEN" -X PUT -d @updateseleniumplus.json https://api.github.com/repos/safsdev/updatesite/contents/seleniumplus/SEPLUS.LIB.UPDATE.ZIP        -->
+  <!--  curl -i -k -H "Content-Type: application/json" -H "Authorization: token OAUTH-TOKEN" -X PUT -d @updateseleniumplusplugin.json https://api.github.com/repos/safsdev/updatesite/contents/seleniumplus/SEPLUS.PLUGIN.UPDATE.ZIP     -->
   <!--                                                                                      -->
   <!--  requires:                                                                           -->
   <!--            ${env.git.usertoken}                                                      -->
@@ -154,7 +154,7 @@
   <!--            ${git.update.url}                                                         -->
   <!--                                                                                      -->
   <!--  Which will be used as shown below:                                                  -->
-  <!--  curl -i -k -H "Content-Type: application/json" -H "Authorization: token ${env.git.usertoken}" -X POST -d @${git.update.json} ${git.update.url}  -->
+  <!--  curl -i -k -H "Content-Type: application/json" -H "Authorization: token ${env.git.usertoken}" -X PUT -d @${git.update.json} ${git.update.url}  -->
   <!--                                                                                      -->
   <!--  return:                                                                             -->
   <!--            ${exec.rc}                                                                -->
@@ -164,7 +164,7 @@
   <!--                                                                                      -->
   <target name="git.update.file" description="Update a file in repository" >
       <!-- DO NOT show usertoken in the command line output, only echo following line during debug -->
-      <echo>curl -i -k -H "Content-Type: application/json" -H "Authorization: token ${env.git.usertoken}" -X POST -d @${git.update.json} ${git.update.url}</echo>
+      <echo>curl -i -k -H "Content-Type: application/json" -H "Authorization: token ${env.git.usertoken}" -X PUT -d @${git.update.json} ${git.update.url}</echo>
   	
       <exec executable="curl" 
             failifexecutionfails="true"
@@ -180,7 +180,7 @@
           <arg value="-H"/>
           <arg value="Authorization: token ${env.git.usertoken}"/>
           <arg value="-X"/>  
-          <arg value="POST"/>
+          <arg value="PUT"/>
           <arg value="-d"/>
           <arg value="@${git.update.json}"/>
           <arg value="${git.update.url}"/>
@@ -223,6 +223,8 @@
             errorproperty="java.error" >
          <arg value="${git.update.content.filename}"/>
          <!--arg value="base64file.dat"/-->
+         <jvmarg value="-Xms512M"/>
+         <jvmarg value="-Xmx1024M"/>
          <classpath>
            <pathelement path="${java.class.path}"/>
          </classpath>
