@@ -210,6 +210,7 @@
               select="\1"
               casesensitive="false" />
   		
+    <echo>Created release ${git.release.id} at ${git.release.url}</echo>
   </target>
 	
   <!--                                                                                      -->
@@ -243,7 +244,7 @@
   <target name="git.release.upload.asset" description="Upload asset for a Git release" >
       <!-- DO NOT show usertoken in the command line output, only echo following line during debug -->
       <!--echo>curl -i -k -H "Content-Type: ${git.release.asset.type}" -H "Authorization: token ${env.git.usertoken}" -data-binary @${git.release.asset.data} -X POST ${git.release.uploads.url}/${git.release.id}/assets?name=${git.release.asset.name}</echo-->
-      <echo>uplaod asset ${git.release.asset.name} for git.release.id: ${git.release.id}</echo>
+      <echo>Upload asset ${git.release.asset.name} for git.release.id: ${git.release.id} at ${git.release.uploads.url}</echo>
   	
       <exec executable="curl" 
             failifexecutionfails="true"
@@ -265,7 +266,8 @@
           <arg value="${git.release.uploads.url}/${git.release.id}/assets?name=${git.release.asset.name}"/>
       </exec>
   	
-  	<!--echo>${exec.output}</echo-->
+  	<echo> RC ${exec.rc}</echo>
+  	<!-- echo>OUT ${exec.output}</echo -->
   </target>
        
   <!--                                                                                      -->
@@ -357,6 +359,7 @@
   <target name="git.release.delete.asset" description="Delete asset for a Git release" >
       <!-- DO NOT show usertoken in the command line output, only echo following line during debug -->
       <!-- echo>curl -i -k -H "Authorization: token ${env.git.usertoken}" -X DELETE ${git.release.updatesite.url}/assets/${git.asset.id}</echo -->
+      <echo>Deleting asset ${git.release.asset.name}, the git.asset.id: ${git.asset.id} at ${git.release.updatesite.url}</echo>
   	
       <exec executable="curl" 
             failifexecutionfails="true"
