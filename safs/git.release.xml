@@ -293,6 +293,7 @@
             errorproperty="exec.error" >
             
           <arg value="-i"/>
+          <arg value="-k"/>
           <arg value="-X"/>
           <arg value="GET"/>  
           <arg value="${git.release.updatesite.url}/${git.release.id}/assets"/>
