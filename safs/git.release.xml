@@ -93,6 +93,10 @@
       </echo>
   </target>
 
+
+  <!--                                                                         -->
+  <!-- Update the GitHub SAFSDEV UpdateSite "safs" release SAFS.LIB.UPDATE.ZIP -->
+  <!--                                                                         -->
   <target name="git.updatesite.safs.asset.update" description="Update asset of SAFS release at GitHub SAFSDEV/UpdateSite" >
   	<!-- delete the asset-->
     <var name="git.release.id" value="${git.release.updatesite.safs.id}" />
@@ -107,6 +111,13 @@
 	<antcall target="git.release.upload.asset" />
   </target>
 	
+
+  <!--                                                                         -->
+  <!-- Update the GitHub SAFSDEV UpdateSite "seleniumplus" release:            -->
+  <!--                                                                         -->
+  <!--                                                SEPLUS.LIB.UPDATE.ZIP    -->
+  <!--                                                SEPLUS.PLUGIN.UPDATE.ZIP -->
+  <!--                                                                         -->
   <target name="git.updatesite.seleniumplus.asset.update" description="Update asset of SELENIUMPLUS release at GitHub SAFSDEV/UpdateSite" >
   	<!-- For LIB -->
   	<!-- delete the asset-->
@@ -191,6 +202,8 @@
           
       </exec>
 
+      <var name="git.release.id" unset="true"/>
+      
       <propertyregex property="git.release.id"
               input="${exec.output}"
               regexp='"id": (\d+)'
@@ -300,6 +313,9 @@
  
       </exec>
 
+      <!-- DELETE any previously existing git.asset.id property to insure we set a new one. -->      
+      <var name="git.asset.id" unset="true"/>
+
       <!-- We need to first find the portion of the response for our specific content.filename            -->
       <!-- Then we must find the "sha": value for that content filename.                                  -->
       <!-- This is only complicated by the fact that there can be more than 1 file in the response array. -->
@@ -340,7 +356,7 @@
   <!--                                                                                      -->
   <target name="git.release.delete.asset" description="Delete asset for a Git release" >
       <!-- DO NOT show usertoken in the command line output, only echo following line during debug -->
-      <echo>curl -i -k -H "Authorization: token ${env.git.usertoken}" -X DELETE ${git.release.updatesite.url}/assets/${git.asset.id}</echo>
+      <!-- echo>curl -i -k -H "Authorization: token ${env.git.usertoken}" -X DELETE ${git.release.updatesite.url}/assets/${git.asset.id}</echo -->
   	
       <exec executable="curl" 
             failifexecutionfails="true"
