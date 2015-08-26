@@ -5,12 +5,14 @@
   
   <mkdir dir="libs" /> 
   
+  <property environment="env"/>
   <property file="safs.properties" />
   <property file="selenium.properties" />
   <import   file="bootstrap.build.xml" />
   <import   file="safs.build.xml" />
   <import   file="selenium.build.xml" />
   <import   file="custom_rules.xml" optional="true" />
+  <import   file="git.release.xml" optional="true" />
   
   <!--                                              -->
   <!--             safs.win.prepare                 -->
