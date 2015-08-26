@@ -10,7 +10,95 @@
   <tstamp>
       <format property="RELEASE_TAG" pattern="yyyy.MM.dd_HH.mm"/>
   </tstamp>
-  
+
+  <!--========================================================================================================================-->
+  <!--====================    Prerequisite :  SAFS/SeleniumPlus Release and Update ZIP file              =====================-->
+  <!--====================    Targets to be called directly:                                             =====================-->
+  <!--====================                                  git.updatesite.safs.asset.update             =====================-->
+  <!--====================                                  git.updatesite.seleniumplus.asset.update     =====================-->
+  <!--====================                                  git.release.safs.upload                      =====================-->
+  <!--====================                                  git.release.seleniumplus.upload              =====================-->
+  <!--========================================================================================================================-->
+  <!--                                                                                    -->
+  <!-- Update the GitHub SAFSDEV UpdateSite "safs" release with asset SAFS.LIB.UPDATE.ZIP -->
+  <!--                                                                                    -->
+  <target name="git.updatesite.safs.asset.update" description="Update asset of SAFS release at GitHub SAFSDEV/UpdateSite" >
+  	<!-- delete the asset-->
+    <var name="git.release.id" value="${git.release.updatesite.safs.id}" />
+	<var name="git.release.asset.name" value="${git.release.updatesite.safs.asset.name}" />
+  	<antcallback target="git.get.asset.id" return="exec.rc, exec.output, exec.error, git.asset.id"/>
+  	<antcall target="git.release.delete.asset"/>
+  	<!-- upload asset -->
+	<var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
+	<var name="git.release.asset.type" value="${git.release.updatesite.safs.asset.type}" />
+	<var name="git.release.asset.data" value="${git.release.updatesite.safs.asset.data}" />
+	<antcall target="git.release.upload.asset" />
+  </target>
+	
+  <!--                                                                               -->
+  <!-- Update the GitHub SAFSDEV UpdateSite "seleniumplus" release with assets:      -->
+  <!--                                                                               -->
+  <!--                                                SEPLUS.LIB.UPDATE.ZIP          -->
+  <!--                                                SEPLUS.PLUGIN.UPDATE.ZIP       -->
+  <!--                                                                               -->
+  <target name="git.updatesite.seleniumplus.asset.update" description="Update asset of SELENIUMPLUS release at GitHub SAFSDEV/UpdateSite" >
+  	<!-- For LIB -->
+  	<!-- delete the asset-->
+    <var name="git.release.id" value="${git.release.updatesite.seleniumplus.id}" />
+	<var name="git.release.asset.name" value="${git.release.updatesite.seleniumplus.asset.lib.name}" />
+  	<antcallback target="git.get.asset.id" return="exec.rc, exec.output, exec.error, git.asset.id"/>
+  	<antcall target="git.release.delete.asset"/>
+  	<!-- upload asset -->
+	<var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
+	<var name="git.release.asset.type" value="${git.release.updatesite.seleniumplus.asset.lib.type}" />
+	<var name="git.release.asset.data" value="${git.release.updatesite.seleniumplus.asset.lib.data}" />
+	<antcall target="git.release.upload.asset" />
+
+  	<!-- For PLUGIN -->
+  	<!-- delete the asset-->
+    <var name="git.release.id" value="${git.release.updatesite.seleniumplus.id}" />
+	<var name="git.release.asset.name" value="${git.release.updatesite.seleniumplus.asset.plugin.name}" />
+  	<antcallback target="git.get.asset.id" return="exec.rc, exec.output, exec.error, git.asset.id"/>
+  	<antcall target="git.release.delete.asset"/>
+  	<!-- upload asset -->
+	<var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
+	<var name="git.release.asset.type" value="${git.release.updatesite.seleniumplus.asset.plugin.type}" />
+	<var name="git.release.asset.data" value="${git.release.updatesite.seleniumplus.asset.plugin.data}" />
+	<antcall target="git.release.upload.asset" />
+  </target>
+	
+  <!--                                                                           -->
+  <!-- upload SAFSWinReleaseCandidate.ZIP to release SAFS on github              -->
+  <!--                                                                           -->
+  <target name="git.release.safs.upload" depends="git.release.safs.create" description="Upload asset to SAFS release at GitHub SAFSDEV/Core">
+      <var name="git.release.uploads.url" value="${git.release.uploads.safs.url}" />
+      <var name="git.release.asset.type" value="${git.release.asset.safs.type}" />
+      <var name="git.release.asset.data" value="${git.release.asset.safs.data}" />
+      <var name="git.release.asset.name" value="${git.release.asset.safs.name}" />
+      <antcall target="git.release.upload.asset" />
+  </target>
+	
+  <!--                                                                                       -->
+  <!-- upload SeleniumPlusReleaseCandidate.ZIP to release SeleniumPlus on github             -->
+  <!--                                                                                       -->
+  <target name="git.release.seleniumplus.upload" depends="git.release.seleniumplus.create" description="Upload asset to SeleniumPlus release at GitHub SAFSDEV/SeleniumPlus-Plugin" >
+      <var name="git.release.uploads.url" value="${git.release.uploads.seleniumplus.url}" />
+      <var name="git.release.asset.type" value="${git.release.asset.seleniumplus.type}" />
+      <var name="git.release.asset.data" value="${git.release.asset.seleniumplus.data}" />
+      <var name="git.release.asset.name" value="${git.release.asset.seleniumplus.name}" />
+      <antcall target="git.release.upload.asset" />
+  </target>
+  <!--===========================================================================================================================-->
+  <!--====================    END of targets to be called directly.                                         =====================-->
+  <!--===========================================================================================================================-->
+	
+  <!--===========================================================================================================================-->
+  <!--====================    Targets on which other target depends:                                   ==========================-->
+  <!--====================                                         git.release.safs.create             ==========================-->
+  <!--====================                                         create.safsrelease.json             ==========================-->
+  <!--====================                                         git.release.seleniumplus.create     ==========================-->
+  <!--====================                                         create.seleniumplusrelease.json     ==========================-->
+  <!--===========================================================================================================================-->
   <!--                                                          -->
   <!-- create release SAFS on github                            -->
   <!--                                                          -->
@@ -37,28 +125,6 @@
       <echo>exec.rc: ${exec.rc}</echo>
       <!-- echo>exec.error: ${exec.error}</echo -->
       <echo>git.release.id: ${git.release.id}</echo>
-  </target>
-	
-  <!--                                                          -->
-  <!-- upload zip to release SAFS on github                     -->
-  <!--                                                          -->
-  <target name="git.release.safs.upload" depends="git.release.safs.create" description="Upload asset to SAFS release at GitHub SAFSDEV/Core">
-      <var name="git.release.uploads.url" value="${git.release.uploads.safs.url}" />
-      <var name="git.release.asset.type" value="${git.release.asset.safs.type}" />
-      <var name="git.release.asset.data" value="${git.release.asset.safs.data}" />
-      <var name="git.release.asset.name" value="${git.release.asset.safs.name}" />
-      <antcall target="git.release.upload.asset" />
-  </target>
-	
-  <!--                                                          -->
-  <!-- upload zip to release SeleniumPlus on github             -->
-  <!--                                                          -->
-  <target name="git.release.seleniumplus.upload" depends="git.release.seleniumplus.create" description="Upload asset to SeleniumPlus release at GitHub SAFSDEV/SeleniumPlus-Plugin" >
-      <var name="git.release.uploads.url" value="${git.release.uploads.seleniumplus.url}" />
-      <var name="git.release.asset.type" value="${git.release.asset.seleniumplus.type}" />
-      <var name="git.release.asset.data" value="${git.release.asset.seleniumplus.data}" />
-      <var name="git.release.asset.name" value="${git.release.asset.seleniumplus.name}" />
-      <antcall target="git.release.upload.asset" />
   </target>
 
   <!--                                                          -->
@@ -92,54 +158,10 @@
 }
       </echo>
   </target>
+  <!--===========================================================================================================================-->
+  <!--====================    END of targets on which other target depends.                            ==========================-->
+  <!--===========================================================================================================================-->
 
-  <!--                                                                         -->
-  <!-- Update the GitHub SAFSDEV UpdateSite "safs" release SAFS.LIB.UPDATE.ZIP -->
-  <!--                                                                         -->
-  <target name="git.updatesite.safs.asset.update" description="Update asset of SAFS release at GitHub SAFSDEV/UpdateSite" >
-  	<!-- delete the asset-->
-    <var name="git.release.id" value="${git.release.updatesite.safs.id}" />
-	<var name="git.release.asset.name" value="${git.release.updatesite.safs.asset.name}" />
-  	<antcallback target="git.get.asset.id" return="exec.rc, exec.output, exec.error, git.asset.id"/>
-  	<antcall target="git.release.delete.asset"/>
-  	<!-- upload asset -->
-	<var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
-	<var name="git.release.asset.type" value="${git.release.updatesite.safs.asset.type}" />
-	<var name="git.release.asset.data" value="${git.release.updatesite.safs.asset.data}" />
-	<antcall target="git.release.upload.asset" />
-  </target>
-	
-  <!--                                                                         -->
-  <!-- Update the GitHub SAFSDEV UpdateSite "seleniumplus" release:            -->
-  <!--                                                                         -->
-  <!--                                                SEPLUS.LIB.UPDATE.ZIP    -->
-  <!--                                                SEPLUS.PLUGIN.UPDATE.ZIP -->
-  <!--                                                                         -->
-  <target name="git.updatesite.seleniumplus.asset.update" description="Update asset of SELENIUMPLUS release at GitHub SAFSDEV/UpdateSite" >
-  	<!-- For LIB -->
-  	<!-- delete the asset-->
-    <var name="git.release.id" value="${git.release.updatesite.seleniumplus.id}" />
-	<var name="git.release.asset.name" value="${git.release.updatesite.seleniumplus.asset.lib.name}" />
-  	<antcallback target="git.get.asset.id" return="exec.rc, exec.output, exec.error, git.asset.id"/>
-  	<antcall target="git.release.delete.asset"/>
-  	<!-- upload asset -->
-	<var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
-	<var name="git.release.asset.type" value="${git.release.updatesite.seleniumplus.asset.lib.type}" />
-	<var name="git.release.asset.data" value="${git.release.updatesite.seleniumplus.asset.lib.data}" />
-	<antcall target="git.release.upload.asset" />
-
-  	<!-- For PLUGIN -->
-  	<!-- delete the asset-->
-    <var name="git.release.id" value="${git.release.updatesite.seleniumplus.id}" />
-	<var name="git.release.asset.name" value="${git.release.updatesite.seleniumplus.asset.plugin.name}" />
-  	<antcallback target="git.get.asset.id" return="exec.rc, exec.output, exec.error, git.asset.id"/>
-  	<antcall target="git.release.delete.asset"/>
-  	<!-- upload asset -->
-	<var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
-	<var name="git.release.asset.type" value="${git.release.updatesite.seleniumplus.asset.plugin.type}" />
-	<var name="git.release.asset.data" value="${git.release.updatesite.seleniumplus.asset.plugin.data}" />
-	<antcall target="git.release.upload.asset" />
-  </target>
 	
   <!--=========================================================================================================-->
   <!--====================          common ant scripts to call as a function              =====================-->
@@ -393,4 +415,7 @@
   	
   	  <!--echo>${exec.output}</echo-->
   </target>
+  <!--=========================================================================================================-->
+  <!--====================          END of "common ant scripts".                          =====================-->
+  <!--=========================================================================================================-->
 </project>
