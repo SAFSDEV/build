@@ -205,6 +205,7 @@
     <javac destdir="${classes}"
            classpath="${safs.classpath}"
            debug="on"
+    	   encoding="UTF-8"
            excludes="**/*.sh **/*.bat **/*.vbs **/*.wsf 
                      **/*.ini **/*.dat **/*.properties 
                      **/*.htm **/*.html 
