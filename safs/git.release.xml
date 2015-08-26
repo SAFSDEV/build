@@ -93,7 +93,6 @@
       </echo>
   </target>
 
-
   <!--                                                                         -->
   <!-- Update the GitHub SAFSDEV UpdateSite "safs" release SAFS.LIB.UPDATE.ZIP -->
   <!--                                                                         -->
@@ -103,7 +102,6 @@
 	<var name="git.release.asset.name" value="${git.release.updatesite.safs.asset.name}" />
   	<antcallback target="git.get.asset.id" return="exec.rc, exec.output, exec.error, git.asset.id"/>
   	<antcall target="git.release.delete.asset"/>
-  	
   	<!-- upload asset -->
 	<var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
 	<var name="git.release.asset.type" value="${git.release.updatesite.safs.asset.type}" />
@@ -111,7 +109,6 @@
 	<antcall target="git.release.upload.asset" />
   </target>
 	
-
   <!--                                                                         -->
   <!-- Update the GitHub SAFSDEV UpdateSite "seleniumplus" release:            -->
   <!--                                                                         -->
@@ -129,9 +126,8 @@
 	<var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
 	<var name="git.release.asset.type" value="${git.release.updatesite.seleniumplus.asset.lib.type}" />
 	<var name="git.release.asset.data" value="${git.release.updatesite.seleniumplus.asset.lib.data}" />
-	<!--var name="git.release.asset.name" value="${git.release.updatesite.seleniumplus.asset.lib.name}" /-->
 	<antcall target="git.release.upload.asset" />
-  	
+
   	<!-- For PLUGIN -->
   	<!-- delete the asset-->
     <var name="git.release.id" value="${git.release.updatesite.seleniumplus.id}" />
@@ -143,7 +139,6 @@
 	<var name="git.release.asset.type" value="${git.release.updatesite.seleniumplus.asset.plugin.type}" />
 	<var name="git.release.asset.data" value="${git.release.updatesite.seleniumplus.asset.plugin.data}" />
 	<antcall target="git.release.upload.asset" />
-  
   </target>
 	
   <!--=========================================================================================================-->
@@ -180,6 +175,12 @@
   <target name="git.release.create" description="Create Git release" >
       <!-- DO NOT show usertoken in the command line output, only echo following line during debug -->
       <!-- echo>curl -i -k -H "Content-Type: application/json" -H "Authorization: token ${env.git.usertoken}" -X POST -d @${git.release.json} ${git.release.url}</echo -->
+
+	  <!-- we MUST clean the returned values, otherwise it will keep the previous value.-->
+	  <var name="exec.rc" unset="true"/>
+	  <var name="exec.output" unset="true"/>
+	  <var name="exec.error" unset="true"/>
+      <var name="git.release.id" unset="true"/>
   	
       <exec executable="curl" 
             failifexecutionfails="true"
@@ -201,10 +202,9 @@
           <arg value="${git.release.url}"/>
           
       </exec>
-
-      <var name="git.release.id" unset="true"/>
       
       <propertyregex property="git.release.id"
+      	      override="true"
               input="${exec.output}"
               regexp='"id": (\d+)'
               select="\1"
@@ -246,6 +246,11 @@
       <!--echo>curl -i -k -H "Content-Type: ${git.release.asset.type}" -H "Authorization: token ${env.git.usertoken}" -data-binary @${git.release.asset.data} -X POST ${git.release.uploads.url}/${git.release.id}/assets?name=${git.release.asset.name}</echo-->
       <echo>Upload asset ${git.release.asset.name} for git.release.id: ${git.release.id} at ${git.release.uploads.url}</echo>
   	
+	  <!-- we MUST clean the returned values, otherwise it will keep the previous value.-->
+	  <var name="exec.rc" unset="true"/>
+	  <var name="exec.output" unset="true"/>
+	  <var name="exec.error" unset="true"/>
+
       <exec executable="curl" 
             failifexecutionfails="true"
             failonerror="true"
@@ -266,8 +271,8 @@
           <arg value="${git.release.uploads.url}/${git.release.id}/assets?name=${git.release.asset.name}"/>
       </exec>
   	
-  	<echo> RC ${exec.rc}</echo>
-  	<!-- echo>OUT ${exec.output}</echo -->
+  	<!--echo> RC ${exec.rc}</echo-->
+  	<!--echo>${exec.output}</echo-->
   </target>
        
   <!--                                                                                      -->
@@ -298,7 +303,13 @@
   <!--                                                                                      -->
   <target name="git.get.asset.id" description="GET id for an asset in a release. " >
       <!-- only echo following line during debug -->
-      <!-- echo>curl -i -X GET ${git.release.updatesite.url}/${git.release.id}/assets</echo -->
+      <!--echo>curl -i -X GET ${git.release.updatesite.url}/${git.release.id}/assets</echo-->
+
+	  <!-- we MUST clean the returned values, otherwise it will keep the previous value.-->
+	  <var name="exec.rc" unset="true"/>
+	  <var name="exec.output" unset="true"/>
+	  <var name="exec.error" unset="true"/>  
+      <var name="git.asset.id" unset="true"/>
   	
       <exec executable="curl" 
             failifexecutionfails="true"
@@ -315,22 +326,20 @@
  
       </exec>
 
-      <!-- DELETE any previously existing git.asset.id property to insure we set a new one. -->      
-      <var name="git.asset.id" unset="true"/>
-
       <!-- We need to first find the portion of the response for our specific content.filename            -->
       <!-- Then we must find the "sha": value for that content filename.                                  -->
       <!-- This is only complicated by the fact that there can be more than 1 file in the response array. -->
   	
       <propertyregex property="git.asset.id"
+      	      override="true"
               input="${exec.output}"
               regexp='"id": (\d+),.*\n.*"name": "${git.release.asset.name}",'
               select="\1"
               casesensitive="false" />
 
-    <!--echo>${exec.output}</echo-->
+  	<!--echo>${exec.output}</echo-->
     <!-- only echo following line during debug -->
-    <echo>For asset ${git.release.asset.name}, the git.asset.id: ${git.asset.id}</echo>
+    <echo>Get ID for asset ${git.release.asset.name}, the git.asset.id: ${git.asset.id}</echo>
   </target>
 	
   <!--                                                                                      -->
@@ -358,8 +367,13 @@
   <!--                                                                                      -->
   <target name="git.release.delete.asset" description="Delete asset for a Git release" >
       <!-- DO NOT show usertoken in the command line output, only echo following line during debug -->
-      <!-- echo>curl -i -k -H "Authorization: token ${env.git.usertoken}" -X DELETE ${git.release.updatesite.url}/assets/${git.asset.id}</echo -->
+      <!--echo>curl -i -k -H "Authorization: token ${env.git.usertoken}" -X DELETE ${git.release.updatesite.url}/assets/${git.asset.id}</echo-->
       <echo>Deleting asset ${git.release.asset.name}, the git.asset.id: ${git.asset.id} at ${git.release.updatesite.url}</echo>
+	  
+	  <!-- we MUST clean the returned values, otherwise it will keep the previous value.-->
+	  <var name="exec.rc" unset="true"/>
+	  <var name="exec.output" unset="true"/>
+	  <var name="exec.error" unset="true"/>
   	
       <exec executable="curl" 
             failifexecutionfails="true"
