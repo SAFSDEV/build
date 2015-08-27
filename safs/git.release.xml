@@ -12,16 +12,26 @@
   </tstamp>
 
   <!--========================================================================================================================-->
-  <!--====================    Prerequisite :  SAFS/SeleniumPlus Release and Update ZIP file              =====================-->
-  <!--====================    Targets to be called directly:                                             =====================-->
+  <!--====================    Upload SAFS/SeleniumPlus Release & Update to github                        =====================-->
+  <!--====================                                  SAFSWinReleaseCandidate.ZIP                  =====================-->
+  <!--====================                                  SeleniumPlusReleaseCandidate.ZIP             =====================-->
+  <!--====================                                  SAFS.LIB.UPDATE.ZIP                          =====================-->
+  <!--====================                                  SEPLUS.LIB.UPDATE.ZIP                        =====================-->
+  <!--====================                                  SEPLUS.PLUGIN.UPDATE.ZIP                     =====================-->
+  <!--====================    Targets could be called directly:                                          =====================-->
   <!--====================                                  git.updatesite.safs.asset.update             =====================-->
   <!--====================                                  git.updatesite.seleniumplus.asset.update     =====================-->
   <!--====================                                  git.release.safs.upload                      =====================-->
   <!--====================                                  git.release.seleniumplus.upload              =====================-->
+  <!--====================    Prerequisite :  SAFS/SeleniumPlus Release and Update ZIP file Ready        =====================-->
+  <!--====================                    safs.lib.update.zip                                        =====================-->
+  <!--====================                    selenium.lib.update.zip                                    =====================-->
+  <!--====================                    (these 2 targets are defined in custom_rules.xml)          =====================-->
   <!--========================================================================================================================-->
   <!--                                                                                    -->
   <!-- Update the GitHub SAFSDEV UpdateSite "safs" release with asset SAFS.LIB.UPDATE.ZIP -->
   <!--                                                                                    -->
+
   <target name="git.updatesite.safs.asset.update" description="Update asset of SAFS release at GitHub SAFSDEV/UpdateSite" >
   	<!-- delete the asset-->
     <var name="git.release.id" value="${git.release.updatesite.safs.id}" />
@@ -88,9 +98,9 @@
       <var name="git.release.asset.name" value="${git.release.asset.seleniumplus.name}" />
       <antcall target="git.release.upload.asset" />
   </target>
-  <!--===========================================================================================================================-->
-  <!--====================    END of targets to be called directly.                                         =====================-->
-  <!--===========================================================================================================================-->
+  <!--========================================================================================================================-->
+  <!--====================    END of Upload SAFS/SeleniumPlus Release & Update to github.                =====================-->
+  <!--========================================================================================================================-->
 	
   <!--===========================================================================================================================-->
   <!--====================    Targets on which other target depends:                                   ==========================-->
@@ -106,6 +116,13 @@
                                          description="Make SAFS release at GitHub SAFSDEV/Core" >
       <var name="git.release.json" value="${git.release.safs.json}" />
       <var name="git.release.url" value="${git.release.safs.url}" />
+
+	  <!-- we MUST clean the value of some global variables.-->
+	  <var name="exec.rc" unset="true"/>
+	  <var name="exec.output" unset="true"/>
+	  <var name="exec.error" unset="true"/>
+      <var name="git.release.id" unset="true"/>
+
       <antcallback target="git.release.create" return="exec.rc, exec.output, exec.error, git.release.id"/>
       <!-- echo>${exec.output}</echo -->
       <echo>exec.rc: ${exec.rc}</echo>
@@ -120,6 +137,13 @@
                                                  description="Make SeleniumPlus release at GitHub SAFSDEV/SeleniumPlus-Plugin" >
       <var name="git.release.json" value="${git.release.seleniumplus.json}" />
       <var name="git.release.url" value="${git.release.seleniumplus.url}" />
+	  
+  	  <!-- we MUST clean the value of some global variables.-->
+	  <var name="exec.rc" unset="true"/>
+	  <var name="exec.output" unset="true"/>
+	  <var name="exec.error" unset="true"/>
+      <var name="git.release.id" unset="true"/>
+  	
       <antcallback target="git.release.create" return="exec.rc, exec.output, exec.error, git.release.id"/>
       <!-- echo>${exec.output}</echo -->
       <echo>exec.rc: ${exec.rc}</echo>
@@ -198,7 +222,7 @@
       <!-- DO NOT show usertoken in the command line output, only echo following line during debug -->
       <!-- echo>curl -i -k -H "Content-Type: application/json" -H "Authorization: token ${env.git.usertoken}" -X POST -d @${git.release.json} ${git.release.url}</echo -->
 
-	  <!-- we MUST clean the returned values, otherwise it will keep the previous value.-->
+  	  <!-- we MUST clean the value of some global variables.-->
 	  <var name="exec.rc" unset="true"/>
 	  <var name="exec.output" unset="true"/>
 	  <var name="exec.error" unset="true"/>
@@ -268,7 +292,7 @@
       <!--echo>curl -i -k -H "Content-Type: ${git.release.asset.type}" -H "Authorization: token ${env.git.usertoken}" -data-binary @${git.release.asset.data} -X POST ${git.release.uploads.url}/${git.release.id}/assets?name=${git.release.asset.name}</echo-->
       <echo>Upload asset ${git.release.asset.name} for git.release.id: ${git.release.id} at ${git.release.uploads.url}</echo>
   	
-	  <!-- we MUST clean the returned values, otherwise it will keep the previous value.-->
+	  <!-- we MUST clean the value of some global variables.-->
 	  <var name="exec.rc" unset="true"/>
 	  <var name="exec.output" unset="true"/>
 	  <var name="exec.error" unset="true"/>
@@ -327,7 +351,7 @@
       <!-- only echo following line during debug -->
       <!--echo>curl -i -X GET ${git.release.updatesite.url}/${git.release.id}/assets</echo-->
 
-	  <!-- we MUST clean the returned values, otherwise it will keep the previous value.-->
+	  <!-- we MUST clean the value of some global variables.-->
 	  <var name="exec.rc" unset="true"/>
 	  <var name="exec.output" unset="true"/>
 	  <var name="exec.error" unset="true"/>  
@@ -392,7 +416,7 @@
       <!--echo>curl -i -k -H "Authorization: token ${env.git.usertoken}" -X DELETE ${git.release.updatesite.url}/assets/${git.asset.id}</echo-->
       <echo>Deleting asset ${git.release.asset.name}, the git.asset.id: ${git.asset.id} at ${git.release.updatesite.url}</echo>
 	  
-	  <!-- we MUST clean the returned values, otherwise it will keep the previous value.-->
+	  <!-- we MUST clean the value of some global variables.-->
 	  <var name="exec.rc" unset="true"/>
 	  <var name="exec.output" unset="true"/>
 	  <var name="exec.error" unset="true"/>
