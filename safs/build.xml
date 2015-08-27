@@ -44,5 +44,48 @@
   <target name="selenium.win.build" depends="selenium.win.plugin,
                                              seleniumplus.win.dist" />
                                              
-  
+  <!--                                                         -->
+  <!--  safs.win.upload                                        -->
+  <!--                                                         -->
+  <!--  Purpose :                                              -->
+  <!--           Upload SAFS "Update assets" on github.        -->
+  <!--           Create SAFS Release on github.                -->
+  <!--           Upload SAFS "Update assets" on sourceforge.   -->
+  <!--           Create SAFS Release on sourceforge.           -->
+  <!--                                                         -->
+  <!--  Prerequisite :  safs.win.build                         -->
+  <!--                                                         -->
+  <!--  Depends:                                               -->
+  <!--          safs.lib.update.zip                            -->
+  <!--          git.updatesite.safs.asset.update               -->
+  <!--          git.release.safs.upload                        -->
+  <!--          safs.sourceforge.upload                        -->
+  <!--                                                         -->
+  <target name="safs.win.upload" depends="safs.lib.update.zip,
+  	                                      git.updatesite.safs.asset.update,
+  	                                      git.release.safs.upload,
+  	                                      safs.sourceforge.upload" />
+
+  <!--                                                         -->
+  <!--  selenium.win.upload                                    -->
+  <!--                                                         -->
+  <!--  Purpose :                                              -->
+  <!--           Upload SE+ "Update assets" on github.         -->
+  <!--           Create SE+ Release on github.                 -->
+  <!--           Upload SE+ "Update assets" on sourceforge.    -->
+  <!--           Create SE+ Release on sourceforge.            -->
+  <!--                                                         -->
+  <!--  Prerequisite :  selenium.win.build                     -->
+  <!--                                                         -->
+  <!--  Depends:                                               -->
+  <!--          selenium.lib.update.zip                        -->
+  <!--          git.updatesite.seleniumplus.asset.update       -->
+  <!--          git.release.seleniumplus.upload                -->
+  <!--          selenium.sourceforge.upload                    -->
+  <!--                                                         -->
+  <target name="selenium.win.upload" depends="selenium.lib.update.zip,
+  	                                          git.updatesite.seleniumplus.asset.update,
+  	                                          git.release.seleniumplus.upload,
+  	                                          selenium.sourceforge.upload" />
+
 </project>  
