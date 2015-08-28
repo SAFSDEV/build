@@ -15,51 +15,63 @@
   <import   file="git.release.xml" optional="true" />
   
   <!--                                              -->
-  <!--             safs.win.prepare                 -->
-  <!--  do cvs.checkout, safs.compile, safs.jar     -->
+  <!--  safs.win.prepare                            -->
+  <!--                                              -->
+  <!--  Purpose:                                    -->
+  <!--          Check out source code and compile   -->
+  <!--          them, then make jar files           -->
   <!--                                              -->
   <target name="safs.win.prepare" depends="cvs.checkout,
                                            safs.compile,
                                            safs.jar,
                                            seleniumplus.jar" />
   
-  <!--                                                         -->
-  <!--                    safs.win.build                       -->
-  <!--          do safs.win.prepare, safs.win.dist             -->
-  <!--                                                         -->
+  <!--                                              -->
+  <!--  safs.win.build                              -->
+  <!--                                              -->
+  <!--  Purpose:                                    -->
+  <!--          Check out source code and compile   -->
+  <!--          them, then make jar files.          -->
+  <!--          Make SAFS ditribution assets        -->
+  <!--                                              -->
   <target name="safs.win.build" depends="safs.win.prepare,
                                          safs.win.dist" />
-
-  <!--                                                         -->
-  <!--                selenium.win.plugin                      -->
-  <!--     do    safs.win.prepare, selenium.plugin.build       -->
-  <!--                                                         -->
+	
+  <!--                                                                                                                -->
+  <!--  selenium.win.plugin                                                                                           -->
+  <!--                                                                                                                -->
+  <!--  Purpose:                                                                                                      -->
+  <!--          Check out source code and compile them, then make jar files.                                          -->
+  <!--          Compile and create jar for SE+ plugin.                                                                -->
+  <!--                                                                                                                -->
+  <!--  Prerequisite:                                                                                                 -->
+  <!--               selenium.plugin.build requires an OS environment 'ECLIPSEJARS', which indicates                  -->
+  <!--               the folder containing Eclipse plugins jar files, for example ECLIPSEJARS=c:/eclipse4/plugins     -->
+  <!--                                                                                                                -->
   <target name="selenium.win.plugin" depends="safs.win.prepare,
                                               selenium.plugin.build" />
                                                
-  <!--                                                         -->
-  <!--                selenium.win.build                       -->
-  <!--     do    safs.win.prepare, seleniumplus.win.dist       -->
-  <!--                                                         -->
+  <!--                                                                           -->
+  <!--  selenium.win.build                                                       -->
+  <!--                                                                           -->
+  <!--  Purpose:                                                                 -->
+  <!--          Check out source code and compile them, then make jar files.     -->
+  <!--          Compile and create jar for SE+ plugin.                           -->
+  <!--          Make SeleniumPlus ditribution assets                             -->
+  <!--                                                                           -->
   <target name="selenium.win.build" depends="selenium.win.plugin,
                                              seleniumplus.win.dist" />
                                              
   <!--                                                         -->
   <!--  safs.win.upload                                        -->
   <!--                                                         -->
-  <!--  Purpose :                                              -->
-  <!--           Upload SAFS "Update assets" on github.        -->
+  <!--  Purpose:                                               -->
+  <!--           Update SAFS "Update assets" on github.        -->
   <!--           Create SAFS Release on github.                -->
-  <!--           Upload SAFS "Update assets" on sourceforge.   -->
-  <!--           Create SAFS Release on sourceforge.           -->
+  <!--           Update SAFS "Update assets" on sourceforge.   -->
+  <!--           Update SAFS Release on sourceforge.           -->
   <!--                                                         -->
   <!--  Prerequisite :  safs.win.build                         -->
-  <!--                                                         -->
-  <!--  Depends:                                               -->
-  <!--          safs.lib.update.zip                            -->
-  <!--          git.updatesite.safs.asset.update               -->
-  <!--          git.release.safs.upload                        -->
-  <!--          safs.sourceforge.upload                        -->
   <!--                                                         -->
   <target name="safs.win.upload" depends="safs.lib.update.zip,
   	                                      git.updatesite.safs.asset.update,
@@ -69,19 +81,13 @@
   <!--                                                         -->
   <!--  selenium.win.upload                                    -->
   <!--                                                         -->
-  <!--  Purpose :                                              -->
-  <!--           Upload SE+ "Update assets" on github.         -->
+  <!--  Purpose:                                               -->
+  <!--           Update SE+ "Update assets" on github.         -->
   <!--           Create SE+ Release on github.                 -->
-  <!--           Upload SE+ "Update assets" on sourceforge.    -->
-  <!--           Create SE+ Release on sourceforge.            -->
+  <!--           Update SE+ "Update assets" on sourceforge.    -->
+  <!--           Update SE+ Release on sourceforge.            -->
   <!--                                                         -->
   <!--  Prerequisite :  selenium.win.build                     -->
-  <!--                                                         -->
-  <!--  Depends:                                               -->
-  <!--          selenium.lib.update.zip                        -->
-  <!--          git.updatesite.seleniumplus.asset.update       -->
-  <!--          git.release.seleniumplus.upload                -->
-  <!--          selenium.sourceforge.upload                    -->
   <!--                                                         -->
   <target name="selenium.win.upload" depends="selenium.lib.update.zip,
   	                                          git.updatesite.seleniumplus.asset.update,
