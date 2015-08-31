@@ -11,7 +11,7 @@
   <import   file="bootstrap.build.xml" />
   <import   file="safs.build.xml" />
   <import   file="selenium.build.xml" />
-  <import   file="custom_rules.xml" optional="true" />
+  <import   file="sourceforge.release.xml" optional="true" />
   <import   file="git.release.xml" optional="true" />
   
   <!--                                              -->
