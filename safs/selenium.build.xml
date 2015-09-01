@@ -73,7 +73,7 @@
 			     safsupdate.jar
 			     safsvars.jar" />
 	 <fileset dir="${safssource}/install/lib/"
-	 	includes="mail.jar" />
+	 	includes="javax.mail.jar" />
       </zip>
   </target>
   
@@ -136,10 +136,10 @@
           <fileset dir="${safssource}/install/lib/" includes="commons-logging-*.jar
                                                               ja*.jar
                                                               JSTAFEmbedded.jar
-                                                              json-*.jar
+                                                              org.json.jar
                                                               juniversalchardet*.jar
                                                               jna.zip
-                                                              mail.jar
+                                                              javax.mail.jar
                                                               platform.zip
                                                               win32-x86.zip" />
       </copy>
