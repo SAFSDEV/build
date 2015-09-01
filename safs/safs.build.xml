@@ -94,6 +94,8 @@
         <fileset dir="${git.wdir.core}/rrafs/" /></move>
     <move todir="${safssource}" preservelastmodified="true" >
         <fileset dir="${git.wdir.core}/src/" /></move>
+    <move todir="${safs.dependencies}" preservelastmodified="true" >
+        <fileset dir="${git.wdir.core}/dependencies/" /></move>
     
     <!-- move _default_ to root of safssource -->
     <move todir="${safssource}"  preservelastmodified="true" >
@@ -123,33 +125,42 @@
       
   </target>
 
-
+  <!--                                                                                              -->
+  <!--              prepare.dependencies                                                            -->
+  <!--   Get all 3rd party jars prepared in folder ${libs}                                          -->
+  <!--   Some jar files are got from FTP server, like rft                                           -->
+  <!--   Other jar files are got from GitHub, open source, we should probably check their license   -->
+  <!--                                                                                              -->
+  <target name="prepare.dependencies">
+    <echo>Copy all 3rd party jars from source lib folder/subfolder</echo>
+    <copy todir="${libs}" preservelastmodified="true" >
+        <fileset dir="${installlibs}" excludes="*.js,*.htm,*.properties"/>
+    </copy>
+    <copy todir="${libs}" preservelastmodified="true" >
+        <fileset dir="${safs.dependencies}"/>
+    </copy>
+    <echo>Get/Update all 3rd party jars from FTP Server</echo>
+    <ftp action="get" remotedir="${rftlibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
+        <fileset dir="${rftlibs}"/> </ftp>
+    <!-- do we need this safslibs? golden safsupdate.jar -->
+    <ftp action="get" remotedir="${safslibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
+        <fileset dir="${safslibs}" includes="*.exe,*.jar,*.zip" /></ftp>
+    <!-- get the open source jar from github instead of internal FTP server -->
+  	<!--ftp action="get" remotedir="${staflibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
+        <fileset dir="${staflibs}"/></ftp>
+    <ftp action="get" remotedir="${cukeslibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}" preservelastmodified="true"  >
+        <fileset dir="${cukeslibs}" excludes="*.pom,*-javadoc.jar"/></ftp>
+    <ftp action="get" remotedir="${droidlibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
+        <fileset dir="${droidlibs}"/></ftp>
+    <ftp action="get" remotedir="${seleniumlibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
+        <fileset dir="${seleniumlibs}" includes="*.exe,*.jar,*.zip" /></ftp-->
+  </target>
+  
   <!--                                                -->
   <!--               cvs.checkout                     -->
   <!--   Get/Update all Source and 3rd party jars     -->
   <!--                                                -->
-  <target name="cvs.checkout" depends="cleansource,_internal.checkout,ftpdependencies" />
-  
-  
-  <!--                                                -->
-  <!--              ftpdependencies                   -->
-  <!--   Get/Update all 3rd party jars FTP Server     -->
-  <!--                                                -->
-  <target name="ftpdependencies" >
-      <ftp action="get" remotedir="${cukeslibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}" preservelastmodified="true"  >
-          <fileset dir="${cukeslibs}" excludes="*.pom,*-javadoc.jar"/></ftp>
-      <ftp action="get" remotedir="${rftlibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
-          <fileset dir="${rftlibs}"/> </ftp>
-      <ftp action="get" remotedir="${droidlibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
-          <fileset dir="${droidlibs}"/></ftp>
-      <ftp action="get" remotedir="${staflibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
-          <fileset dir="${staflibs}"/></ftp>
-      <ftp action="get" remotedir="${seleniumlibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
-          <fileset dir="${seleniumlibs}" includes="*.exe,*.jar,*.zip" /></ftp>
-      <ftp action="get" remotedir="${safslibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
-          <fileset dir="${safslibs}" includes="*.exe,*.jar,*.zip" /></ftp>
-  </target>
-  
+  <target name="cvs.checkout" depends="cleansource,_internal.checkout,prepare.dependencies" />
   
   <!--                                              -->
   <!--              safscompile                     -->
@@ -162,7 +173,6 @@
     <!-- 3rd Party Libraries to be included for SAFS -->
     <!--                                             -->
     <path id="safs.classpath" >
-        <fileset dir="${installlibs}"    includes="*.jar,*.zip"        />
     	<fileset dir="${libs}"  includes="**/*.jar **/*.zip"  />
     </path>
 
@@ -537,7 +547,7 @@
                      safsvars.jar" />
                      
        <fileset dir="${safssource}/install/lib/"
-	 	includes="mail.jar" />
+	 	includes="javax.mail.jar" />
      </zip>
   </target>
 
@@ -638,12 +648,12 @@
                                                               ja*.jar
                                                               jna*.zip
                                                               JSTAF*.jar
-                                                              json-*.jar
+                                                              org.json.jar
                                                               juniversalchardet*.jar
                                                               neko*.jar
                                                               platform.zip
                                                               safsjvmagent.properties
-                                                              mail.jar
+                                                              javax.mail.jar
                                                               win32-x86.zip" 
                                                               
                                                     excludes="JSTAF3.jar
