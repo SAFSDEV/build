@@ -73,7 +73,8 @@
 			     safsupdate.jar
 			     safsvars.jar" />
 	 <fileset dir="${safssource}/install/lib/"
-	 	includes="javax.mail.jar" />
+	 	includes="javax.mail.jar
+	 		org.json.jar" />
       </zip>
   </target>
   
