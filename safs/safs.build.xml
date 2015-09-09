@@ -132,6 +132,7 @@
   <!--   Other jar files are got from GitHub, open source, we should probably check their license   -->
   <!--                                                                                              -->
   <target name="prepare.dependencies">
+  	<delete dir="${libs}" />
     <echo>Copy all 3rd party jars from source lib folder/subfolder</echo>
     <copy todir="${libs}" preservelastmodified="true" >
         <fileset dir="${installlibs}" excludes="*.js,*.htm,*.properties"/>
