@@ -36,6 +36,7 @@
 		     org\safs\custom\**
 		     org\safs\image\**
 		     org\safs\install\**
+      		 org\safs\autoit\**
 		     org\safs\jvmagent\**
 		     org\safs\logging\**
 		     org\safs\natives\**
@@ -72,10 +73,10 @@
 			     safsmaps.jar 
 			     safsupdate.jar
 			     safsvars.jar" />
-	 <fileset dir="${safssource}/install/lib/"
-	 	includes="javax.mail.jar
-	 		org.json.jar" />
-      </zip>
+			 <fileset dir="${safssource}/install/lib/"
+			 	includes="javax.mail.jar
+			 		org.json.jar" />
+		      </zip>
   </target>
   
   <target name="_make.sp.dist" >  
@@ -143,9 +144,11 @@
                                                               javax.mail.jar
                                                               platform.zip
                                                               win32-x86.zip" />
+      	 <fileset dir="${autoitlibs}"  excludes="*.exe" />
       </copy>
       <copy todir="${seleniumdist}/extra"  preservelastmodified="true" >
-	 <fileset dir="${seleniumlibs}/" includes="*.exe" />
+	 	<fileset dir="${seleniumlibs}/" includes="*.exe" />
+      	<fileset dir="${autoitlibs}/" includes="*.exe" />
       </copy>
       <!-- Stop distributing due to sel-ser-stand.jar covers all jars 
       <unzip dest="${seleniumdist}/libs/" >
