@@ -1,0 +1,17 @@
+org.safs.model
+org.safs.model.annotations
+org.safs.model.commands
+org.safs.model.components
+org.safs.model.examples.advanced
+org.safs.model.examples.embedded
+org.safs.model.examples.embedded.include
+org.safs.model.examples.embedded.exclude
+org.safs.model.examples.minimal
+org.safs.model.examples.minimal.include
+org.safs.model.examples.minimal.exclude
+org.safs.model.examples.tables
+org.safs.model.examples.tables.appmap
+org.safs.model.examples.tables.cycle
+org.safs.model.examples.tables.suite
+org.safs.model.examples.tables.step
+org.safs.model.tools
