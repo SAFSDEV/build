@@ -16,6 +16,7 @@ SET JRE=C:\Progra~1\Java\jdk1.7.0_40\bin
 %JRE%\jar uf .\classes\_safs-source-update.zip org\safs\*.java
 %JRE%\jar uf .\classes\_safs-source-update.zip org\safs\abbot\*.* 
 %JRE%\jar uf .\classes\_safs-source-update.zip org\safs\android\*.* 
+%JRE%\jar uf .\classes\_safs-source-update.zip org\safs\autoit\*.* 
 %JRE%\jar uf .\classes\_safs-source-update.zip org\safs\cukes\*.* 
 %JRE%\jar uf .\classes\_safs-source-update.zip org\safs\custom\*.* 
 %JRE%\jar uf .\classes\_safs-source-update.zip org\safs\image\*.*
