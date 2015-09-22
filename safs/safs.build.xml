@@ -817,93 +817,92 @@
                      jre/**" />
    </target>
    
-   
    <target name="git.clone.tcafs" description="Clone from GitHub SAFSDEV/TCAFS" >
        <var name="git.repo.tree" value="${git.wdir.tcafs}" />
-       <var name="git.repo.url" value="${git.repo.tcafs}" />
+       <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
+       <var name="git.repo.name" value="${git.repo.tcafs}" />
        <var name="git.repo.branch" value="${git.branch.tcafs}" />
        <antcall target="git.repo.clone" />
-       <delete dir="TCAFS" />
    </target>
 
    <target name="git.clone.core" description="Clone from GitHub SAFSDEV/Core" >
        <var name="git.repo.tree" value="${git.wdir.core}" />
-       <var name="git.repo.url" value="${git.repo.core}" />
+       <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
+       <var name="git.repo.name" value="${git.repo.core}" />
        <var name="git.repo.branch" value="${git.branch.core}" />
        <antcall target="git.repo.clone" />
-       <delete dir="Core" />
    </target>
 
    <target name="git.clone.keywords" description="Clone from GitHub SAFSDEV/keywords" >
        <var name="git.repo.tree" value="${git.wdir.keywords}" />
-       <var name="git.repo.url" value="${git.repo.keywords}" />
+       <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
+       <var name="git.repo.name" value="${git.repo.keywords}" />
        <var name="git.repo.branch" value="${git.branch.keywords}" />
        <antcall target="git.repo.clone" />
-       <delete dir="keywords" />
    </target>
 
    <target name="git.clone.metainf" description="Clone from GitHub SAFSDEV/META-INF" >
        <var name="git.repo.tree" value="${git.wdir.metainf}" />
-       <var name="git.repo.url" value="${git.repo.metainf}" />
+       <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
+       <var name="git.repo.name" value="${git.repo.metainf}" />
        <var name="git.repo.branch" value="${git.branch.metainf}" />
        <antcall target="git.repo.clone" />
-       <delete dir="META-INF" />
    </target>
 
    <target name="git.clone.stafinf" description="Clone from GitHub SAFSDEV/STAF-INF" >
        <var name="git.repo.tree" value="${git.wdir.stafinf}" />
-       <var name="git.repo.url" value="${git.repo.stafinf}" />
+       <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
+       <var name="git.repo.name" value="${git.repo.stafinf}" />
        <var name="git.repo.branch" value="${git.branch.stafinf}" />
        <antcall target="git.repo.clone" />
-       <delete dir="STAF-INF" />
    </target>
 
    <target name="git.clone.seplus" description="Clone from GitHub SAFSDEV/SeleniumPlus-Plugin" >
        <var name="git.repo.tree" value="${git.wdir.seplus}" />
-       <var name="git.repo.url" value="${git.repo.seplus}" />
+       <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
+       <var name="git.repo.name" value="${git.repo.seplus}" />
        <var name="git.repo.branch" value="${git.branch.seplus}" />
        <antcall target="git.repo.clone" />
-       <delete dir="SeleniumPlus-Plugin" />
    </target>
 
    <target name="git.clone.seplus.features" description="Clone from GitHub SAFSDEV/SeleniumPlus-Plugin-Features" >
        <var name="git.repo.tree" value="${git.wdir.seplus.features}" />
-       <var name="git.repo.url" value="${git.repo.seplus.features}" />
+       <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
+       <var name="git.repo.name" value="${git.repo.seplus.features}" />
        <var name="git.repo.branch" value="${git.branch.seplus.features}" />
        <antcall target="git.repo.clone" />
-       <delete dir="SeleniumPlus-Plugin-Features" />
    </target>
 
    <target name="git.clone.droid.remotecontrol" description="Clone from GitHub SAFSDEV/SAFS-Android-Remote-Control" >
        <var name="git.repo.tree" value="${git.wdir.droid.remotecontrol}" />
-       <var name="git.repo.url" value="${git.repo.droid.remotecontrol}" />
+       <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
+       <var name="git.repo.name" value="${git.repo.droid.remotecontrol}" />
        <var name="git.repo.branch" value="${git.branch.droid.remotecontrol}" />
        <antcall target="git.repo.clone" />
-       <delete dir="SAFS-Android-Remote-Control" />
    </target>
 
    <target name="git.clone.droid.engine" description="Clone from GitHub SAFSDEV/SAFS-Android-Engine" >
        <var name="git.repo.tree" value="${git.wdir.droid.engine}" />
-       <var name="git.repo.url" value="${git.repo.droid.engine}" />
+       <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
+       <var name="git.repo.name" value="${git.repo.droid.engine}" />
        <var name="git.repo.branch" value="${git.branch.droid.engine}" />
        <antcall target="git.repo.clone" />
-       <delete dir="SAFS-Android-Engine" />
    </target>
 
    <target name="git.clone.droid.messenger" description="Clone from GitHub SAFSDEV/SAFS-Android-Messenger" >
        <var name="git.repo.tree" value="${git.wdir.droid.messenger}" />
-       <var name="git.repo.url" value="${git.repo.droid.messenger}" />
+       <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
+       <var name="git.repo.name" value="${git.repo.droid.messenger}" />
        <var name="git.repo.branch" value="${git.branch.droid.messenger}" />
        <antcall target="git.repo.clone" />
-       <delete dir="SAFS-Android-Messenger" />
    </target>
 
    <target name="git.clone.droid.sample" description="Clone from GitHub SAFSDEV/SAFS-Android-SampleSpinner" >
        <var name="git.repo.tree" value="${git.wdir.droid.sample}" />
-       <var name="git.repo.url" value="${git.repo.droid.sample}" />
+       <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
+       <var name="git.repo.name" value="${git.repo.droid.sample}" />
        <var name="git.repo.branch" value="${git.branch.droid.sample}" />
        <antcall target="git.repo.clone" />
-       <delete dir="SAFS-Android-SampleSpinner" />
    </target>
 
 </project>
