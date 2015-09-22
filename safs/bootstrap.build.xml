@@ -19,48 +19,58 @@
   </target>
                                            
   <target name="git.clone.build" description="Clone from GitHub SAFSDEV/build" >
-      <delete dir="build" />
-      <delete dir="safsdev.build" />
       <var name="git.repo.tree" value="safsdev.build" />
-      <var name="git.repo.url" value="git://github.com/SAFSDEV/build" />
+      <var name="git.repo.url.prefix" value="git://github.com/SAFSDEV/" />
+      <var name="git.repo.name" value="build" />
       <var name="git.repo.branch" value="master" />
       <antcall target="git.repo.clone" />
-      <delete dir="build" />
   </target>
 
-  <!--                                                                                      -->
-  <!--                                  git.repo.clone                                      -->
-  <!--                                                                                      -->
-  <!--  Execute a GIT clone specified.                                                      -->
-  <!--                                                                                      -->
-  <!--  Example command-line invocation:                                                    -->
-  <!--                                                                                      -->
-  <!--  git -work-tree source/TCAFS clone git://github.com/SAFSDEV/TCAFS -b master          -->
-  <!--                                                                                      -->
-  <!--  requires: ${git.repo.tree}                                                          -->
-  <!--            ${git.repo.url}                                                           -->
-  <!--            ${git.repo.branch}                                                        -->
-  <!--                                                                                      -->
-  <!--  Which will be used as shown below:                                                  -->
-  <!--                                                                                      -->
-  <!--  git -work-tree ${git.repo.tree} clone git://${git.repo.url} -b ${git.repo.branch}   -->
-  <!--                                                                                      -->
+  <!--                                                                                                             -->
+  <!--                                  git.repo.clone                                                             -->
+  <!--                                                                                                             -->
+  <!--  Execute a GIT clone specified.                                                                             -->
+  <!--                                                                                                             -->
+  <!--  Example command-line invocation:                                                                           -->
+  <!--                                                                                                             -->
+  <!--  git -work-tree source/TCAFS clone git://github.com/SAFSDEV/TCAFS -b master                                 -->
+  <!--                                                                                                             -->
+  <!--  requires: ${git.repo.tree}                                                                                 -->
+  <!--            ${git.repo.url.prefix}                                                                           -->
+  <!--            ${git.repo.name}                                                                                 -->
+  <!--            ${git.repo.branch}                                                                               -->
+  <!--                                                                                                             -->
+  <!--  Which will be used as shown below:                                                                         -->
+  <!--                                                                                                             -->
+  <!--  git -work-tree ${git.repo.tree} clone ${git.repo.url.prefix}${git.repo.name} -b ${git.repo.branch}         -->
+  <!--                                                                                                             -->
   <target name="git.repo.clone"                                  
           description="Clone a Repository from a Git URL" >
-          
-      <exec executable="git" 
-            failifexecutionfails="true"
-            failonerror="true"
-            errorproperty="" >
+  	<!--echo>git -work-tree ${git.repo.tree} clone ${git.repo.url.prefix}${git.repo.name} -b ${git.repo.branch}</echo-->
+  	
+    <!-- delete the hidden repository folder and the late remain working folder -->
+    <!-- which will cuase the current clone fail -->
+  	<delete dir="${git.repo.name}" />
+  	<delete dir="${git.repo.tree}" />
+  	
+  	<!-- clone the repository to local machine -->
+  	<exec executable="git" 
+          failifexecutionfails="true"
+          failonerror="true"
+          errorproperty="" >
             
           <arg value="--work-tree"           />  
           <arg value="${git.repo.tree}"      />
           <arg value="clone"                 />  
-          <arg value="${git.repo.url}" />
+          <arg value="${git.repo.url.prefix}${git.repo.name}" />
           <arg value="-b"                    />
           <arg value="${git.repo.branch}"    />
           
-      </exec>
+    </exec>
+  	
+    <!-- delete the hidden repository folder, which will cuase the next clone fail. -->
+  	<delete dir="${git.repo.name}" />
+  	
   </target>
-       
+
 </project>
