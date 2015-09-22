@@ -440,6 +440,7 @@
                      org\safs\custom\**,
                      org\safs\image\**,
                      org\safs\install\**,
+      				 org\safs\autoit\**,
                      org\safs\jvmagent\**,
                      org\safs\logging\**,
                      org\safs\natives\**,
@@ -661,6 +662,7 @@
                                                               re-sign.jar" />                                                    
           <fileset dir="${seleniumlibs}" excludes="*-2.37.0.jar" />
           <fileset dir="${staflibs}"  includes="JSTAF2.jar" />
+      	  <fileset dir="${autoitlibs}" includes="*.dll *.exe *.jar" />
           <fileset dir="${safsjars}/" excludes="_safs-lib-update.zip
                                                 robotium-messages.jar
                                                 robotiumrcinstall.jar
