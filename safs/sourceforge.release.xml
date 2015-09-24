@@ -166,7 +166,7 @@
 			<fileset dir="${dir.selenium}/" includes="chromedriver.exe
 													IEDriverServer.exe
 													MicrosoftWebDriver.exe" />
-			<fileset dir="${dir.autoit}/" includes="UISpy.exe" />
+			<fileset dir="${dir.autoit}/" includes="Au3Info*.exe" />
 		</copy>
 
 		<zip destfile="${dir.updatesite}/${dir.lib}/${dir.latest}/${selenium.zip.lib}" basedir="${dir.temp}" />
