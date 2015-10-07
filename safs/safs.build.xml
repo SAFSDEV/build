@@ -664,6 +664,7 @@
           <fileset dir="${staflibs}"  includes="JSTAF2.jar" />
       	  <fileset dir="${autoitlibs}" includes="*.dll *.exe *.jar" />
           <fileset dir="${safsjars}/" excludes="_safs-lib-update.zip
+                                                _seleniumplus-lib-update.zip
                                                 robotium-messages.jar
                                                 robotiumrcinstall.jar
                                                 safs-guiclassdata.jar
