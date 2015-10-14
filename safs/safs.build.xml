@@ -703,8 +703,8 @@
       <copy todir="${safsdist}/samples/Droid/SAFSTestRunner"  preservelastmodified="true" >
           <fileset dir="${source}/android/SAFSEngine/" /></copy>
 
-      <copy todir="${safsdist}/samples/Droid/SampleSpinner"  preservelastmodified="true" >
-          <fileset dir="${source}/android/SampleSpinner/" /></copy>
+      <copy todir="${safsdist}/samples/Droid/SpinnerSample"  preservelastmodified="true" >
+          <fileset dir="${source}/android/SpinnerSample/" /></copy>
 
       <copy todir="${safsdist}/samples/Droid/SoloRemoteControl"  preservelastmodified="true" >
           <fileset dir="${source}/android/SoloRemoteControl/" /></copy>
