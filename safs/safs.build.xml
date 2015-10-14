@@ -695,7 +695,16 @@
           <fileset dir="${safssource}/install/samples/Dotnet/DotNetApp/" /></copy>
 
       <copy todir="${safsdist}/samples/Droid/"  preservelastmodified="true" >
-          <fileset dir="${safssource}/install/" includes="SetupAndroid.README.htm" /></copy>
+          <fileset dir="${safssource}/install/samples/Droid/" includes="*.ini
+                                                                        *.bat" />
+          <fileset dir="${safssource}/install/" includes="SetupAndroid.README.htm" />
+          </copy>
+      <copy todir="${safsdist}/samples/Droid/Datapool/"  preservelastmodified="true" >
+          <fileset dir="${safssource}/install/samples/Droid/Datapool/" includes="*.CDD
+                                                                                 *.STD
+                                                                                 *.SDD
+                                                                                 *.MAP" />
+          </copy>
 
       <copy todir="${safsdist}/samples/Droid/SAFSTCPMessenger"  preservelastmodified="true" >
           <fileset dir="${source}/android/SAFSMessenger/" /></copy>
