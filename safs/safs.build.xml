@@ -363,8 +363,6 @@
            includes="org/safs/GUIClassData.*,
                      org/safs/JavaConstant.*,
                      org/safs/IndependantLog.*,
-                     org/safs/sockets/NamedListener.*,
-                     org/safs/sockets/DebugListener.*,
                      org/safs/jvmagent/AgentClassLoader.*,
                      org/safs/logging/AbstractLogFacility.*,
                      org/safs/tools/drivers/DriverConstant.*,

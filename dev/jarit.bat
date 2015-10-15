@@ -169,7 +169,9 @@ copy safs-messages.jar %EXTROBOTIUMRCDISTRUNNER%
 
 :SAFS_GUICLASSDATA_JAR
 %JRE%\jar cf safs-guiclassdata.jar org\safs\GuiClassData.* org\safs\JavaConstant.* org\safs\IndependantLog.*
-%JRE%\jar uf safs-guiclassdata.jar org\safs\sockets\DebugListener.* org\safs\sockets\NamedListener.*
+;REM
+;REM CAUSES FAILED TEST RUNNER BUILDS: %JRE%\jar uf safs-guiclassdata.jar org\safs\sockets\DebugListener.* org\safs\sockets\NamedListener.*
+;REM 
 %JRE%\jar uf safs-guiclassdata.jar org\safs\jvmagent\AgentClassLoader.* org\safs\logging\AbstractLogFacility.*
 %JRE%\jar uf safs-guiclassdata.jar org\safs\tools\drivers\DriverConstant.* org\safs\tools\CaseInsensitiveFile.*
 copy safs-guiclassdata.jar %EXTDROIDLIBS%
