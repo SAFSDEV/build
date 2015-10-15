@@ -33,7 +33,7 @@
   <!--                                                                                                             -->
   <!--  Example command-line invocation:                                                                           -->
   <!--                                                                                                             -->
-  <!--  git --work-tree source/TCAFS clone git://github.com/SAFSDEV/TCAFS -b master                                 -->
+  <!--  git -work-tree source/TCAFS clone git://github.com/SAFSDEV/TCAFS -b master                                 -->
   <!--                                                                                                             -->
   <!--  requires: ${git.repo.tree}                                                                                 -->
   <!--            ${git.repo.url.prefix}                                                                           -->
@@ -42,11 +42,11 @@
   <!--                                                                                                             -->
   <!--  Which will be used as shown below:                                                                         -->
   <!--                                                                                                             -->
-  <!--  git --work-tree ${git.repo.tree} clone ${git.repo.url.prefix}${git.repo.name} -b ${git.repo.branch}         -->
+  <!--  git -work-tree ${git.repo.tree} clone ${git.repo.url.prefix}${git.repo.name} -b ${git.repo.branch}         -->
   <!--                                                                                                             -->
   <target name="git.repo.clone"                                  
           description="Clone a Repository from a Git URL" >
-  	<!--echo>git --work-tree ${git.repo.tree} clone ${git.repo.url.prefix}${git.repo.name} -b ${git.repo.branch}</echo-->
+  	<!--echo>git -work-tree ${git.repo.tree} clone ${git.repo.url.prefix}${git.repo.name} -b ${git.repo.branch}</echo-->
   	
     <!-- delete the hidden repository folder and the late remain working folder -->
     <!-- which will cuase the current clone fail -->
