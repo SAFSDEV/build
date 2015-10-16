@@ -360,7 +360,7 @@
 
       <jar destfile="${safsjars}/safs-guiclassdata.jar"
            basedir="${classes}"
-           includes="org/safs/GUIClassData.*,
+           includes="org/safs/GuiClassData.*,
                      org/safs/JavaConstant.*,
                      org/safs/IndependantLog.*,
                      org/safs/jvmagent/AgentClassLoader.*,
