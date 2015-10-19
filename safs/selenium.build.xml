@@ -91,15 +91,15 @@
   
   <target name="seleniumplus.win.dist" depends="_make.sp.dist" >
 
-      <ftp action="get" remotedir="${sp.win.java}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
+      <ftp action="get" remotedir="${sp.win.java}" server="${Lftpserver}" userid="${Lftpuserid}" password="${Lftppasswrd}"  preservelastmodified="true" >
           <fileset dir="${seleniumdist}/Java" includes="JDK*WIN.ZIP" /></ftp>
-      <ftp action="get" remotedir="${sp.win.java}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
+      <ftp action="get" remotedir="${sp.win.java}" server="${Lftpserver}" userid="${Lftpuserid}" password="${Lftppasswrd}"  preservelastmodified="true" >
           <fileset dir="${seleniumdist}/Java64" includes="JRE*64*WIN.ZIP" /></ftp>
-      <ftp action="get" remotedir="${sp.win.eclipse}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
+      <ftp action="get" remotedir="${sp.win.eclipse}" server="${Lftpserver}" userid="${Lftpuserid}" password="${Lftppasswrd}"  preservelastmodified="true" >
           <fileset dir="${seleniumdist}/eclipse" includes="*WIN.ZIP" /></ftp>
-      <ftp action="get" remotedir="${ocrtools}/bin/" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
+      <ftp action="get" remotedir="${ocrtools}/bin/" server="${Lftpserver}" userid="${Lftpuserid}" password="${Lftppasswrd}"  preservelastmodified="true" >
           <fileset dir="${seleniumdist}/extra/automation/bin/" /></ftp>
-      <ftp action="get" remotedir="${ocrtools}/ocr/" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
+      <ftp action="get" remotedir="${ocrtools}/ocr/" server="${Lftpserver}" userid="${Lftpuserid}" password="${Lftppasswrd}"  preservelastmodified="true" >
           <fileset dir="${seleniumdist}/extra/automation/ocr/" /></ftp>
       <unzip dest="${seleniumdist}/Java/" >
           <fileset dir="${seleniumdist}/Java/" includes="JDK*.ZIP"/>

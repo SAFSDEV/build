@@ -125,6 +125,10 @@
       
   </target>
 
+  <condition property="FTPServer.isConnected">
+    <isreachable host="${ftpserver}" timeout="10" />
+  </condition>
+
   <!--                                                                                              -->
   <!--              prepare.dependencies                                                            -->
   <!--   Get all 3rd party jars prepared in folder ${libs}                                          -->
@@ -141,11 +145,22 @@
         <fileset dir="${safs.dependencies}"/>
     </copy>
     <echo>Get/Update all 3rd party jars from FTP Server</echo>
-    <ftp action="get" remotedir="${rftlibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
-        <fileset dir="${rftlibs}"/> </ftp>
+	
+	<if>
+      <!-- This <not> should be stripped when uploading. -->
+  		<not> <isset property="FTPServer.isConnected" /> </not>
+  		<then>
+  			<ftp action="get" remotedir="${rftlibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
+  				<fileset dir="${rftlibs}"/> 
+  			</ftp>
+  		</then>
+  	</if>	
     <!-- do we need this safslibs? golden safsupdate.jar -->
-    <ftp action="get" remotedir="${safslibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
-        <fileset dir="${safslibs}" includes="*.exe,*.jar,*.zip" /></ftp>
+    <!-- ftp action="get" remotedir="${safslibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
+        <fileset dir="${safslibs}" includes="*.exe,*.jar,*.zip" /></ftp -->
+	<copy todir="${safslibs}" preservelastmodified="true" >
+        <fileset dir="${safs.dependencies}/safs" includes="*.exe,*.jar,*.zip" />
+    </copy>
     <!-- get the open source jar from github instead of internal FTP server -->
   	<!--ftp action="get" remotedir="${staflibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
         <fileset dir="${staflibs}"/></ftp>
@@ -163,6 +178,82 @@
   <!--                                                -->
   <target name="cvs.checkout" depends="cleansource,_internal.checkout,prepare.dependencies" />
   
+  <!--                                                -->
+  <!--               javac.compile                    -->
+  <!--   Compile the java files according to the      -->
+  <!--         availability of RFT FTP Server.        -->
+  <!--                                                -->
+  <target name="javac.compile">
+    <if>
+      <!-- This <not> should be stripped when uploading. -->
+      <not> <isset property="FTPServer.isConnected" /> </not>      
+      <then>
+        <javac destdir="${classes}"
+         classpath="${safs.classpath}"
+         debug="on"
+         encoding="UTF-8"
+         excludes="**/*.sh **/*.bat **/*.vbs **/*.wsf 
+             **/*.ini **/*.dat **/*.properties 
+             **/*.htm **/*.html 
+             **/*.png **/.gif  **/.jpg 
+             **/*.classpath **/*.project" >
+            <src path="${safssource}" /> 
+            <exclude name="eclipse/**" />
+            <exclude name="com/jayway/android/robotium/solo/**" />
+            <exclude name="eclipse/**" />
+            <exclude name="install/**" />
+            <exclude name="keywords/**" />
+            <exclude name="META-INF/**" />
+            <exclude name="STAF-INF/**" />
+            <exclude name="org/*.*" />
+            <exclude name="org/safstag/**" />
+            <exclude name="org/safs/abbot/**" />
+            <exclude name="org/safs/jfcunit/**" />
+            <exclude name="org/safs/jmx/**" />
+            <exclude name="org/safs/jrex/**" />
+            <exclude name="org/safs/selenium/install/**" />
+            <exclude name="org/safs/tools/drivers/test/**" />
+            <exclude name="org/safs/tools/engines/test/**" />
+            <exclude name="org/safs/tools/expressions/test/**" />
+        </javac> 
+      </then>
+      <else>
+        <javac destdir="${classes}"
+         classpath="${safs.classpath}"
+         debug="on"
+         encoding="UTF-8"
+         excludes="**/*.sh **/*.bat **/*.vbs **/*.wsf 
+             **/*.ini **/*.dat **/*.properties 
+             **/*.htm **/*.html 
+             **/*.png **/.gif  **/.jpg 
+             **/*.classpath **/*.project " >
+          <src path="${safssource}" /> 
+          <exclude name="eclipse/**" />
+          <exclude name="com/jayway/android/robotium/solo/**" />
+          <exclude name="eclipse/**" />
+          <exclude name="install/**" />
+          <exclude name="keywords/**" />
+          <exclude name="META-INF/**" />
+          <exclude name="STAF-INF/**" />
+          <exclude name="org/*.*" />
+          <exclude name="org/safstag/**" />
+          <exclude name="org/safs/abbot/**" />
+          <exclude name="org/safs/jfcunit/**" />
+          <exclude name="org/safs/jmx/**" />
+          <exclude name="org/safs/jrex/**" />
+          <exclude name="org/safs/selenium/install/**" />
+          <exclude name="org/safs/tools/drivers/test/**" />
+          <exclude name="org/safs/tools/engines/test/**" />
+          <exclude name="org/safs/tools/expressions/test/**" />
+          <!-- Exclude all things importing rational -->
+          <exclude name="TestScript.java" />
+          <exclude name="org/safs/rational/**/*.java" />
+          <exclude name="resources/*.java" />
+        </javac> 
+      </else>      
+    </if>
+  </target>
+
   <!--                                              -->
   <!--              safscompile                     -->
   <!-- Compile/Build ALL sourcecode for a SAFS dist -->
@@ -212,35 +303,9 @@
         <fileset dir="${safssource}/org/safs/staf/service" includes="*.properties"/></copy>
     <copy todir="${classes}/org/safs/model" preservelastmodified="true" >
         <fileset dir="${safssource}/org/safs/model"/></copy>
-
-    <javac destdir="${classes}"
-           classpath="${safs.classpath}"
-           debug="on"
-    	   encoding="UTF-8"
-           excludes="**/*.sh **/*.bat **/*.vbs **/*.wsf 
-                     **/*.ini **/*.dat **/*.properties 
-                     **/*.htm **/*.html 
-                     **/*.png **/.gif  **/.jpg 
-                     **/*.classpath **/*.project" >
-       <src path="${safssource}" /> 
-       <exclude name="com/jayway/android/robotium/solo/**" />
-       <exclude name="eclipse/**" />
-       <exclude name="install/**" />
-       <exclude name="keywords/**" />
-       <exclude name="META-INF/**" />
-       <exclude name="STAF-INF/**" />
-       <exclude name="org/*.*" />
-       <exclude name="org/safstag/**" />
-       <exclude name="org/safs/abbot/**" />
-       <exclude name="org/safs/jfcunit/**" />
-       <exclude name="org/safs/jmx/**" />
-       <exclude name="org/safs/jrex/**" />
-       <exclude name="org/safs/selenium/install/**" />
-       <exclude name="org/safs/tools/drivers/test/**" />
-       <exclude name="org/safs/tools/engines/test/**" />
-       <exclude name="org/safs/tools/expressions/test/**" />
-    </javac>
     
+    <antcall target="javac.compile" />
+
     <rmic base="${safssource}" 
           classname="org.safs.rmi.engine.ServerImpl" 
           destdir="${classes}" 
@@ -580,7 +645,7 @@
   </target>
   
   <target name="safs.win.dist" depends="_make.safs.dist" >
-      <ftp action="get" remotedir="${safs.win.java}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
+      <ftp action="get" remotedir="${safs.win.java}" server="${Lftpserver}" userid="${Lftpuserid}" password="${Lftppasswrd}"  preservelastmodified="true" >
           <fileset dir="${safsdist}/jre" includes="JRE*WIN.ZIP" /></ftp>
           
       <unzip dest="${safsdist}/jre" >
@@ -812,7 +877,7 @@
                 
       <!-- FTP STAF installation binary -->
       
-      <ftp action="get" remotedir="${staftools}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
+      <ftp action="get" remotedir="${staftools}" server="${Lftpserver}" userid="${Lftpuserid}" password="${Lftppasswrd}"  preservelastmodified="true" >
           <fileset dir="${safsdist}/install" includes="STAF3*win32-NoJVM.exe" /></ftp>
 
       <!-- Create ReleaseCandidate ZIP   -->
