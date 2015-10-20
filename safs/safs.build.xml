@@ -125,8 +125,8 @@
       
   </target>
 
-  <condition property="FTPServer.isConnected">
-    <isreachable host="${ftpserver}" timeout="10" />
+  <condition property="RFT.FTPServer.isConnected">
+    <isreachable host="${rft.ftpserver}" timeout="10" />
   </condition>
 
   <!--                                                                                              -->
@@ -148,9 +148,9 @@
 	
 	<if>
       <!-- This <not> should be stripped when uploading. -->
-  		<not> <isset property="FTPServer.isConnected" /> </not>
+  		<not> <isset property="RFT.FTPServer.isConnected" /> </not>
   		<then>
-  			<ftp action="get" remotedir="${rftlibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
+  			<ftp action="get" remotedir="${rftlibs}" server="${rft.ftpserver}" userid="${rft.ftpuserid}" password="${rft.ftppasswd}"  preservelastmodified="true" >
   				<fileset dir="${rftlibs}"/> 
   			</ftp>
   		</then>
@@ -186,7 +186,7 @@
   <target name="javac.compile">
     <if>
       <!-- This <not> should be stripped when uploading. -->
-      <not> <isset property="FTPServer.isConnected" /> </not>      
+      <not> <isset property="RFT.FTPServer.isConnected" /> </not>      
       <then>
         <javac destdir="${classes}"
          classpath="${safs.classpath}"
@@ -645,7 +645,7 @@
   </target>
   
   <target name="safs.win.dist" depends="_make.safs.dist" >
-      <ftp action="get" remotedir="${safs.win.java}" server="${Lftpserver}" userid="${Lftpuserid}" password="${Lftppasswrd}"  preservelastmodified="true" >
+      <ftp action="get" remotedir="${safsdev.win.java}" server="${largeFiles.ftpserver}" userid="${largeFiles.ftpuserid}" password="${largeFiles.ftppasswd}"  preservelastmodified="true" >
           <fileset dir="${safsdist}/jre" includes="JRE*WIN.ZIP" /></ftp>
           
       <unzip dest="${safsdist}/jre" >
