@@ -645,7 +645,7 @@
   </target>
   
   <target name="safs.win.dist" depends="_make.safs.dist" >
-      <ftp action="get" remotedir="${safs.win.java}" server="${Lftpserver}" userid="${Lftpuserid}" password="${Lftppasswrd}"  preservelastmodified="true" >
+      <ftp action="get" remotedir="/safsdev/${safs.win.java}" server="${Lftpserver}" userid="${Lftpuserid}" password="${Lftppasswrd}"  preservelastmodified="true" >
           <fileset dir="${safsdist}/jre" includes="JRE*WIN.ZIP" /></ftp>
           
       <unzip dest="${safsdist}/jre" >
@@ -875,7 +875,7 @@
                      source/**
                      TCAFS/**" />
                 
-      <!-- FTP STAF installation binary -->
+      <!-- STAF installation binary -->
       
       <copy todir="${safsdist}/install" preservelastmodified="true" >
         <fileset dir="${safs.dependencies}/staf" includes="STAF3*win32-NoJVM.exe" />
