@@ -125,6 +125,10 @@
       
   </target>
 
+  <!--                                                   -->
+  <!-- Property 'Private.FTPServer.isConnected' is used  -->
+  <!-- to test if the private FTP server is reachable.   -->
+  <!--                                                   -->
   <condition property="Private.FTPServer.isConnected">
     <isreachable host="${private.ftpserver}" timeout="10" />
   </condition>
