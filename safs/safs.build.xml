@@ -136,7 +136,8 @@
   <!--                                                                                              -->
   <!--              prepare.dependencies                                                            -->
   <!--   Get all 3rd party jars prepared in folder ${libs}                                          -->
-  <!--   Some jar files are got from FTP server, like rft                                           -->
+  <!--   Some jar files, which are NOT free, are got from private FTP server, like rft              -->
+  <!--   Some jar files, which are free, are got from public FTP server, like Java, Eclipse         -->
   <!--   Other jar files are got from GitHub, open source, we should probably check their license   -->
   <!--                                                                                              -->
   <target name="prepare.dependencies">
