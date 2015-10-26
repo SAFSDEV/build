@@ -182,8 +182,9 @@
   
   <!--                                                -->
   <!--               javac.compile                    -->
-  <!--   Compile the java files according to the      -->
-  <!--         availability of RFT FTP Server.        -->
+  <!--   Compile the java files with/without these    -->
+  <!--     NOT free testing engines JARs based on     -->
+  <!--     the availability of private FTP Server.    -->
   <!--                                                -->
   <target name="javac.compile">
     <if>
