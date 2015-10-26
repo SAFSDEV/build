@@ -152,8 +152,7 @@
     <echo>Get/Update all 3rd party jars from FTP Server</echo>
 	
 	<if>
-      <!-- This <not> should be stripped when uploading. -->
-  		<not> <isset property="Private.FTPServer.isConnected" /> </not>
+  		<isset property="Private.FTPServer.isConnected" />
   		<then>
   			<ftp action="get" remotedir="${rftlibs}" server="${private.ftpserver}" userid="${private.ftpuserid}" password="${private.ftppasswd}"  preservelastmodified="true" >
   				<fileset dir="${rftlibs}"/> 
@@ -190,8 +189,7 @@
   <!--                                                -->
   <target name="javac.compile">
     <if>
-      <!-- This <not> should be stripped when uploading. -->
-      <not> <isset property="Private.FTPServer.isConnected" /> </not>      
+      <isset property="Private.FTPServer.isConnected" />
       <then>
         <javac destdir="${classes}"
          classpath="${safs.classpath}"
