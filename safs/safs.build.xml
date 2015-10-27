@@ -799,14 +799,15 @@
                                                safs-remotecontrol.jar" /></copy>
 
       <copy todir="${safsdist}/samples/Droid/SoloRemoteControl/src/com/jayway/android/robotium"  preservelastmodified="true" >
-          <fileset dir="${safssource}/com/jayway/android/robotium" includes="**/*.java" /></copy>
+          <fileset dir="${safssource}/com/jayway/android/robotium" includes="**/*.java" 
+                                                                   excludes="**/SilentInstaller.java" /></copy>
 
       <copy todir="${safsdist}/samples/Droid/SoloRemoteControl/src/com/robotium/solo"  preservelastmodified="true" >
           <fileset dir="${safssource}/com/robotium/solo/" /></copy>
 
       <copy todir="${safsdist}/samples/eclipse"  preservelastmodified="true" >
           <fileset dir="${safssource}/install/samples/eclipse/" />
-          <fileset dir="${safssource}/install/doc/info" includes="UsingJSAFSAutoConfigure.htm" /></copy>
+          <fileset dir="${safssource}/install/doc/info" includes="UsingJSAFSAutoConfiguration.htm" /></copy>
 
       <mkdir  dir="${safsdist}/samples/eclipse/MyTest/Datapool/Bench" />
       <mkdir  dir="${safsdist}/samples/eclipse/MyTest/Datapool/Dif" />
