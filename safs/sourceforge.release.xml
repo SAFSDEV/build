@@ -230,17 +230,17 @@
 	<!--                                                         -->
 	<target name="safs.sourceforge.upload">
 		<scp
-   	trust="true"
-   	todir="dharmesh4@frs.sourceforge.net:/home/frs/project/safsdev/SAFS Updates/LibraryUpdates/" 
-   	keyfile="c:/users/dhrajp/ssh/id_rsa"
-   	preservelastmodified="true"
-   	sftp="true">
+	   	trust="true"
+	   	todir="${sfuser}@frs.sourceforge.net:/home/frs/project/safsdev/SAFS Updates/LibraryUpdates/" 
+	   	keyfile="${rsaid}"
+	   	preservelastmodified="true"
+	   	sftp="true">
 			<fileset dir="${dir.updatesite}/${dir.lib}"/>
 		</scp>
 		<scp
      	trust="true"
-     	todir="dharmesh4@frs.sourceforge.net:/home/frs/project/safsdev/SAFS Win/ReleaseCandidates/" 
-     	keyfile="c:/users/dhrajp/ssh/id_rsa"
+     	todir="${sfuser}@frs.sourceforge.net:/home/frs/project/safsdev/SAFS Win/ReleaseCandidates/" 
+     	keyfile="${rsaid}"
      	preservelastmodified="true"
      	sftp="true">
 			<fileset dir="${dir.updatesite}/${dir.release}"/>
@@ -254,23 +254,23 @@
 	<!--                                                         -->
 	<target name="selenium.sourceforge.upload">
 		<scp
-   	trust="true"
-   	todir="dharmesh4@frs.sourceforge.net:/home/pfs/project/safsdev/SeleniumPlusUpdates/LibraryUpdates/" 
-   	keyfile="c:/users/dhrajp/ssh/id_rsa"
-   	preservelastmodified="true">
+	   	trust="true"
+	   	todir="${sfuser}@frs.sourceforge.net:/home/pfs/project/safsdev/SeleniumPlusUpdates/LibraryUpdates/" 
+	   	keyfile="${rsaid}"
+	   	preservelastmodified="true">
 			<fileset dir="${dir.updatesite}/${dir.lib}"/>
 		</scp>
 		<scp
      	trust="true"
-     	todir="dharmesh4@frs.sourceforge.net:/home/pfs/project/safsdev/SeleniumPlusUpdates/PlugInUpdates/" 
-     	keyfile="c:/users/dhrajp/ssh/id_rsa"
+     	todir="${sfuser}@frs.sourceforge.net:/home/pfs/project/safsdev/SeleniumPlusUpdates/PlugInUpdates/" 
+     	keyfile="${rsaid}"
      	preservelastmodified="true">
 			<fileset dir="${dir.updatesite}/${dir.plugin}"/>
 		</scp>
 		<scp
      	trust="true"
-     	todir="dharmesh4@frs.sourceforge.net:/home/frs/project/safsdev/SeleniumPlus Win/Release Candidates/" 
-     	keyfile="c:/users/dhrajp/ssh/id_rsa"
+     	todir="${sfuser}@frs.sourceforge.net:/home/frs/project/safsdev/SeleniumPlus Win/Release Candidates/" 
+     	keyfile="${rsaid}"
      	preservelastmodified="true"
      	sftp="true">
 			<fileset dir="${dir.updatesite}/${dir.release}"/>
