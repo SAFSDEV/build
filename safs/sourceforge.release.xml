@@ -151,9 +151,10 @@
 			</path>
 		</timestampselector>
 
-		<copy todir="${dir.temp}/Java64" preservelastmodified="true" >
+		<!-- Stop publish java64 for update site 
+			<copy todir="${dir.temp}/Java64" preservelastmodified="true" >
 			<fileset dir="${dir.dist}/Java64" includes="**" />
-		</copy>
+		</copy> -->
 		<copy file="${sel.latest.modified}" todir="${dir.temp}/libs" preservelastmodified="true" />
 		<copy todir="${dir.temp}/libs" preservelastmodified="true">
 				<fileset dir="${dir.selenium}/" includes="SeInterpreter.jar" />															
