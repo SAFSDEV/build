@@ -168,6 +168,8 @@
 													IEDriverServer.exe
 													MicrosoftWebDriver.exe" />
 			<fileset dir="${dir.autoit}/" includes="Au3Info*.exe" />
+			<fileset dir="${source}/common/org/safs/selenium/install/extra" includes="*.bat
+				                                                                      *.vbs" />
 		</copy>
 
 		<zip destfile="${dir.updatesite}/${dir.lib}/${dir.latest}/${selenium.zip.lib}" basedir="${dir.temp}" />
