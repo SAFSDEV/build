@@ -744,7 +744,7 @@
           <fileset dir="${safssource}/install/ocr/" includes="tessdata.zip"/></unzip>
               
       <copy todir="${safsdist}/Project" preservelastmodified="true" >
-          <fileset dir="${safssource}/install/Project/" excludes="runTIDTEst.rec
+          <fileset dir="${safssource}/install/Project/" excludes="runTIDTest.rec
                                                                   Datapool/CheckBoxFunctions.SDD
                                                                   Datapool/CloseTCAFSApp.SDD
                                                                   Datapool/ComboBox.SDD
@@ -840,7 +840,7 @@
           <fileset dir="${safssource}/org/safs/selenium/install/doc/" /></copy>
       
       <copy todir="${safsdist}/samples/Selenium2.0/extra"  preservelastmodified="true" >
-          <fileset dir="${safssource}/org/safs/selenium/install/extra/" includes="*.exe" /></copy>
+          <fileset dir="${safs.dependencies}/selenium/" includes="*.exe" /></copy>
 
       <mkdir  dir="${safsdist}/samples/Selenium2.0/Datapool/Bench" />
       <mkdir  dir="${safsdist}/samples/Selenium2.0/Datapool/Dif" />
