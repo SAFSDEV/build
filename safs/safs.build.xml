@@ -629,6 +629,7 @@
      <mkdir  dir="${safsdist}/datastorej_logs/TestScript" />
      <mkdir  dir="${safsdist}/doc" />
      <mkdir  dir="${safsdist}/install" />
+     <mkdir  dir="${safsdist}/install/lib" />
      <mkdir  dir="${safsdist}/jre" />
      <mkdir  dir="${safsdist}/keywords" />
      <mkdir  dir="${safsdist}/lib" />
@@ -699,8 +700,14 @@
                                                 excludes="SetupSelenium.README.htm
                                                           SetupSAFS.README.htm
                                                           SetupRuntime.README.htm" />
-          <fileset dir="${safsjars}" includes="safsinstall.jar" /></copy>
+      </copy>
 
+      <copy todir="${safsdist}/install/lib" preservelastmodified="true" >
+          <fileset dir="${safssource}/install/lib" includes="jna*.zip 
+          	                                                 juniversalchardet*.jar"/>
+        <fileset dir="${safsjars}" includes="safsinstall.jar "/>
+      </copy>
+  	
       <copy todir="${safsdist}/keywords" preservelastmodified="true" >
           <fileset dir="${safssource}/keywords/" /></copy>
 
@@ -879,13 +886,11 @@
                      TCAFS/**" />
                 
       <!-- STAF installation binary -->
-      
       <copy todir="${safsdist}/install" preservelastmodified="true" >
         <fileset dir="${safs.dependencies}/staf" includes="STAF3*win32-NoJVM.exe" />
       </copy>
 
       <!-- Create ReleaseCandidate ZIP   -->
-      
       <zip destfile="${safsdist}/SAFSWinReleaseCandidate.ZIP"
            basedir="${safsdist}"
            includes="*.htm
