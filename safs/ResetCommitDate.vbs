@@ -12,6 +12,7 @@
 Dim shell, env, fso, shellApp
 Dim newline
 Dim scriptName, rootFolder, debug, silent
+Dim lastVisitedFolder
 
 Set shell = WScript.CreateObject("WScript.Shell")
 Set env = shell.Environment("SYSTEM")
@@ -57,7 +58,8 @@ Function ChangeLastModifiedDate(folder)
 		If (not items is nothing) Then
 			For i = 0 to items.Count-1
 				Set item = items.Item(i)
-				If item.IsFolder Then
+				If item.IsFolder And lastVisitedFolder<>item.Path Then
+				    lastVisitedFolder = item.Path
 					ChangeLastModifiedDate(item)
 				Else
 					Log 4, "Before reset: " & item.Path & " last modified date is " & item.ModifyDate
