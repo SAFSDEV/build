@@ -915,6 +915,12 @@
        <var name="git.repo.name" value="${git.repo.core}" />
        <var name="git.repo.branch" value="${git.branch.core}" />
        <antcall target="git.repo.clone" />
+   	
+    	<exec executable="cscript">
+        	<arg value="ResetCommitDate.vbs"/>
+        	<arg value="${git.wdir.core}/dependencies" />
+        	<arg value="${git.wdir.core}/src/install/lib" />
+    	</exec>
    </target>
 
    <target name="git.clone.keywords" description="Clone from GitHub SAFSDEV/keywords" >
