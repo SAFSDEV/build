@@ -916,11 +916,17 @@
        <var name="git.repo.branch" value="${git.branch.core}" />
        <antcall target="git.repo.clone" />
    	
-    	<exec executable="cscript">
-        	<arg value="ResetCommitDate.vbs"/>
-        	<arg value="${git.wdir.core}/dependencies" />
-        	<arg value="${git.wdir.core}/src/install/lib" />
-    	</exec>
+   	   <!-- Reset the dependencies 'last modified time' to 'git last commit time' -->
+       <copy todir="${git.wdir.core}/.git"  preservelastmodified="true" >
+           <fileset dir="${git.repo.name}" />
+       </copy>
+       <exec executable="cscript" dir="${git.wdir.core}">
+           <arg value="../ResetCommitDate.vbs"/>
+           <arg value="dependencies" />
+           <arg value="src/install/lib" />
+       </exec>
+   	   <delete dir="${git.wdir.core}/.git" />
+
    </target>
 
    <target name="git.clone.keywords" description="Clone from GitHub SAFSDEV/keywords" >
