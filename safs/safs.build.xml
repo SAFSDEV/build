@@ -915,17 +915,17 @@
        <var name="git.repo.name" value="${git.repo.core}" />
        <var name="git.repo.branch" value="${git.branch.core}" />
        <antcall target="git.repo.clone" />
-   	
-   	   <!-- Reset the dependencies 'last modified time' to 'git last commit time' -->
-       <copy todir="${git.wdir.core}/.git"  preservelastmodified="true" >
+   	   	
+	   <echo>Resetting the dependencies 'last modified time' to 'git last commit time'</echo>
+       <copy todir="${git.repo.tree}/.git"  preservelastmodified="true" >
            <fileset dir="${git.repo.name}" />
        </copy>
-       <exec executable="cscript" dir="${git.wdir.core}">
+       <exec executable="cscript" dir="${git.repo.tree}">
            <arg value="../ResetCommitDate.vbs"/>
            <arg value="dependencies" />
-           <arg value="src/install/lib" />
+		   <arg value="src/install/lib" />
        </exec>
-   	   <delete dir="${git.wdir.core}/.git" />
+	   <delete dir="${git.repo.tree}/.git" />
 
    </target>
 

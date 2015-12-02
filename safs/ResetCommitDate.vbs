@@ -7,12 +7,13 @@
 '==========  Usage:        ResetCommitDate.vbs <folder1> [folder2] [folder3]    ========
 '==========  History:                                                           ========
 '==========          DEC 01, 2012 (LeiWang) CREATED                             ========
+'==========          DEC 02, 2012 (LeiWang) Fix dead loop problem.              ========
 '=======================================================================================
 
 Dim shell, env, fso, shellApp
 Dim newline
 Dim scriptName, rootFolder, debug, silent
-Dim lastVisitedFolder
+Dim visitedFolders()
 
 Set shell = WScript.CreateObject("WScript.Shell")
 Set env = shell.Environment("SYSTEM")
@@ -32,6 +33,7 @@ Else
 	For i = 0 to WScript.Arguments.Count-1
 		rootFolder = fso.GetAbsolutePathName(WScript.Arguments(i))
 		Log 4, "Parameter(" & i & ")='" & WScript.Arguments(i) & newline & "' Resetting 'last modified date' for files under folder " & rootFolder
+		ReDim visitedFolders(0)
 		ChangeLastModifiedDate rootFolder	
 	Next
 End If
@@ -50,28 +52,57 @@ Set exec  = nothing
 Function ChangeLastModifiedDate(folder)
 	On Error Resume Next
 	
+	Dim folderObj, items, item, visited, visitedFolder, i
+	
 	Set folderObj = shellApp.NameSpace(folder)
 
 	If (not folderObj is nothing) Then
 		Set items = folderObj.Items
 	
 		If (not items is nothing) Then
+			showItems folderObj
+			
 			For i = 0 to items.Count-1
 				Set item = items.Item(i)
-				If item.IsFolder And lastVisitedFolder<>item.Path Then
-				    lastVisitedFolder = item.Path
-					ChangeLastModifiedDate(item)
+				Log 4, "visiting : " & folder & "(" & i & ")=" & item.Path
+				
+				'.zip file will be considered as a folder, but we don't want that
+				If item.IsFolder And Not StringContainsIgnoreCase(item.Path, ".zip") Then
+					visited = False
+					For Each visitedFolder in visitedFolders
+						If item.Path=visitedFolder Then
+							visited = True
+						End If
+					Next
+					
+					If Not visited Then
+						Log 4, "Drill down folder: " & item.Path & newline & " index=" & i & newline & " count=" & items.Count
+						ReDim Preserve visitedFolders(UBound(visitedFolders)+1)
+						visitedFolders(UBound(visitedFolders)) = item.Path
+						ChangeLastModifiedDate(item.Path)
+					Else
+						Log 2, "You have visited: " & item.Path & newline & " index=" & i & newline & " count=" & items.Count
+						showItems folder, items
+					End If
 				Else
 					Log 4, "Before reset: " & item.Path & " last modified date is " & item.ModifyDate
 					item.ModifyDate = GetGitLastCommitDate(item.Path)
 					Log 4, "After reset: " & item.Path & " last modified date is " & item.ModifyDate
 				End If
+				
+				Set item = nothing
 			Next
+			Set items = nothing
 		End If
+		Set folderObj = nothing
 	Else
 		Log 1, "File '"&folder&"' is not a valid folder name."
 	End If
 
+	If Err.Number <> 0 Then
+		Log 1, "Error in ChangeLastModifiedDate: " & Err.Description
+		Err.Clear
+	End If
 End Function
 
 '*****************************************************************************
@@ -87,20 +118,21 @@ Function GetGitLastCommitDate(file)
 	
 	GetGitLastCommitDate = ""
 	cmd = "git log --pretty=format:%cd -n 1 --date=iso " & file
-	'return git last commit iso date such as 2015-09-23 17:17:44 -0400
+	''return git last commit iso date such as 2015-09-23 17:17:44 -0400
 	
-	'Exec command "git log ..." and retrieve the commit date from the output
-	'The only problem is that Exec will show the teminal window for each execution
+	''Exec command "git log ..." and retrieve the commit date from the output
+	''The only problem is that Exec will show the teminal window for each execution
 	Log 4, "Executing shell command: " & newline & cmd
 	Set exec = shell.Exec(cmd)
-	'extract stdout and stderr
+	''extract stdout and stderr
     Do While exec.Status = 0
         GetGitLastCommitDate = readall(exec)
-		'WScript.Sleep(1)
+		''WScript.Sleep(1)
 	Loop
-	'GetGitLastCommitDate will be 'STDOUT:\r\n2015-09-23 17:17:44 -0400
+	''GetGitLastCommitDate will be 'STDOUT:\r\n2015-09-23 17:17:44 -0400
 	GetGitLastCommitDate = Mid(GetGitLastCommitDate, 10, 19) '2015-09-23 17:17:44
 	
+	'Dim MyFile
 	'cmd = cmd & " > " & TEMPFILE
 	'Log 4, "Executing shell command: " & cmd
 	'shell.Run cmd, 0, True
@@ -109,8 +141,9 @@ Function GetGitLastCommitDate(file)
 	'	GetGitLastCommitDate = GetGitLastCommitDate & MyFile.ReadLine & newline
 	'Loop
 	'MyFile.Close
+	'Set MyFile = nothing
 	
-	'GetGitLastCommitDate will be '2015-09-23 17:17:44 -0400
+	''GetGitLastCommitDate will be '2015-09-23 17:17:44 -0400
 	'GetGitLastCommitDate = Mid(GetGitLastCommitDate, 1, 19) '2015-09-23 17:17:44
 	'Log 4, GetGitLastCommitDate
 	
@@ -143,19 +176,21 @@ End Function
 '* Parameter:
 '*   eventLevel, int, the event level, refer to wscript LogEvent. 0 Success, 1 Error, 2 Warning, 4 Info
 '*   message,    string, the message to log
+'*   forceShow,  boolean, if true then debug message will be shown in popup
 '* Global Variable:
 '*   debug,  boolean, if false then this method will do nothing
 '*   silent, boolean, if true the write the log message to system
 '*                    log "Event Viewer->Windows Logs->Application".
 '*                    otherwise, show the message in a popup window.
+'*   scriptName, string, the script name to prefix each log message for easy trace.
 '*****************************************************************************
-Function Log(eventLevel, message)
+Function Log(eventLevel, message, forceShow)
 	Dim localMsg, popupType
 	
 	On Error Resume Next
 	
-    If debug Then
-		If silent Then
+    If debug Or forceShow Then
+		If silent And Not forceShow Then
 			localMsg = scriptName & ": " & message
 			shell.LogEvent eventLevel, localMsg
 		Else
@@ -176,4 +211,38 @@ Function Log(eventLevel, message)
 		End If
 	End If
 	
+End Function
+
+'*****************************************************************************
+'* Purpose: Check if one string contains another case-insensitively
+'* Parameter:
+'*   folder, string, the string to contain
+'*   Str2, string, the string to be contained
+'*****************************************************************************
+Function showItems(folderObj)
+	Dim children, items
+	
+	Set items = folderObj.Items
+	
+	For i = 0 to items.Count-1
+		children = children & newline & items.Item(i).Path
+	Next
+
+	Set items = nothing
+	
+	Log 4, folderObj.title & " contains: " & children
+End Function
+
+'*****************************************************************************
+'* Purpose: Check if one string contains another case-insensitively
+'* Parameter:
+'*   Str1, string, the string to contain
+'*   Str2, string, the string to be contained
+'*****************************************************************************
+Function StringContainsIgnoreCase(Str1, Str2)
+    If InStr(1, Str1, Str2, CompareMethod_Text)=0 Then
+        StringContainsIgnoreCase = False
+    Else
+        StringContainsIgnoreCase = True
+    End If
 End Function
