@@ -915,6 +915,18 @@
        <var name="git.repo.name" value="${git.repo.core}" />
        <var name="git.repo.branch" value="${git.branch.core}" />
        <antcall target="git.repo.clone" />
+   	   	
+	   <echo>Resetting the dependencies 'last modified time' to 'git last commit time'</echo>
+       <copy todir="${git.repo.tree}/.git"  preservelastmodified="true" >
+           <fileset dir="${git.repo.name}" />
+       </copy>
+       <exec executable="cscript" dir="${git.repo.tree}">
+           <arg value="../ResetCommitDate.vbs"/>
+           <arg value="dependencies" />
+		   <arg value="src/install/lib" />
+       </exec>
+	   <delete dir="${git.repo.tree}/.git" />
+
    </target>
 
    <target name="git.clone.keywords" description="Clone from GitHub SAFSDEV/keywords" >
