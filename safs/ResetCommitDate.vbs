@@ -4,7 +4,7 @@
 '==========           the last modified date to the moment the file's last      ========
 '==========           committed time.                                           ========
 '==========  Prerequisite: GitBash SHOULD have been installed.                  ========
-'==========  Usage:        ResetCommitDate.vbs <folder1> [folder2] [folder3]    ========
+'==========  Usage:        ResetCommitDate.vbs <folder1> [folder2] ...          ========
 '==========  History:                                                           ========
 '==========          DEC 01, 2012 (LeiWang) CREATED                             ========
 '==========          DEC 02, 2012 (LeiWang) Fix dead loop problem.              ========
@@ -12,8 +12,16 @@
 
 Dim shell, env, fso, shellApp
 Dim newline
-Dim scriptName, rootFolder, debug, silent
+Dim scriptName, rootFolder
+' debug boolean, if true, the debug message will be shown.
+' silent boolean, if true, the debug message will be wrote to log "Event Viewer->Windows Logs->Application".
+'                 otherwise, will be shown in popup dialog.
+'                 This only take effect when debug is set to true.
+Dim debug, silent
+' visitedFolders string array, hold the visited folders to avoid a dead loop
 Dim visitedFolders()
+Dim TEMPFILE
+Dim j
 
 Set shell = WScript.CreateObject("WScript.Shell")
 Set env = shell.Environment("SYSTEM")
@@ -24,30 +32,31 @@ On Error Resume Next
 newline = chr(13) & chr(10)
 TEMPFILE= fso.GetSpecialFolder(2) & "\seplus.resetdata.temp"
 debug = false
-silent = false
+silent = true
 scriptName = "ResetCommitDate.vbs"
 
 If WScript.Arguments.Count = 0 Then
     Log 1, "Please provide at the lease one folder name as parameter."
 Else
-	For i = 0 to WScript.Arguments.Count-1
-		rootFolder = fso.GetAbsolutePathName(WScript.Arguments(i))
-		Log 4, "Parameter(" & i & ")='" & WScript.Arguments(i) & newline & "' Resetting 'last modified date' for files under folder " & rootFolder
+	For j = 0 to WScript.Arguments.Count-1
+		rootFolder = fso.GetAbsolutePathName(WScript.Arguments(j))
+		Log 4, "Parameter(" & j & ")='" & WScript.Arguments(j) & newline & "' Resetting 'last modified date' for files under folder " & rootFolder
 		ReDim visitedFolders(0)
 		ChangeLastModifiedDate rootFolder	
 	Next
 End If
 
 Set shell = nothing
+Set env = nothing
 Set fso   = nothing
-Set exec  = nothing
+Set shellApp = nothing
 '==========   End of Script  ====================================
 
 '*****************************************************************************
 '* Purpose: Reset file's last modified time to its git last commit time.
 '* Parameter:
-'*   folder, the folder in a git repository under which the file's "last modified time" will be reset
-'*           it should be given as absolute path
+'*   folder, the folder in a git repository under which the file's "last modified time" will be reset.
+'*           it should be given as an absolute path
 '*****************************************************************************
 Function ChangeLastModifiedDate(folder)
 	On Error Resume Next
@@ -72,6 +81,7 @@ Function ChangeLastModifiedDate(folder)
 					For Each visitedFolder in visitedFolders
 						If item.Path=visitedFolder Then
 							visited = True
+							Exit For
 						End If
 					Next
 					
@@ -82,7 +92,7 @@ Function ChangeLastModifiedDate(folder)
 						ChangeLastModifiedDate(item.Path)
 					Else
 						Log 2, "You have visited: " & item.Path & newline & " index=" & i & newline & " count=" & items.Count
-						showItems folder, items
+						showItems folderObj
 					End If
 				Else
 					Log 4, "Before reset: " & item.Path & " last modified date is " & item.ModifyDate
@@ -214,22 +224,19 @@ Function Log(eventLevel, message, forceShow)
 End Function
 
 '*****************************************************************************
-'* Purpose: Check if one string contains another case-insensitively
+'* Purpose: Show all children of a folder.
 '* Parameter:
-'*   folder, string, the string to contain
-'*   Str2, string, the string to be contained
+'*   folderObj, Folder, the Folder object got by CreateObject("Shell.Application").NameSpace(folder)
 '*****************************************************************************
 Function showItems(folderObj)
-	Dim children, items
+	Dim children, items, i
 	
 	Set items = folderObj.Items
-	
 	For i = 0 to items.Count-1
 		children = children & newline & items.Item(i).Path
 	Next
 
 	Set items = nothing
-	
 	Log 4, folderObj.title & " contains: " & children
 End Function
 
@@ -240,9 +247,13 @@ End Function
 '*   Str2, string, the string to be contained
 '*****************************************************************************
 Function StringContainsIgnoreCase(Str1, Str2)
-    If InStr(1, Str1, Str2, CompareMethod_Text)=0 Then
+	Dim foundPosition
+
+	foundPosition = InStr(1, Str1, Str2, 1) 'vbTextCompare
+    If IsNull(foundPosition) or foundPosition=0 Then
         StringContainsIgnoreCase = False
     Else
         StringContainsIgnoreCase = True
     End If
+	
 End Function
