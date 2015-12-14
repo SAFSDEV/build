@@ -916,17 +916,38 @@
        <var name="git.repo.branch" value="${git.branch.core}" />
        <antcall target="git.repo.clone" />
    	   	
-	   <echo>Resetting the dependencies 'last modified time' to 'git last commit time'</echo>
-       <copy todir="${git.repo.tree}/.git"  preservelastmodified="true" >
-           <fileset dir="${git.repo.name}" />
-       </copy>
-       <exec executable="cscript" dir="${git.repo.tree}">
-           <arg value="../ResetCommitDate.vbs"/>
-           <arg value="dependencies" />
-		   <arg value="src/install/lib" />
-       </exec>
-	   <delete dir="${git.repo.tree}/.git" />
+   	   <antcall target="reset.last.modified">
+   	   	 <param name="git.repo.tree" value="${git.wdir.core}" />
+         <param name="git.repo.name" value="${git.repo.core}" />
+         <param name="sub.dirs" value="dependencies;src/install/lib" />
+   	   </antcall>
 
+   </target>
+
+   <!-- ======================================================================================= -->	
+   <!-- Use ResetCommitDate.java to reset the file's last modified date to git last commit date -->
+   <!-- Parameters:                                                                             -->	
+   <!--   ${git.repo.tree}, the git repository folder name                                      -->	
+   <!--   ${git.repo.name}, the git repository metadata folder name                             -->
+   <!--   ${sub.dirs}, the sub-directories, under which the files will be reset                 -->
+   <!-- ======================================================================================= -->	
+   <target name="reset.last.modified" description="Reset 'last modified time' to 'git last commit time'">
+   	  <!-- Copy the git metadata folder to the repository -->
+      <copy todir="${git.repo.tree}/.git"  preservelastmodified="true" >
+        <fileset dir="${git.repo.name}" />
+      </copy>
+   	
+      <delete><fileset dir="." includes="*.class" /></delete>
+	  <javac includeantruntime="false" sourcepath="" srcdir="." destdir="." debug="on" encoding="UTF-8" includes="ResetCommitDate.java" excludes="*.xml, *.properties" />
+	
+      <!--echo>java ResetCommitDate ${git.repo.tree} ${sub.dirs}</echo-->
+	  <java classname="ResetCommitDate" classpath=".">
+	    <arg value="${git.repo.tree}" />
+	    <arg value="${sub.dirs}" />
+	    <!--arg value="-debug" /-->
+	  </java>
+
+	  <delete dir="${git.repo.tree}/.git" />
    </target>
 
    <target name="git.clone.keywords" description="Clone from GitHub SAFSDEV/keywords" >
