@@ -11,6 +11,7 @@
  * DEC 08 2015    (sbjlwa) Initial release.
  * DEC 14 2015    (sbjlwa) Copy org.safs.tools.consoles.ProcessCapture to this class to remove that dependency.
  *                         The sub-directories will be passed in one string (separated by ;) instead of multiple strings.
+ * DEC 15 2015    (sbjlwa) Fix a synchronization problem.
  */
 
 import java.io.BufferedReader;
@@ -42,6 +43,10 @@ public class ResetCommitDate{
 	
 	public static void debug(String message){
 		if(debug) System.out.println(message);
+	}
+	
+	public static void println(String message){
+		System.out.println(message);
 	}
 	
 	public static void error(String message){
@@ -78,8 +83,6 @@ public class ResetCommitDate{
 	}
 	
 	public Date getGitLastCommitDate(File file){
-		int timeoutWaitProcess = 5000;
-		
 		if(!isValid(file)){
 			error("The parameter file or repository is not valid!");
 			return null;
@@ -91,12 +94,6 @@ public class ResetCommitDate{
 		try {
 			Process p = Runtime.getRuntime().exec(command, null, gitRepository);
 			ProcessCapture pc = new ProcessCapture(p);
-			Thread thread = new Thread(pc);
-			thread.start();
-			long current = System.currentTimeMillis();
-			debug("ProcessCapture: current "+current);
-			thread.join(timeoutWaitProcess);
-			debug("ProcessCapture: used "+(System.currentTimeMillis()-current)+" milliseconds. ");
 			
 			if(pc.getExitValue()==0){
 				if(pc.stdout.size()>0){
@@ -121,39 +118,61 @@ public class ResetCommitDate{
 
 	}
 	
-	public class ProcessCapture implements Runnable{
+	public static class ProcessCapture implements Runnable{
+		public static final int DEFAULT_PAUSE_FOR_READY = 10;
+		public static final int DEFAULT_TIME_WAIT_PROCESS = 5000;
+		
 		protected Process process = null;
 		/** time in milliseconds to pause to wait for stdout/stderr is ready. */
-		protected  int pauseForReady = 10;
+		protected  int pauseForReady = DEFAULT_PAUSE_FOR_READY;
+		/** timeout in milliseconds to wait for process thread terminates. */
+		protected  int timeoutWaitProcess = DEFAULT_TIME_WAIT_PROCESS;
+		
 		protected BufferedReader  out = null;
 		protected BufferedReader  err = null;
 		protected boolean shutdown = false;
 		protected  int exitValue = -1;
 		
+		
 		public Vector<String> stdout = new Vector<String>();
 		public Vector<String> stderr = new Vector<String>();
 		
-		public ProcessCapture(Process p){
-			this.process = p;
+		public ProcessCapture(Process process){
+			this(process, DEFAULT_PAUSE_FOR_READY, DEFAULT_TIME_WAIT_PROCESS);
+		}
+		
+		public ProcessCapture(Process process, int pauseForReady){
+			this(process, pauseForReady, DEFAULT_TIME_WAIT_PROCESS);
+		}
+		
+		public ProcessCapture(Process process, int pauseForReady, int timeoutWaitProcess){
+			this.process = process;
+			this.pauseForReady = pauseForReady;
+			this.timeoutWaitProcess = timeoutWaitProcess;
 			
 			try{
 				out = new BufferedReader(new InputStreamReader(process.getInputStream()));
 				err = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+				
+				Thread thread = new Thread(this);
+				thread.setDaemon(true);
+				thread.start();
+				thread.join(timeoutWaitProcess);
+
 			}catch(Exception x){
 				debug("ProcessCapture initialization error:"+ x.getMessage());
 			}
 		}
-		
-		public ProcessCapture(Process p, int pauseForReady){
-			this(p);
-			this.pauseForReady = pauseForReady;
-		}
 
-		public int getExitValue(){
+		public synchronized int getExitValue(){
 			if(!shutdown){
 				throw new IllegalThreadStateException("The process is still running ...");
 			}
 			return exitValue;
+		}
+		
+		protected synchronized void setShutdown(boolean shutdown){
+			this.shutdown = shutdown;
 		}
 		
 		public void run(){
@@ -180,11 +199,11 @@ public class ResetCommitDate{
 					
 					try{
 						exitValue = process.exitValue();
-						shutdown = true;
+						setShutdown(true);
 					}catch(IllegalThreadStateException x){
 						// process not yet finished
 					}
-					if ( !outdata && !errdata && !shutdown) Thread.sleep(pauseForReady);
+					if ( !outdata && !errdata && !shutdown) try{ Thread.sleep(pauseForReady);}catch(Exception e){}
 					
 				}
 				
@@ -226,7 +245,7 @@ public class ResetCommitDate{
 				error("The parameter gitRepository is not valid!\n"+getUsage());
 				return;
 			}
-			System.out.println("Resetting 'last commit date' for files in repository '"+repository+"'");
+			println("Resetting 'last commit date' for files in repository '"+repository+"'");
 				
 			ResetCommitDate reset = new ResetCommitDate(repository);
 			
@@ -251,7 +270,7 @@ public class ResetCommitDate{
 				file = new File(repository, subfolder);
 				if(!isValid(file)) file = new File(subfolder);
 				if(isValid(file)){
-					System.out.println("Resetting for files under folder '"+file.getAbsolutePath()+"'");
+					println("Resetting for files under folder '"+file.getAbsolutePath()+"'");
 					reset.resetLastModifyTime(file);
 				}else{
 					error("parameter '"+subfolders[i]+"' is not a valid folder in repository");
