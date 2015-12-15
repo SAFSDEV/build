@@ -93,8 +93,11 @@ public class ResetCommitDate{
 			ProcessCapture pc = new ProcessCapture(p);
 			Thread thread = new Thread(pc);
 			thread.start();
+			long current = System.currentTimeMillis();
+			debug("ProcessCapture: current "+current);
 			thread.join(timeoutWaitProcess);
-
+			debug("ProcessCapture: used "+(System.currentTimeMillis()-current)+" milliseconds. ");
+			
 			if(pc.getExitValue()==0){
 				if(pc.stdout.size()>0){
 					String isoDateTime = pc.stdout.get(0);
@@ -185,10 +188,10 @@ public class ResetCommitDate{
 					
 				}
 				
-				debug("ProcessCapture shutdown for process "+ process);
+				debug("ProcessCapture shutdown for process "+ process+" shutdown="+shutdown+" exitValue="+exitValue);
 				
 			}catch(Exception x){
-				debug("ProcessCapture thread loop error:"+ x.getMessage());
+				error("ProcessCapture thread loop error:"+ x.getMessage());
 			}
 		}
 		
