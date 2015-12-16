@@ -12,6 +12,7 @@
  * DEC 14 2015    (sbjlwa) Copy org.safs.tools.consoles.ProcessCapture to this class to remove that dependency.
  *                         The sub-directories will be passed in one string (separated by ;) instead of multiple strings.
  * DEC 15 2015    (sbjlwa) Fix a synchronization problem.
+ * DEC 16 2015    (sbjlwa) Enlarge the timeout for waiting a process thread's termination.
  */
 
 import java.io.BufferedReader;
@@ -50,7 +51,7 @@ public class ResetCommitDate{
 	}
 	
 	public static void error(String message){
-		System.err.println(message);
+		System.err.println("ERROR: "+message);
 	}
 	
 	/**
@@ -119,8 +120,8 @@ public class ResetCommitDate{
 	}
 	
 	public static class ProcessCapture implements Runnable{
-		public static final int DEFAULT_PAUSE_FOR_READY = 10;
-		public static final int DEFAULT_TIME_WAIT_PROCESS = 5000;
+		public static final int DEFAULT_PAUSE_FOR_READY = 20;
+		public static final int DEFAULT_TIME_WAIT_PROCESS = 10000;
 		
 		protected Process process = null;
 		/** time in milliseconds to pause to wait for stdout/stderr is ready. */
@@ -157,15 +158,25 @@ public class ResetCommitDate{
 				Thread thread = new Thread(this);
 				thread.setDaemon(true);
 				thread.start();
+				long start = System.currentTimeMillis();
 				thread.join(timeoutWaitProcess);
+				debug("Time used "+(System.currentTimeMillis()-start));
 
 			}catch(Exception x){
 				debug("ProcessCapture initialization error:"+ x.getMessage());
 			}
 		}
 
-		public synchronized int getExitValue(){
-			if(!shutdown){
+		public int getExitValue(){
+			if(!isShutdown()){
+				println("waitting for process thread terminates for another 10 seconds ... ");
+				int tries = 0;
+				int MAX_TRIES = 10;
+				while(!isShutdown() && tries++<MAX_TRIES){
+					try{ Thread.sleep(1000);}catch(Exception e){}
+				}
+			}
+			if(!isShutdown()){
 				throw new IllegalThreadStateException("The process is still running ...");
 			}
 			return exitValue;
@@ -173,6 +184,9 @@ public class ResetCommitDate{
 		
 		protected synchronized void setShutdown(boolean shutdown){
 			this.shutdown = shutdown;
+		}
+		protected synchronized boolean isShutdown(){
+			return shutdown;
 		}
 		
 		public void run(){
@@ -197,20 +211,23 @@ public class ResetCommitDate{
 						}
 					}
 					
-					try{
-						exitValue = process.exitValue();
-						setShutdown(true);
-					}catch(IllegalThreadStateException x){
-						// process not yet finished
+					if (!outdata && !errdata){
+						try{
+							exitValue = process.exitValue();
+							setShutdown(true);
+						}catch(IllegalThreadStateException x){
+							// process not yet finished
+						}
+						
+						if (!shutdown) try{ Thread.sleep(pauseForReady);}catch(Exception e){}
 					}
-					if ( !outdata && !errdata && !shutdown) try{ Thread.sleep(pauseForReady);}catch(Exception e){}
 					
 				}
 				
 				debug("ProcessCapture shutdown for process "+ process+" shutdown="+shutdown+" exitValue="+exitValue);
 				
-			}catch(Exception x){
-				error("ProcessCapture thread loop error:"+ x.getMessage());
+			}catch(Throwable x){
+				error("ProcessCapture thread loop error:"+ x.getMessage()+" shutdown="+shutdown+" exitValue="+exitValue);
 			}
 		}
 		
