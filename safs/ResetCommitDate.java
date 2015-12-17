@@ -96,7 +96,7 @@ public class ResetCommitDate{
 			Process p = Runtime.getRuntime().exec(command, null, gitRepository);
 			ProcessCapture pc = new ProcessCapture(p);
 			
-			if(pc.getExitValue()==0){
+			if(pc.getExitValue(30)==0){
 				if(pc.stdout.size()>0){
 					String isoDateTime = pc.stdout.get(0);
 					debug(isoDateTime);
@@ -119,9 +119,20 @@ public class ResetCommitDate{
 
 	}
 	
+	/**
+	 * Start a sub-thread to capture the process's output from stdout and stderr.<br>
+	 * By default, the main thread will wait this sub-thread to terminate with a timeout 30 seconds.<br>
+	 * User can alternate that timeout by calling different constructor.<br>
+	 * Then in the main thread:<br>
+	 * 1. User can call {@link #getExitValue(int)} to test if the process terminates normally.<br>
+	 *    This method expects the sub-thread's termination, if not terminated, then it will<br>
+	 *    wait its termination for xxx seconds, if still not terminated, then throw out IllegalThreadStateException.<br>
+	 * 2. User can get the process output from {@link #stdout} and {@link #stderr}.<br>
+	 * 
+	 */
 	public static class ProcessCapture implements Runnable{
 		public static final int DEFAULT_PAUSE_FOR_READY = 20;
-		public static final int DEFAULT_TIME_WAIT_PROCESS = 10000;
+		public static final int DEFAULT_TIME_WAIT_PROCESS = 30*1000;
 		
 		protected Process process = null;
 		/** time in milliseconds to pause to wait for stdout/stderr is ready. */
@@ -167,12 +178,18 @@ public class ResetCommitDate{
 			}
 		}
 
-		public int getExitValue(){
+		/**
+		 * This method is used to test if the process terminates normally.<br>
+		 * This method expects the sub-thread's termination, if not terminated, then it will<br>
+		 * wait its termination for xxx seconds, if still not terminated, then throw out IllegalThreadStateException.<br>
+		 * @param timeoutInSeconds int, the timeout in seconds to get process's exit value.
+		 * @return int, the process's exit value. 0 means normal.
+		 */
+		public int getExitValue(int timeoutInSeconds){
 			if(!isShutdown()){
 				println("waitting for process thread terminates for another 10 seconds ... ");
 				int tries = 0;
-				int MAX_TRIES = 10;
-				while(!isShutdown() && tries++<MAX_TRIES){
+				while(!isShutdown() && tries++<timeoutInSeconds){
 					try{ Thread.sleep(1000);}catch(Exception e){}
 				}
 			}
