@@ -919,7 +919,7 @@
    	   <antcall target="reset.last.modified">
    	   	 <param name="git.repo.tree" value="${git.wdir.core}" />
          <param name="git.repo.name" value="${git.repo.core}" />
-         <param name="sub.dirs" value="dependencies;src/install/lib" />
+         <param name="sub.dirs" value="dependencies;src/install/lib;src/org/safs/selenium/install/extra;src/org/safs/selenium/install/install" />
    	   </antcall>
 
    </target>
