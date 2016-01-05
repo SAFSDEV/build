@@ -190,5 +190,127 @@
             <arg value="build.update.jar" />
       </java>
   </target>
+  
+  <target name="run.regression.test" depends="seleniumplus.lib.update.runtime, git.clone.se.regression">
+  	<!-- TODO: use java task instead of batch script to avoid OS dependency -->
+	<exec executable="cmd"
+		  dir="${git.wdir.seplus.regression}"
+		  resultproperty="exec.rc"
+		  outputproperty="exec.output"
+		  errorproperty="exec.error">
+	  <arg value="/c"/>
+	  <arg value="runAutomation.bat"/>
+	</exec>
+  	
+  	<!-- The regression will return failure-number as result, if it is not zero, then this task will fail. -->
+	<fail message="There is some failure with regression running. For details, refer to log files under '${git.wdir.seplus.regression}\Logs'.">
+      <condition>
+		<not><equals arg1="${exec.rc}" arg2="0"/></not>
+      </condition>
+	</fail>
+  </target>
+	
+  <target name="seleniumplus.lib.update.runtime" description="update seleniumplus libarary runtime environment" >
+	<antcallback target="update.runtime" return="java.rc, java.output, java.error">
+	  <param name="update.runtime.jar" value="${SELENIUM_PLUS}\update_bak\libs\safsupdate.jar" />
+	  <param name="update.runtime.log" value="${SELENIUM_PLUS}\${update.runtime.se.libs.log}" />
+	  <param name="update.runtime.title" value="SeleniumPlus Libs Update" />
+	  <param name="update.runtime.source.zip" value="${SE_LIB_UPDATE}" />
+	  <param name="update.runtime.target.dir" value="${SELENIUM_PLUS}" />
+	  <param name="update.runtime.backup.dir" value="${SELENIUM_PLUS}\update_bak" />
+	  <param name="debug" value="false" />
+	</antcallback>
+
+  	<!-- If update fails, then this task will fail.-->
+	<fail message="Fail to update selenium plus library runtime. For details, refer to file '${SELENIUM_PLUS}\${update.runtime.se.libs.log}'.">
+      <condition>
+		<or>
+		  <equals arg1="${java.rc}" arg2="-1"/>
+		  <equals arg1="${java.rc}" arg2="-2"/>
+		</or>
+      </condition>
+	</fail>
+  </target>
+	
+  <target name="seleniumplus.pulgin.update.runtime" description="update seleniumplus plugin runtime environment" >
+	<antcallback target="update.runtime" return="java.rc, java.output, java.error">
+	  <param name="update.runtime.jar" value="${SELENIUM_PLUS}\update_bak\libs\safsupdate.jar" />
+	  <param name="update.runtime.log" value="${SELENIUM_PLUS}\${update.runtime.se.plugin.log}" />
+	  <param name="update.runtime.title" value="SeleniumPlus Plugin Update" />
+	  <param name="update.runtime.source.zip" value="${SE_PLUGIN_UPDATE}" />
+	  <param name="update.runtime.target.dir" value="${SELENIUM_PLUS}\eclipse\plugins" />
+	  <param name="update.runtime.backup.dir" value="${SELENIUM_PLUS}\eclipse\plugins\update_bak" />
+	  <param name="debug" value="false" />
+	</antcallback>
+
+  	<!-- If update fails, then this task will fail.-->
+	<fail message="Fail to update selenium plus plugin runtime. For details, refer to file '${SELENIUM_PLUS}\${update.runtime.se.plugin.log}'.">
+		<condition>
+		  <or>
+			<equals arg1="${java.rc}" arg2="-1"/>
+			<equals arg1="${java.rc}" arg2="-2"/>
+		  </or>
+    </condition>
+	</fail>
+  </target>
+	
+  <!--                                                                                      -->
+  <!--                          update.runtime                                              -->
+  <!--                                                                                      -->
+  <!--  Update SeleniumPlus/SAFS runtime environment                                        -->
+  <!--                                                                                      -->
+  <!--  Example command-line invocation:                                                    -->
+  <!--                                                                                      -->
+  <!--  java -jar %SELENIUM_PLUS%\update_bak\libs\safsupdate.jar -r -a -q -prompt:"SeleniumPlus Libs Update" -s:"%SE_LIB_UPDATE%" -t:"%SELENIUM_PLUS%" -b:"%SELENIUM_PLUS%\update_bak"                 -->
+  <!--                                                                                      -->
+  <!--  requires:                                                                           -->
+  <!--            ${update.runtime.jar}                                                     -->
+  <!--            ${update.runtime.log}                                                     -->
+  <!--            ${update.runtime.title}                                                   -->
+  <!--            ${update.runtime.source.zip}                                              -->
+  <!--            ${update.runtime.target.dir}                                              -->
+  <!--            ${update.runtime.backup.dir}                                              -->
+  <!--  option:                                                                             -->
+  <!--            ${debug}                                                                  -->
+  <!--  return:                                                                             -->
+  <!--            ${java.rc}                                                                -->
+  <!--            ${java.output}                                                            -->
+  <!--            ${java.error}                                                             -->	
+  <!--                                                                                      -->
+  <target name="update.runtime" description="update runtime environment" >
+    <if><equals arg1="${debug}" arg2="true"/><then>
+      <echo>java -jar "${update.runtime.jar}" -r -a -q -prompt:"${update.runtime.title}" -s:"${update.runtime.source.zip}" -t:"${update.runtime.target.dir}" -b:"${update.runtime.backup.dir}"</echo>
+	  <echo>java out put can be found in file: ${update.runtime.log}</echo>
+	</then></if>
+    <java jar="${update.runtime.jar}"
+    	   fork="true"
+    	   output="${update.runtime.log}"
+	       resultproperty="java.rc"
+	       outputproperty="java.output"
+           errorproperty="java.error" >
+        <arg value="-r" /> 
+        <arg value="-a" /> 
+        <arg value="-q" /> 
+        <arg value="-prompt:${update.runtime.title}" />
+        <arg value="-s:${update.runtime.source.zip}" />
+        <arg value="-t:${update.runtime.target.dir}" />
+        <arg value="-b:${update.runtime.backup.dir}" />
+    </java>
+	
+	<if><equals arg1="${debug}" arg2="true"/><then>
+	  <echo>java.rc: ${java.rc}</echo>
+	  <echo>java.output: ${java.output}</echo>
+	  <echo>java.error: ${java.error}</echo>
+	</then></if>
+  </target>
+
+  <target name="git.clone.se.regression" description="Clone from GitHub SAFSDEV/SeleniumPlus-REGRESSION" >
+	<antcall target="git.repo.clone">
+	  <param name="git.repo.tree" value="${git.wdir.seplus.regression}" />
+	  <param name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
+	  <param name="git.repo.name" value="${git.repo.seplus.regression}" />
+	  <param name="git.repo.branch" value="${git.branch.seplus.regression}" />
+	</antcall>
+  </target>
 
 </project>  
