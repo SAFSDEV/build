@@ -122,7 +122,7 @@ copy safsupdate.jar %EXTSAFSLIBS%
 copy safsupdate.jar %SAFSEXPLIBS%
 
 :SAFSSELENIUM_JAR
-%JRE%\jar cmf META-INF\MANIFEST.SELENIUM.MF safsselenium.jar org\safs\selenium\
+%JRE%\jar cmf META-INF\MANIFEST.SELENIUM.MF safsselenium.jar org\safs\selenium\ com\sebuilder\interpreter\
 copy safsselenium.jar %EXTSAFSLIBS%
 copy safsselenium.jar %SAFSEXPLIBS%
 

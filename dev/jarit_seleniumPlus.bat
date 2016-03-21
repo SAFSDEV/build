@@ -45,6 +45,7 @@ SET SELENIUMUPDATE=C:\Public\SeleniumPlus\update\libs
 %JRE%\jar uf %JARFILE% org\safs\tools\
 %JRE%\jar uf %JARFILE% org\w3c\tools\codec\
 %JRE%\jar uf %JARFILE% org\safs\xml\
+%JRE%\jar uf %JARFILE% com\sebuilder\interpreter\
 
 cd \sqarepos\ddengine\datastorej
 
