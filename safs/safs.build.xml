@@ -394,7 +394,8 @@
       <jar destfile="${safsjars}/safsselenium.jar"
            manifest="${classes}/META-INF/MANIFEST.SELENIUM.MF"
            basedir="${classes}"
-           includes="org/safs/selenium/**" />
+           includes="org/safs/selenium/**, 
+                     com/sebuilder/interpreter/**" />
 
       <jar destfile="${safsjars}/safssockets.jar"
            basedir="${classes}"
