@@ -48,7 +48,8 @@
 		     org\safs\rmi\engine\**
 		     org\w3c\tools\codec\**
       	 	 org\safs\net\**
-		     org\safs\xml\**"
+		     org\safs\xml\**
+		     com\sebuilder\interpreter\**"
                      
            excludes="org/safs/selenium/install/
                      org/safs/model/examples/
