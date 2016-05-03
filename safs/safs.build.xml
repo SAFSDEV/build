@@ -615,7 +615,9 @@
                      safsvars.jar" />
                      
        <fileset dir="${safssource}/install/lib/"
-	 	includes="javax.mail.jar" />
+	 	includes="javax.mail.jar
+       	          org.json.jar
+      	          jna-*4.2.2.jar" />
      </zip>
   </target>
 
@@ -704,7 +706,8 @@
       </copy>
 
       <copy todir="${safsdist}/install/lib" preservelastmodified="true" >
-          <fileset dir="${safssource}/install/lib" includes="jna*.zip 
+          <fileset dir="${safssource}/install/lib" includes="jna*.zip
+          	                                                 jna-*4.2.2.jar
           	                                                 juniversalchardet*.jar"/>
         <fileset dir="${safsjars}" includes="safsinstall.jar "/>
       </copy>
@@ -722,6 +725,7 @@
                                                               java.policy
                                                               ja*.jar
                                                               jna*.zip
+          	                                                  jna-*4.2.2.jar
                                                               JSTAF*.jar
                                                               org.json.jar
                                                               juniversalchardet*.jar
