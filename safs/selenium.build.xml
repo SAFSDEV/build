@@ -76,7 +76,8 @@
 			     safsvars.jar" />
 			 <fileset dir="${safssource}/install/lib/"
 			 	includes="javax.mail.jar
-			 		org.json.jar" />
+			 	          org.json.jar
+			 	          jna-*4.2.2.jar" />
 		      </zip>
   </target>
   
@@ -144,6 +145,7 @@
                                                               org.json.jar
                                                               juniversalchardet*.jar
                                                               jna.zip
+                                                              jna-*4.2.2.jar
                                                               javax.mail.jar
                                                               platform.zip
                                                               win32-x86.zip" />
@@ -171,7 +173,7 @@
                      install/**
                      uninstall/**
                      Java/**
-		     Java64/**
+                     Java64/**
                      extra/**
                      eclipse/**
                      doc/**" />
