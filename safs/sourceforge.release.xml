@@ -94,7 +94,7 @@
 																AutoItX4Java.jar
 																jacob.jar" />
 		</copy>
-				
+
 		<copy todir="${dir.temp}/extra" preservelastmodified="true">
 			<fileset dir="${dir.selenium}/" includes="chromedriver.exe
 													IEDriverServer.exe
@@ -104,24 +104,17 @@
 				                                                                      *.vbs" />
 		</copy>
 		
-		<zip destfile="${dir.updatesite}/${dir.lib}/${dir.latest}/${safs.zip.lib}"
-         basedir="${dir.temp}"
-    />
-
+		<!--  Get ready the "Update zip files"  -->
+		<zip destfile="${dir.updatesite}/${dir.lib}/${dir.latest}/${safs.zip.lib}" basedir="${dir.temp}"/>
 		<copy file="${dir.updatesite}/${dir.lib}/${dir.latest}/${safs.zip.lib}" 
     	  tofile="${dir.updatesite}/${dir.lib}/${build.date}_${build.time}/${safs.zip.lib}" 
     	  preservelastmodified="true"/>
-
 		<delete dir="${dir.temp}" />
 
-		<!--                  -->
-		<!-- Release zip file -->
-		<!--                  -->
-
+		<!--  Get ready the "Release zip files"  -->
 		<copy file="${dir.dist}/${safs.zip.release}"
           tofile="${dir.updatesite}/${dir.release}/${dir.latest}/${safs.zip.release}" 
           preservelastmodified="true"/>
-
 		<copy file="${dir.updatesite}/${dir.release}/${dir.latest}/${safs.zip.release}"
           tofile="${dir.updatesite}/${dir.release}/${build.date}_${build.time}/${safs.zip.release}" 
           preservelastmodified="true"/>
@@ -174,36 +167,25 @@
 				                                                                      *.vbs" />
 		</copy>
 
+	    <!--  Get ready the "Update zip files"  -->	
 		<zip destfile="${dir.updatesite}/${dir.lib}/${dir.latest}/${selenium.zip.lib}" basedir="${dir.temp}" />
-
 		<copy file="${dir.updatesite}/${dir.lib}/${dir.latest}/${selenium.zip.lib}" 
     	  tofile="${dir.updatesite}/${dir.lib}/${build.date}_${build.time}/${selenium.zip.lib}" 
     	  preservelastmodified="true"/>
-
 		<delete dir="${dir.temp}" />
 
-
-		<!--                    -->
-		<!--  Plugin zip files  -->
-		<!--                    -->
-
+	    <!--  Get ready the "Plugin zip files"  -->		
 		<zip destfile="${dir.updatesite}/${dir.plugin}/${dir.latest}/${selenium.zip.plugin}">
-			<fileset dir="${dir.safsjars}" 
-    	includes="${selenium.jar.plugin}"/>
+			<fileset dir="${dir.safsjars}" includes="${selenium.jar.plugin}"/>
 		</zip>
-
 		<copy file="${dir.updatesite}/${dir.plugin}/${dir.latest}/${selenium.zip.plugin}" 
     	  tofile="${dir.updatesite}/${dir.plugin}/${build.date}_${build.time}/${selenium.zip.plugin}" 
     	  preservelastmodified="true"/>
 
-		<!--                  -->
-		<!-- Release zip file -->
-		<!--                  -->
-
+	    <!--  Get ready the "Release zip files"  -->		
 		<copy file="${dir.dist}/${selenium.zip.designer}"
           tofile="${dir.updatesite}/${dir.release}/${dir.latest}/${selenium.zip.release}" 
           preservelastmodified="true"/>
-
 		<copy file="${dir.updatesite}/${dir.release}/${dir.latest}/${selenium.zip.release}"
           tofile="${dir.updatesite}/${dir.release}/${build.date}_${build.time}/${selenium.zip.release}" 
           preservelastmodified="true"/>
