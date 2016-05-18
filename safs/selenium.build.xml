@@ -203,6 +203,7 @@
 		  errorproperty="exec.error">
 	  <arg value="/c"/>
 	  <arg value="runAutomation.bat"/>
+	  <arg value="${TestBrowserNameParam}"/>
 	</exec>
   	
   	<property name="current.dir" location="." />
