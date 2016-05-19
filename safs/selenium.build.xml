@@ -196,6 +196,13 @@
   
   <target name="run.regression.test" depends="seleniumplus.lib.update.runtime, git.clone.se.regression">
   	<!-- TODO: use java task instead of batch script to avoid OS dependency -->
+	
+	<!-- The variable 'TestBrowserNameParam' here is supposed to be defined by Jenkins when   -->
+	<!-- calling the 'run.regression.test' Ant Task. At default, if the Jenkins calls this    -->
+	<!-- task, it will use the browser defined in Regression MAP file. But the browser can    -->
+	<!-- also be changed by adding Java Options when calling 'run.regression.test' Ant task   -->
+	<!-- in Jenkins, like: '-DTestBrowserNameParam=explorer' or                               -->
+	<!--                   '-DTestBrowserNameParam="explorer chrome firefox"'.                -->
 	<if>
 		<not>
 			<isset property="TestBrowserNameParam"/>
