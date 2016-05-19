@@ -196,6 +196,15 @@
   
   <target name="run.regression.test" depends="seleniumplus.lib.update.runtime, git.clone.se.regression">
   	<!-- TODO: use java task instead of batch script to avoid OS dependency -->
+	<if>
+		<not>
+			<isset property="TestBrowserNameParam"/>
+		</not>
+		<then>
+			<property name="TestBrowserNameParam" value=""/>
+		</then>
+	</if>
+	
 	<exec executable="cmd"
 		  dir="${git.wdir.seplus.regression}"
 		  resultproperty="exec.rc"
