@@ -217,7 +217,7 @@
   	
   	<property name="current.dir" location="." />
   	<!-- The regression will return failure-number as result, if it is not zero, then this task will fail. -->
-  	<fail message="There are ${exec.rc} UNEXPECTED failures with regression test. For details, refer to log files under ${current.dir}\${git.wdir.seplus.regression}\Logs">
+  	<fail message="There are ${exec.rc} UNEXPECTED failures with parameter 'TestBrowserNameParam':'${TestBrowserNameParam}' in regression test. For details, refer to log files under ${current.dir}\${git.wdir.seplus.regression}\Logs">
       <condition>
 		<not><equals arg1="${exec.rc}" arg2="0"/></not>
       </condition>
