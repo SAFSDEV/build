@@ -209,7 +209,11 @@
 		</not>
 		<then>
 			<property name="TestBrowserNameParam" value=""/>
+			<property name="TestBrowserNamePrefix" value=""/>
 		</then>
+		<else>
+			<property name="TestBrowserNamePrefix" value="/browser"/>
+		</else>
 	</if>
 	
 	<exec executable="cmd"
@@ -219,6 +223,7 @@
 		  errorproperty="exec.error">
 	  <arg value="/c"/>
 	  <arg value="runAutomation.bat"/>
+	  <arg value="${TestBrowserNamePrefix}" />
 	  <arg value="${TestBrowserNameParam}"/>
 	</exec>
   	
