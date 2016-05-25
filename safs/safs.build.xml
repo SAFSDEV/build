@@ -616,8 +616,9 @@
                      
        <fileset dir="${safssource}/install/lib/"
 	 	includes="javax.mail.jar
-       	          org.json.jar
-      	          jna-*4.2.2.jar" />
+	 	          org.json.jar 
+	 	          groovy-all-2.4.3.jar 
+	 	          spock-core-1.0-groovy-2.4.jar" />
      </zip>
   </target>
 
@@ -652,14 +653,14 @@
   
   <target name="safs.win.dist" depends="_make.safs.dist" >
       <ftp action="get" remotedir="${safsdev.win.java}" server="${public.ftpserver}" userid="${public.ftpuserid}" password="${public.ftppasswd}"  preservelastmodified="true" >
-          <fileset dir="${safsdist}/jre" includes="JRE*WIN.ZIP" /></ftp>
+          <fileset dir="${safsdist}/jre" includes="${JRE_WINDOWS}" /></ftp>
           
       <unzip dest="${safsdist}/jre" >
-          <fileset dir="${safsdist}/jre/" includes="JRE*WIN.ZIP" >
+          <fileset dir="${safsdist}/jre/" includes="${JRE_WINDOWS}" >
               <patternset  includes="jre/**" /></fileset></unzip>
               
       <delete >
-          <fileset dir="${safsdist}/jre/" includes="JRE*WIN.ZIP" /></delete>
+          <fileset dir="${safsdist}/jre/" includes="${JRE_WINDOWS}" /></delete>
       
       <copy todir="${safsdist}/" preservelastmodified="true" >
           <fileset dir="${safssource}/install/" includes="GNU*.txt
@@ -706,8 +707,7 @@
       </copy>
 
       <copy todir="${safsdist}/install/lib" preservelastmodified="true" >
-          <fileset dir="${safssource}/install/lib" includes="jna*.zip
-          	                                                 jna-*4.2.2.jar
+          <fileset dir="${safssource}/install/lib" includes="jna*.zip 
           	                                                 juniversalchardet*.jar"/>
         <fileset dir="${safsjars}" includes="safsinstall.jar "/>
       </copy>
@@ -725,7 +725,7 @@
                                                               java.policy
                                                               ja*.jar
                                                               jna*.zip
-          	                                                  jna-*4.2.2.jar
+                                                              jna*.jar 
                                                               JSTAF*.jar
                                                               org.json.jar
                                                               juniversalchardet*.jar
@@ -733,6 +733,8 @@
                                                               platform.zip
                                                               safsjvmagent.properties
                                                               javax.mail.jar
+                                                              groovy-all-2.4.3.jar 
+                                                              spock-core-1.0-groovy-2.4.jar
                                                               win32-x86.zip" 
                                                               
                                                     excludes="JSTAF3.jar
