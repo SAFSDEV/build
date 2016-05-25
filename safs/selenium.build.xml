@@ -76,8 +76,9 @@
 			     safsvars.jar" />
 			 <fileset dir="${safssource}/install/lib/"
 			 	includes="javax.mail.jar
-			 	          org.json.jar
-			 	          jna-*4.2.2.jar" />
+			 		      org.json.jar 
+			 		      spock-core-1.0-groovy-2.4.jar 
+			 		      groovy-all-2.4.3.jar" />
 		      </zip>
   </target>
   
@@ -94,11 +95,11 @@
   <target name="seleniumplus.win.dist" depends="_make.sp.dist" >
 
       <ftp action="get" remotedir="${safsdev.win.java}" server="${public.ftpserver}" userid="${public.ftpuserid}" password="${public.ftppasswd}"  preservelastmodified="true" >
-          <fileset dir="${seleniumdist}/Java" includes="JDK*WIN.ZIP" /></ftp>
+          <fileset dir="${seleniumdist}/Java" includes="${JDK_WINDOWS}" /></ftp>
       <ftp action="get" remotedir="${safsdev.win.java}" server="${public.ftpserver}" userid="${public.ftpuserid}" password="${public.ftppasswd}"  preservelastmodified="true" >
-          <fileset dir="${seleniumdist}/Java64" includes="JRE*64*WIN.ZIP" /></ftp>
+          <fileset dir="${seleniumdist}/Java64" includes="${JRE64_WINDOWS}" /></ftp>
       <ftp action="get" remotedir="${safsdev.win.eclipse}" server="${public.ftpserver}" userid="${public.ftpuserid}" password="${public.ftppasswd}"  preservelastmodified="true" >
-          <fileset dir="${seleniumdist}/eclipse" includes="*WIN.ZIP" /></ftp>
+          <fileset dir="${seleniumdist}/eclipse" includes="${ECLIPSE_WINDOWS}" /></ftp>
       <copy todir="${seleniumdist}/extra/automation/bin/" preservelastmodified="true" >
         <fileset dir="${safs.dependencies}/tools/ocr/ocrbin/" />
       </copy>
@@ -106,18 +107,18 @@
         <fileset dir="${safs.dependencies}/tools/ocr/ocr/" />
       </copy>
       <unzip dest="${seleniumdist}/Java/" >
-          <fileset dir="${seleniumdist}/Java/" includes="JDK*.ZIP"/>
+          <fileset dir="${seleniumdist}/Java/" includes="${JDK_WINDOWS}"/>
       </unzip>
       <unzip dest="${seleniumdist}/" >
-          <fileset dir="${seleniumdist}/Java64/" includes="JRE*_64_WIN.ZIP"/>
+          <fileset dir="${seleniumdist}/Java64/" includes="${JRE64_WINDOWS}"/>
       </unzip>
       <unzip dest="${seleniumdist}/eclipse/" >
-          <fileset dir="${seleniumdist}/eclipse/" includes="*.ZIP"/>
+          <fileset dir="${seleniumdist}/eclipse/" includes="${ECLIPSE_WINDOWS}"/>
       </unzip>
       <delete >
-          <fileset dir="${seleniumdist}/Java/" includes="JDK*WIN.ZIP" />
-	  <fileset dir="${seleniumdist}/Java64/" includes="JRE*_64_WIN.ZIP" />
-          <fileset dir="${seleniumdist}/eclipse/" includes="*WIN.ZIP" />
+          <fileset dir="${seleniumdist}/Java/" includes="${JDK_WINDOWS}" />
+	  	  <fileset dir="${seleniumdist}/Java64/" includes="${JRE64_WINDOWS}" />
+          <fileset dir="${seleniumdist}/eclipse/" includes="${ECLIPSE_WINDOWS}" />
       </delete>
       <copy todir="${seleniumdist}/eclipse/plugins"  preservelastmodified="true" >
           <fileset dir="${safsjars}" includes="Seleniumplus_plugin*.jar" /></copy>
@@ -142,10 +143,12 @@
           <fileset dir="${safssource}/install/lib/" includes="commons-logging-*.jar
                                                               ja*.jar
                                                               JSTAFEmbedded.jar
+                                                              groovy-all-2.4.3.jar
+                                                              spock-core-1.0-groovy-2.4.jar
                                                               org.json.jar
                                                               juniversalchardet*.jar
-                                                              jna.zip
-                                                              jna-*4.2.2.jar
+                                                              jna*.zip
+                                                              jna*.jar
                                                               javax.mail.jar
                                                               platform.zip
                                                               win32-x86.zip" />
@@ -173,7 +176,7 @@
                      install/**
                      uninstall/**
                      Java/**
-                     Java64/**
+		     Java64/**
                      extra/**
                      eclipse/**
                      doc/**" />
@@ -181,7 +184,7 @@
   </target>
 
   <target name="selenium.plugin.build" >
-      <java jar="${ECLIPSEJARS}/org.eclipse.equinox.launcher_1.3.0.v20130327-1440.jar"
+      <java jar="${ECLIPSEJARS}/${ECLIPSELAUNCHER}"
             fork="true"
             output="${basedir}/selenium.plugin.build.log" >
             <sysproperty key="ECLIPSEJARS" value="${ECLIPSEJARS}" />
