@@ -13,8 +13,6 @@ org.safs.android.engine.processor
 org.safs.android.messenger
 org.safs.android.messenger.client
 org.safs.android.remotecontrol
-org.safs.android.robot
-org.safs.android.tools.input
 org.safs.autoit
 org.safs.control
 org.safs.control.swing
@@ -56,6 +54,8 @@ org.safs.rational.logging
 org.safs.rational.win
 org.safs.rational.wpf
 org.safs.reflect
+org.safs.rest
+org.safs.rest.service
 org.safs.rmi.engine
 org.safs.robot
 org.safs.selenium
@@ -66,6 +66,8 @@ org.safs.selenium.util
 org.safs.selenium.webdriver
 org.safs.selenium.webdriver.lib
 org.safs.selenium.webdriver.lib.interpreter
+org.safs.selenium.webdriver.lib.interpreter.selrunner
+org.safs.selenium.webdriver.lib.interpreter.selrunner.steptype
 org.safs.selenium.webdriver.lib.model
 org.safs.sockets
 org.safs.sockets.android
@@ -101,4 +103,5 @@ org.safs.tools.status
 org.safs.tools.stringutils
 org.safs.tools.vars
 org.safs.xml
+org.slf4j.impl
 org.w3c.tools.codec

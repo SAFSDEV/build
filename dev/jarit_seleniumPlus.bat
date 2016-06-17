@@ -38,11 +38,13 @@ SET SELENIUMUPDATE=C:\Public\SeleniumPlus\update\libs
 %JRE%\jar uf %JARFILE% org\safs\net\
 %JRE%\jar uf %JARFILE% org\safs\natives\
 %JRE%\jar uf %JARFILE% org\safs\reflect\
+%JRE%\jar uf %JARFILE% org\safs\rest\
 %JRE%\jar uf %JARFILE% org\safs\rmi\
 %JRE%\jar uf %JARFILE% org\safs\robot\
 %JRE%\jar uf %JARFILE% org\safs\staf\
 %JRE%\jar uf %JARFILE% org\safs\text\
 %JRE%\jar uf %JARFILE% org\safs\tools\
+%JRE%\jar uf %JARFILE% org\slf4j\impl\
 %JRE%\jar uf %JARFILE% org\w3c\tools\codec\
 %JRE%\jar uf %JARFILE% org\safs\xml\
 %JRE%\jar uf %JARFILE% com\sebuilder\interpreter\
