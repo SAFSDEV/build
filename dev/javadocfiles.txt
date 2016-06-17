@@ -26,6 +26,7 @@ org.safs.ios
 org.safs.jvmagent
 org.safs.jvmagent.agents
 org.safs.logging
+org.safs.logging.slf4j
 org.safs.model
 org.safs.model.annotations
 org.safs.model.commands
