@@ -3,6 +3,7 @@
 <!-- 2014.08.15  Carl Nagle  Initial Release                      -->
 <!-- 2014.08.19  Carl Nagle  SAFS Include for build.xml Include   -->
 <!-- 2014.10.21  DHARMESH4  Add safsupdate.jar as third party -->
+<!-- 2016.06.16  Carl Nagle  Add slf4j-api as third party         -->
 <!--                                                          -->
 <project name="safs_build" basedir="." >
 
@@ -41,6 +42,7 @@
 		  source/common/META-INF
                   source/common/org
                   source/common/org/safs
+                  source/common/org/slf4j
                   source/common/org/w3c
                   source/common/STAF-INF
                   source/rrafs/doc"    
@@ -518,6 +520,7 @@
                      org\safs\staf\**,
                      org\safs\text\**,
                      org\safs\tools\**,
+                     org\slf4j\impl\**,
                      org\w3c\tools\codec\**,
                      org\safs\xml\**" />
 
@@ -618,7 +621,8 @@
 	 	includes="javax.mail.jar
 	 	          org.json.jar 
 	 	          groovy-all-2.4.3.jar 
-	 	          spock-core-1.0-groovy-2.4.jar" />
+	 	          spock-core-1.0-groovy-2.4.jar
+	 	          slf4j-api-1.7.21.jar" />
      </zip>
   </target>
 
@@ -735,6 +739,7 @@
                                                               javax.mail.jar
                                                               groovy-all-2.4.3.jar 
                                                               spock-core-1.0-groovy-2.4.jar
+                                                              slf4j-api-1.7.21.jar
                                                               win32-x86.zip" 
                                                               
                                                     excludes="JSTAF3.jar
