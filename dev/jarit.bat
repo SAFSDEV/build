@@ -251,12 +251,15 @@ copy safsjvmagent.jar %SAFSEXPLIBS%
 %JRE%\jar uf safs.jar org\safs\net\
 %JRE%\jar uf safs.jar org\safs\natives\
 %JRE%\jar uf safs.jar org\safs\reflect\
+%JRE%\jar uf safs.jar org\safs\rest\
 %JRE%\jar uf safs.jar org\safs\rmi\
 %JRE%\jar uf safs.jar org\safs\robot\
 %JRE%\jar uf safs.jar org\safs\sockets\
 %JRE%\jar uf safs.jar org\safs\staf\
 %JRE%\jar uf safs.jar org\safs\text\
 %JRE%\jar uf safs.jar org\safs\tools\
+
+%JRE%\jar uf safs.jar org\slf4j\impl\
 %JRE%\jar uf safs.jar org\w3c\tools\codec\
 
 @REM %JRE%\jar uf safs.jar org\safs\tools\counters\

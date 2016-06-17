@@ -36,6 +36,7 @@ SET JRE=C:\Progra~1\Java\jdk1.7.0_40\bin
 %JRE%\jar uf .\classes\_safs-source-update.zip org\safs\tools\*.*
 %JRE%\jar uf .\classes\_safs-source-update.zip org\safs\selenium\*.* 
 %JRE%\jar uf .\classes\_safs-source-update.zip org\safs\xml\*.*
+%JRE%\jar uf .\classes\_safs-source-update.zip org\slf4j\impl\*.*
 %JRE%\jar uf .\classes\_safs-source-update.zip org\w3c\tools\codec\*.*
 %JRE%\jar uf .\classes\_safs-source-update.zip resources\TestScrip*.* resources\RunProcessContaine*.* resources\DatastoreDefinition.rftdsd
 
