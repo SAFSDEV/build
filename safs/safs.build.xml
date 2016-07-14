@@ -127,14 +127,6 @@
       
   </target>
 
-  <!--                                                   -->
-  <!-- Property 'Private.FTPServer.isConnected' is used  -->
-  <!-- to test if the private FTP server is reachable.   -->
-  <!--                                                   -->
-  <condition property="Private.FTPServer.isConnected">
-    <isreachable host="${private.ftpserver}" timeout="10" />
-  </condition>
-
   <!--                                                                                              -->
   <!--              prepare.dependencies                                                            -->
   <!--   Get all 3rd party jars prepared in folder ${libs}                                          -->
@@ -151,8 +143,8 @@
     <copy todir="${libs}" preservelastmodified="true" >
         <fileset dir="${safs.dependencies}"/>
     </copy>
+    
     <echo>Get/Update all 3rd party jars from FTP Server</echo>
-	
 	<if>
   		<isset property="Private.FTPServer.isConnected" />
   		<then>
@@ -160,20 +152,11 @@
   				<fileset dir="${rftlibs}"/> 
   			</ftp>
   		</then>
-  	</if>	
+  	</if>
     <!-- do we need this safslibs? golden safsupdate.jar -->
 	<copy todir="${safslibs}" preservelastmodified="true" >
         <fileset dir="${safs.dependencies}/safs" includes="*.exe,*.jar,*.zip" />
     </copy>
-    <!-- get the open source jar from github instead of internal FTP server -->
-  	<!--ftp action="get" remotedir="${staflibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
-        <fileset dir="${staflibs}"/></ftp>
-    <ftp action="get" remotedir="${cukeslibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}" preservelastmodified="true"  >
-        <fileset dir="${cukeslibs}" excludes="*.pom,*-javadoc.jar"/></ftp>
-    <ftp action="get" remotedir="${droidlibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
-        <fileset dir="${droidlibs}"/></ftp>
-    <ftp action="get" remotedir="${seleniumlibs}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswrd}"  preservelastmodified="true" >
-        <fileset dir="${seleniumlibs}" includes="*.exe,*.jar,*.zip" /></ftp-->
   </target>
   
   <!--                                                -->
@@ -655,8 +638,8 @@
      <mkdir  dir="${safsdist}/uninstall" />
   </target>
   
-  <target name="safs.win.dist" depends="_make.safs.dist" >
-      <ftp action="get" remotedir="${safsdev.win.java}" server="${public.ftpserver}" userid="${public.ftpuserid}" password="${public.ftppasswd}"  preservelastmodified="true" >
+  <target name="safs.win.dist" depends="_make.safs.dist, prepare.ftp.connection" >
+      <ftp action="get" remotedir="${safsdev.win.java}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswd}"  preservelastmodified="true" >
           <fileset dir="${safsdist}/jre" includes="${JRE_WINDOWS}" /></ftp>
           
       <unzip dest="${safsdist}/jre" >
