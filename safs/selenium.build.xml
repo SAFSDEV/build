@@ -94,13 +94,13 @@
      <mkdir dir="${seleniumdist}/eclipse" />
   </target>
   
-  <target name="seleniumplus.win.dist" depends="_make.sp.dist" >
+  <target name="seleniumplus.win.dist" depends="_make.sp.dist, prepare.ftp.connection" >
 
-      <ftp action="get" remotedir="${safsdev.win.java}" server="${public.ftpserver}" userid="${public.ftpuserid}" password="${public.ftppasswd}"  preservelastmodified="true" >
+      <ftp action="get" remotedir="${safsdev.win.java}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswd}"  preservelastmodified="true" >
           <fileset dir="${seleniumdist}/Java" includes="${JDK_WINDOWS}" /></ftp>
-      <ftp action="get" remotedir="${safsdev.win.java}" server="${public.ftpserver}" userid="${public.ftpuserid}" password="${public.ftppasswd}"  preservelastmodified="true" >
+      <ftp action="get" remotedir="${safsdev.win.java}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswd}"  preservelastmodified="true" >
           <fileset dir="${seleniumdist}/Java64" includes="${JRE64_WINDOWS}" /></ftp>
-      <ftp action="get" remotedir="${safsdev.win.eclipse}" server="${public.ftpserver}" userid="${public.ftpuserid}" password="${public.ftppasswd}"  preservelastmodified="true" >
+      <ftp action="get" remotedir="${safsdev.win.eclipse}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswd}"  preservelastmodified="true" >
           <fileset dir="${seleniumdist}/eclipse" includes="${ECLIPSE_WINDOWS}" /></ftp>
       <copy todir="${seleniumdist}/extra/automation/bin/" preservelastmodified="true" >
         <fileset dir="${safs.dependencies}/tools/ocr/ocrbin/" />
