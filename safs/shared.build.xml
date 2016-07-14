@@ -1,0 +1,35 @@
+
+<!-- This build XML is supposed to provide common target etc. -->
+
+<project name="shared_target" basedir=".">
+
+	<!-- Property 'Private.FTPServer.isConnected' is used -->
+	<!-- to test if the private FTP server is reachable. -->
+	<condition property="Private.FTPServer.isConnected">
+		<isreachable host="${private.ftpserver}" timeout="10" />
+	</condition>
+    
+	<!-- Prepare for FTP server connection  -->
+	<!-- Currently, we set the server-name, user and password. -->
+	<!-- We have 2 FTP servers, one is private and the other is public -->
+	<!-- We prefer to use the private FTP server if it is connectable -->
+	<target name="prepare.ftp.connection">
+		<if>
+			<isset property="Private.FTPServer.isConnected" />
+			<then>
+				<property name="ftpserver"  value="${private.ftpserver}" />
+				<property name="ftpuserid"  value="${private.ftpuserid}" />
+				<property name="ftppasswd"  value="${private.ftppasswd}" />
+			</then>
+			<else>
+				<property name="ftpserver"  value="${public.ftpserver}" />
+				<property name="ftpuserid"  value="${public.ftpuserid}" />
+				<property name="ftppasswd"  value="${public.ftppasswd}" />
+			</else>
+		</if>
+		<echo>we are using '${ftpserver}' as FTP server.</echo>
+		<!-- echo>FTP userid is ${ftpuserid}</echo-->
+		<!-- echo>FTP passwd is ${ftppasswd}</echo-->
+	</target>
+
+</project>
