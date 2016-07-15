@@ -638,9 +638,11 @@
      <mkdir  dir="${safsdist}/uninstall" />
   </target>
   
-  <target name="safs.win.dist" depends="_make.safs.dist, prepare.ftp.connection" >
-      <ftp action="get" remotedir="${safsdev.win.java}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswd}"  preservelastmodified="true" >
-          <fileset dir="${safsdist}/jre" includes="${JRE_WINDOWS}" /></ftp>
+  <target name="safs.win.dist" depends="_make.safs.dist, prepare.download" >
+      <!-- ftp action="get" remotedir="${safsdev.win.java}" server="$server}" userid="$userid}" password="$passwd}"  preservelastmodified="true" >
+          <fileset dir="${safsdist}/jre" includes="${JRE_WINDOWS}" /></ftp-->
+      <get dest="${safsdist}/jre" username="${userid}" password="${passwd}" usetimestamp="true">
+            <url url="${server}${safsdev.win.java}/${JRE_WINDOWS}"/></get>
           
       <unzip dest="${safsdist}/jre" >
           <fileset dir="${safsdist}/jre/" includes="${JRE_WINDOWS}" >

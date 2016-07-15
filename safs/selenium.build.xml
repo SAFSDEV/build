@@ -94,14 +94,22 @@
      <mkdir dir="${seleniumdist}/eclipse" />
   </target>
   
-  <target name="seleniumplus.win.dist" depends="_make.sp.dist, prepare.ftp.connection" >
+  <target name="seleniumplus.win.dist" depends="_make.sp.dist, prepare.download" >
 
-      <ftp action="get" remotedir="${safsdev.win.java}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswd}"  preservelastmodified="true" >
+      <!-- ftp action="get" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
           <fileset dir="${seleniumdist}/Java" includes="${JDK_WINDOWS}" /></ftp>
-      <ftp action="get" remotedir="${safsdev.win.java}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswd}"  preservelastmodified="true" >
+      <ftp action="get" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
           <fileset dir="${seleniumdist}/Java64" includes="${JRE64_WINDOWS}" /></ftp>
-      <ftp action="get" remotedir="${safsdev.win.eclipse}" server="${ftpserver}" userid="${ftpuserid}" password="${ftppasswd}"  preservelastmodified="true" >
-          <fileset dir="${seleniumdist}/eclipse" includes="${ECLIPSE_WINDOWS}" /></ftp>
+      <ftp action="get" remotedir="${safsdev.win.eclipse}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/eclipse" includes="${ECLIPSE_WINDOWS}" /></ftp-->
+
+      <get dest="${seleniumdist}/Java" username="${userid}" password="${passwd}" usetimestamp="true">
+          <url url="${server}${safsdev.win.java}/${JDK_WINDOWS}"/></get>   
+      <get dest="${seleniumdist}/Java64" username="${userid}" password="${passwd}" usetimestamp="true">
+          <url url="${server}${safsdev.win.java}/${JRE64_WINDOWS}"/></get>   
+      <get dest="${seleniumdist}/eclipse" username="${userid}" password="${passwd}" usetimestamp="true">
+          <url url="${server}${safsdev.win.eclipse}/${ECLIPSE_WINDOWS}"/></get>   
+          
       <copy todir="${seleniumdist}/extra/automation/bin/" preservelastmodified="true" >
         <fileset dir="${safs.dependencies}/tools/ocr/ocrbin/" />
       </copy>

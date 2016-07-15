@@ -9,27 +9,45 @@
 		<isreachable host="${private.ftpserver}" timeout="10" />
 	</condition>
     
-	<!-- Prepare for FTP server connection  -->
+	<!-- Prepare for server connection  -->
 	<!-- Currently, we set the server-name, user and password. -->
 	<!-- We have 2 FTP servers, one is private and the other is public -->
 	<!-- We prefer to use the private FTP server if it is connectable -->
-	<target name="prepare.ftp.connection">
-		<if>
+	
+	<!-- We used ant <ftp> to download files, now we use ant <get> to download files. -->
+	<!-- Concern: I DO NOT know if the ftp user/password could work with ant <get>    -->
+	<target name="prepare.download">
+		<!-- comment the setting for FTP Server, using ant <ftp> to download resources -->
+		<!--if>
 			<isset property="Private.FTPServer.isConnected" />
 			<then>
-				<property name="ftpserver"  value="${private.ftpserver}" />
-				<property name="ftpuserid"  value="${private.ftpuserid}" />
-				<property name="ftppasswd"  value="${private.ftppasswd}" />
+				<property name="server"  value="${private.ftpserver}" />
+				<property name="userid"  value="${private.ftpuserid}" />
+				<property name="passwd"  value="${private.ftppasswd}" />
 			</then>
 			<else>
-				<property name="ftpserver"  value="${public.ftpserver}" />
-				<property name="ftpuserid"  value="${public.ftpuserid}" />
-				<property name="ftppasswd"  value="${public.ftppasswd}" />
+				<property name="server"  value="${public.ftpserver}" />
+				<property name="userid"  value="${public.ftpuserid}" />
+				<property name="passwd"  value="${public.ftppasswd}" />
+			</else>
+		</if-->
+		<!-- currently we are using ant <get> to download resources -->
+		<if>
+			<isset property="Private.FTPServer.isConnecte" />
+			<then>
+				<property name="server"  value="ftp://${private.ftpserver}" />
+				<property name="userid"  value="${private.ftpuserid}" />
+				<property name="passwd"  value="${private.ftppasswd}" />
+			</then>
+			<else>
+				<property name="server"  value="http://${public.httpserver}" />
+				<property name="userid"  value="" />
+				<property name="passwd"  value="" />
 			</else>
 		</if>
-		<echo>we are using '${ftpserver}' as FTP server.</echo>
-		<!-- echo>FTP userid is ${ftpuserid}</echo-->
-		<!-- echo>FTP passwd is ${ftppasswd}</echo-->
+		<echo>we are using '${server}' as download server.</echo>
+		<!-- echo>userid is ${userid}</echo-->
+		<!-- echo>passwd is ${passwd}</echo-->
 	</target>
-
+	
 </project>
