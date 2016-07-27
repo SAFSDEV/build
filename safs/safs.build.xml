@@ -126,6 +126,67 @@
     <delete dir="${git.wdir.droid.sample}" />
       
   </target>
+  
+  <!--                                                                                              -->
+  <!--              update.safs.reference                                                           -->
+  <!--   Generate SAFS HTML documents according to the latest XML files                             -->
+  <!--   Then push the generated HTML files to GITHUB and SOURCEFORGE                               -->
+  <!--   This task requires that the OS is configured correctly to upload files to                  -->
+  <!--   GITHUB and SOURCEFORGE automatically without asking for user/password                      -->
+  <!--                                                                                              -->
+  <target name="update.safs.reference" depends="cleansource,
+                                                git.clone.keywords,
+                                                git.clone.core,
+                                                git.clone.github.io">
+    <property name="current.dir" location="." />
+
+    <mkdir dir="${safssource}"/>
+    <mkdir dir="${git.wdir.bin}"/>
+    <mkdir dir="${git.wdir.doc}"/>
+    
+    <!-- copy the latest script for generating SAFS HTML documents --> 
+    <move todir="${git.wdir.bin}" preservelastmodified="true">
+      <fileset dir="${git.wdir.core}/src/install/bin" includes="*.bat, *.exe"/></move>
+    <!-- copy the latest static HTML documents -->  
+    <move todir="${git.wdir.doc}" preservelastmodified="true">
+      <fileset dir="${git.wdir.core}/src/install/doc/static" includes="*.htm, *.js, *.css"/></move> 
+  
+    <!--  Generate the SAFS HTML DOCUMENT files -->
+    <exec executable="cmd"
+          dir="${git.wdir.bin}"
+          resultproperty="exec.rc"
+          outputproperty="exec.output"
+          errorproperty="exec.error">
+      <!-- Set the environment SAFSDIR for execution of XSLBuildALLReferenceDocs.bat -->
+      <env key="SAFSDIR" value="${current.dir}/${safssource}"/>
+      <arg value="/c"/>
+      <arg value="XSLBuildALLReferenceDocs.bat"/>
+    </exec>
+    <echo>${exec.output}</echo><!-- Show the standard output of generating SAFS document. -->
+    <fail message="Generating SAFS HTML DOCUMENTS failed: ${exec.error}"><!-- Show the standard error if SAFS doc generating failed.-->
+      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+    </fail>
+
+    <!-- Copy the generated SAFS Documents to GIT repository for push -->
+    <copy todir="${git.wdir.github.io}/sqabasic2000"  preservelastmodified="true" >
+        <fileset dir="${git.wdir.doc}" includes="*.html, *.htm, *.js, *.css"/></copy>
+    
+    <!-- Push modified files to GITHUB and SOURCEFORGE -->
+    <exec executable="cmd"
+          dir="${git.wdir.bin}"
+          resultproperty="exec.rc"
+          outputproperty="exec.output"
+          errorproperty="exec.error">
+      <arg value="/c"/>
+      <arg value="Push_SAFS_Reference.bat"/>
+      <arg value="${current.dir}\${git.wdir.github.io}\sqabasic2000"/>
+      <!-- arg value="enable_debug"/ -->
+    </exec>
+    <echo>${exec.output}</echo><!-- Show the standard output of pushing SAFS document. -->
+    <fail message="Pushing SAFS HTML DOCUMENTS failed: ${exec.error}"><!-- Show the standard error if SAFS doc pushing failed.-->
+      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+    </fail>
+  </target>
 
   <!--                                                                                              -->
   <!--              prepare.dependencies                                                            -->
@@ -1026,6 +1087,14 @@
        <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
        <var name="git.repo.name" value="${git.repo.droid.sample}" />
        <var name="git.repo.branch" value="${git.branch.droid.sample}" />
+       <antcall target="git.repo.clone" />
+   </target>
+   
+   <target name="git.clone.github.io" description="Clone from GitHub Documentation Pages for SAFSDEV" >
+       <var name="git.repo.tree" value="${git.wdir.github.io}" />
+       <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
+       <var name="git.repo.name" value="${git.repo.github.io}" />
+       <var name="git.repo.branch" value="${git.branch.github.io}" />
        <antcall target="git.repo.clone" />
    </target>
 
