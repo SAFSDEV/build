@@ -171,6 +171,10 @@
     <copy todir="${git.wdir.github.io}/sqabasic2000"  preservelastmodified="true" >
         <fileset dir="${git.wdir.doc}" includes="*.html, *.htm, *.js, *.css"/></copy>
     
+    <!-- we MUST clean the value of some global variables.-->
+    <var name="exec.rc" unset="true"/>
+    <var name="exec.output" unset="true"/>
+    <var name="exec.error" unset="true"/>
     <!-- Push modified files to GITHUB and SOURCEFORGE -->
     <exec executable="cmd"
           dir="${git.wdir.bin}"
@@ -180,6 +184,8 @@
       <arg value="/c"/>
       <arg value="Push_SAFS_Reference.bat"/>
       <arg value="${current.dir}\${git.wdir.github.io}\sqabasic2000"/>
+      <arg value="${sfuser.lei}"/>
+      <arg value="${rsaid.lei}"/>
       <!-- arg value="enable_debug"/ -->
     </exec>
     <echo>${exec.output}</echo><!-- Show the standard output of pushing SAFS document. -->
