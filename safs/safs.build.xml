@@ -146,7 +146,7 @@
     
     <!-- copy the latest script for generating SAFS HTML documents --> 
     <move todir="${git.wdir.bin}" preservelastmodified="true">
-      <fileset dir="${git.wdir.core}/src/install/bin" includes="*.bat, *.exe"/></move>
+      <fileset dir="${git.wdir.core}/src/install/bin" includes="*.bat, *.exe, *.scr"/></move>
     <!-- copy the latest static HTML documents -->  
     <move todir="${git.wdir.doc}" preservelastmodified="true">
       <fileset dir="${git.wdir.core}/src/install/doc/static" includes="*.htm, *.js, *.css"/></move> 
@@ -170,6 +170,9 @@
     <!-- Copy the generated SAFS Documents to GIT repository for push -->
     <copy todir="${git.wdir.github.io}/sqabasic2000"  preservelastmodified="true" >
         <fileset dir="${git.wdir.doc}" includes="*.html, *.htm, *.js, *.css"/></copy>
+    <!-- Copy the psftp script for copy/delete to/from sourceforge -->  
+    <copy todir="${git.wdir.github.io}/sqabasic2000"  preservelastmodified="true" >
+        <fileset dir="${git.wdir.bin}" includes="*.scr"/></copy>
     
     <!-- we MUST clean the value of some global variables.-->
     <var name="exec.rc" unset="true"/>
@@ -186,6 +189,8 @@
       <arg value="${current.dir}\${git.wdir.github.io}\sqabasic2000"/>
       <arg value="${sfuser.lei}"/>
       <arg value="${rsaid.lei}"/>
+      <arg value="${ftp.sf.put.script}"/>
+      <arg value="${ftp.sf.del.script}"/>
       <!-- arg value="enable_debug"/ -->
     </exec>
     <echo>${exec.output}</echo><!-- Show the standard output of pushing SAFS document. -->
