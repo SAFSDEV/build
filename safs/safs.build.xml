@@ -190,8 +190,8 @@
     <copy todir="${git.wdir.github.io}/sqabasic2000"  preservelastmodified="true" >
         <fileset dir="${git.wdir.doc}" includes="*.html, *.htm, *.js, *.css"/></copy>
     <echo>Copying the psftp script files for 'copy to'/'delete from' sourceforge</echo>  
-    <copy todir="${git.wdir.github.io}/sqabasic2000"  preservelastmodified="true" >
-        <fileset dir="${git.repo.bin}" includes="*.scr"/></copy>
+    <copy todir="${git.repo.github.io}/sqabasic2000"  preservelastmodified="true" >
+        <fileset dir="${git.wdir.bin}" includes="*.scr"/></copy>
 
     <echo>Pushing modified SAFS Reference files to GITHUB and SOURCEFORGE ...</echo>
     <var name="exec.rc" unset="true"/>
