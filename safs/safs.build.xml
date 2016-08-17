@@ -167,7 +167,7 @@
     <move todir="${git.wdir.doc}" preservelastmodified="true">
       <fileset dir="${git.wdir.core}/src/install/doc/static" includes="*.htm, *.js, *.css"/></move> 
   
-    <echo>Generating the SAFS Reference files ...</echo>
+    <echo>===&gt;&gt;&gt; Generating the SAFS Reference files ...</echo>
     <!-- we MUST clean the value of some global variables.-->
     <var name="exec.rc" unset="true"/>
     <var name="exec.output" unset="true"/>
@@ -193,7 +193,7 @@
     <copy todir="${git.repo.github.io}/sqabasic2000"  preservelastmodified="true" >
         <fileset dir="${git.wdir.bin}" includes="*.scr"/></copy>
 
-    <echo>Pushing modified SAFS Reference files to GITHUB and SOURCEFORGE ...</echo>
+    <echo>===&gt;&gt;&gt; Pushing modified SAFS Reference files to GITHUB and SOURCEFORGE ...</echo>
     <var name="exec.rc" unset="true"/>
     <var name="exec.output" unset="true"/>
     <var name="exec.error" unset="true"/>
@@ -218,7 +218,7 @@
       <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
     </fail>
     
-    <echo>Generating the SAFS Java Model files ...</echo>
+    <echo>===&gt;&gt;&gt; Generating the SAFS Java Model files ...</echo>
     <var name="exec.rc" unset="true"/>
     <var name="exec.output" unset="true"/>
     <var name="exec.error" unset="true"/>
@@ -240,7 +240,7 @@
     <copy todir="${git.wdir.core}/src/"  preservelastmodified="true" >
         <fileset dir="${git.wdir.source}" includes="**/*.java"/></copy>
         
-    <echo>Pushing modified SAFS Java Model files to GITHUB ...</echo>
+    <echo>===&gt;&gt;&gt; Pushing modified SAFS Java Model files to GITHUB ...</echo>
     <var name="exec.rc" unset="true"/>
     <var name="exec.output" unset="true"/>
     <var name="exec.error" unset="true"/>
@@ -263,7 +263,7 @@
     </fail>
     
     <!-- TODO, We still need to compile safs.core, droid.engine, droid.messenger to get classes ready -->
-    <echo>Generating the SAFS Java API files ...</echo>
+    <echo>===&gt;&gt;&gt; Generating the SAFS Java API files ...</echo>
     <path id="source.path.ref">
         <pathelement location="${git.wdir.core}/src"/>
         <pathelement location="${git.wdir.droid.engine}/src"/>
@@ -299,7 +299,7 @@
     <copy todir="${git.repo.github.io}/doc"  preservelastmodified="true" >
         <fileset dir="${git.wdir.bin}" includes="*.scr"/></copy>
 
-    <echo>Pushing modified SAFS Java API files to GITHUB and SOURCEFORGE ...</echo>
+    <echo>===&gt;&gt;&gt; Pushing modified SAFS Java API files to GITHUB and SOURCEFORGE ...</echo>
     <var name="exec.rc" unset="true"/>
     <var name="exec.output" unset="true"/>
     <var name="exec.error" unset="true"/>
