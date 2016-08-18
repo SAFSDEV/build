@@ -161,11 +161,11 @@
     <mkdir dir="${git.wdir.source}\org\safs\model\components"/>
     
     <!-- copy the latest script for generating SAFS HTML documents --> 
-    <move todir="${git.wdir.bin}" preservelastmodified="true">
-      <fileset dir="${git.wdir.core}/src/install/bin" includes="*.bat, *.exe, *.scr"/></move>
+    <copy todir="${git.wdir.bin}" preservelastmodified="true">
+      <fileset dir="${git.wdir.core}/src/install/bin" includes="*.bat, *.exe, *.scr"/></copy>
     <!-- copy the latest static HTML documents -->  
-    <move todir="${git.wdir.doc}" preservelastmodified="true">
-      <fileset dir="${git.wdir.core}/src/install/doc/static" includes="*.htm, *.js, *.css"/></move> 
+    <copy todir="${git.wdir.doc}" preservelastmodified="true">
+      <fileset dir="${git.wdir.core}/src/install/doc/static" includes="*.htm, *.js, *.css"/></copy> 
   
     <echo>===&gt;&gt;&gt; Generating the SAFS Reference files ...</echo>
     <!-- we MUST clean the value of some global variables.-->
@@ -274,6 +274,8 @@
     </path>
     <path id="classes.path.ref">
         <fileset dir="${git.wdir.core}/dependencies" includes="**/*.jar"/>
+        <fileset dir="${git.wdir.core}/src/install/lib" includes="*.jar"/>
+        <fileset dir="${git.wdir.core}/src/install/lib" includes="*.zip"/>
         <fileset dir="${git.wdir.droid.engine}/libs" includes="*.jar"/>
         <fileset dir="${git.wdir.droid.remotecontrol}/libs" includes="*.jar"/>
     </path>
@@ -290,6 +292,7 @@
         <doctitle><![CDATA[<h1>SAFS API DOCUMENT</h1>]]></doctitle>
         <bottom><![CDATA[<i>Copyright &#169; SAS Institute. All Rights Reserved.</i>]]></bottom>
         <tag name="example" scope="all" description="Example:"/>
+        <arg value="-notimestamp" /><!-- avoid generating the time stamp comments -->
     </javadoc>
     <delete file="${java.docs}/index.html"/>
     <echo>Copying the generated SAFS Java API files to GIT repository for push ...</echo>
