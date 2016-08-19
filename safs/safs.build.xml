@@ -143,6 +143,7 @@
   <!--      GITHUB and SOURCEFORGE automatically without asking for user/password                   -->
   <!--                                                                                              -->
   <target name="update.safs.reference" depends="cleansource,
+                                                prepare.dependencies,
                                                 git.clone.keywords,
                                                 git.clone.core,
                                                 git.clone.droid.remotecontrol,
@@ -273,9 +274,9 @@
         <pathelement location="${git.wdir.droid.remotecontrol}/src"/>
     </path>
     <path id="classes.path.ref">
-        <fileset dir="${git.wdir.core}/dependencies" includes="**/*.jar"/>
-        <fileset dir="${git.wdir.core}/src/install/lib" includes="*.jar"/>
-        <fileset dir="${git.wdir.core}/src/install/lib" includes="*.zip"/>
+        <fileset dir="${libs}"  includes="**/*.jar **/*.zip"  />
+        <fileset dir="${ANDROID_HOME}/platforms/android-${android.sdk.version}"  includes="*.jar"  />
+        <fileset dir="${ANDROID_HOME}/tools/lib"  includes="*.jar"  />
         <fileset dir="${git.wdir.droid.engine}/libs" includes="*.jar"/>
         <fileset dir="${git.wdir.droid.remotecontrol}/libs" includes="*.jar"/>
     </path>
