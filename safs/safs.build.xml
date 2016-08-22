@@ -166,6 +166,9 @@
     <!-- copy the latest static HTML documents -->  
     <copy todir="${git.wdir.doc}" preservelastmodified="true">
       <fileset dir="${git.wdir.core}/src/install/doc/static" includes="*.htm, *.js, *.css"/></copy> 
+    <copy todir="${git.wdir.doc}" preservelastmodified="true">
+      <fileset dir="${git.wdir.core}/src/install/doc/info" includes="*.htm, *.jpg, *.png, *.gif"/></copy>
+    <!-- TODO copy the files to the parent of sqabasic2000 and push to github/sourceforge -->
   
     <echo>===&gt;&gt;&gt; Generating the SAFS Reference files ...</echo>
     <!-- we MUST clean the value of some global variables.-->
@@ -188,7 +191,7 @@
     </fail>
     <echo>Copying the generated SAFS Documents to GIT repository for push</echo>
     <copy todir="${git.wdir.github.io}/sqabasic2000"  preservelastmodified="true" >
-        <fileset dir="${git.wdir.doc}" includes="*.html, *.htm, *.js, *.css"/></copy>
+        <fileset dir="${git.wdir.doc}" includes="*.html, *.htm, *.js, *.css, *.jpg, *.png, *.gif"/></copy>
     <echo>Copying the psftp script files for 'copy to'/'delete from' sourceforge</echo>  
     <copy todir="${git.repo.github.io}/sqabasic2000"  preservelastmodified="true" >
         <fileset dir="${git.wdir.bin}" includes="*.scr"/></copy>
@@ -339,8 +342,8 @@
   <!--              prepare.dependencies                                                            -->
   <!--   Get all 3rd party jars prepared in folder ${libs}                                          -->
   <!--   Some jar files, which are NOT free, are got from private FTP server, like rft              -->
-  <!--   Some jar files, which are free, are got from public FTP server, like Java, Eclipse         -->
-  <!--   Other jar files are got from GitHub, open source, we should probably check their license   -->
+  <!--   Some jar files, which are free, are got from our GITHUB Core repository,                   -->
+  <!--   we should probably check their license                                                     -->
   <!--                                                                                              -->
   <target name="prepare.dependencies">
   	<delete dir="${libs}" />
@@ -361,10 +364,6 @@
   			</ftp>
   		</then>
   	</if>
-    <!-- do we need this safslibs? golden safsupdate.jar -->
-	<copy todir="${safslibs}" preservelastmodified="true" >
-        <fileset dir="${safs.dependencies}/safs" includes="*.exe,*.jar,*.zip" />
-    </copy>
   </target>
   
   <!--                                                -->
