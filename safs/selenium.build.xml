@@ -322,6 +322,7 @@
       <echo>java -jar "${update.runtime.jar}" -r -a -q -prompt:"${update.runtime.title}" -s:"${update.runtime.source.zip}" -t:"${update.runtime.target.dir}" -b:"${update.runtime.backup.dir}"</echo>
 	  <echo>java out put can be found in file: ${update.runtime.log}</echo>
 	</then></if>
+	<copy todir="${SELENIUM_PLUS}\update_bak\libs" preservelastmodified="true" file="${SELENIUM_PLUS}\libs\safsupdate.jar"/>
     <java jar="${update.runtime.jar}"
     	   fork="true"
     	   output="${update.runtime.log}"
