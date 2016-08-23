@@ -126,217 +126,6 @@
     <delete dir="${git.wdir.droid.sample}" />
       
   </target>
-  
-  <!--                                                                                              -->
-  <!--   update.safs.reference                                                                      -->
-  <!--   This job will currently do 3 things:                                                       -->
-  <!--   1. Generate SAFS HTML documents according to the latest XML files                          -->
-  <!--      Then push the generated HTML files to GITHUB and SOURCEFORGE                            -->
-  <!--   2. Generate SAFS Java Model files according to the latest XML files                        -->
-  <!--      Then push the generated model files to GITHUB                                           -->
-  <!--   3. Generate SAFS Java API documents according to the latest source code                    -->
-  <!--      Then push the generated java API files to GITHUB and SOURCEFORGE                        -->
-  <!--   Prerequisite:                                                                              -->
-  <!--   1. GIT should be installed and configured                                                  -->
-  <!--   2. PUTTY should be installed                                                               -->
-  <!--   3. The OS should be configured correctly to upload files to                                -->
-  <!--      GITHUB and SOURCEFORGE automatically without asking for user/password                   -->
-  <!--                                                                                              -->
-  <target name="update.safs.reference" depends="cleansource,
-                                                git.clone.keywords,
-                                                git.clone.core,
-                                                git.clone.droid.remotecontrol,
-                                                git.clone.droid.engine,
-                                                git.clone.droid.messenger,
-                                                git.clone.github.io,
-                                                git.clone.build">
-    <property name="current.dir" location="." />
-
-    <mkdir dir="${safssource}"/>
-    <mkdir dir="${git.wdir.bin}"/>
-    <mkdir dir="${git.wdir.doc}"/>
-    <mkdir dir="${git.wdir.source}"/>
-    <mkdir dir="${git.wdir.data}"/>
-    <mkdir dir="${git.wdir.source}\org\safs\model\commands"/>
-    <mkdir dir="${git.wdir.source}\org\safs\model\components"/>
-    
-    <!-- copy the latest script for generating SAFS HTML documents --> 
-    <copy todir="${git.wdir.bin}" preservelastmodified="true">
-      <fileset dir="${git.wdir.core}/src/install/bin" includes="*.bat, *.exe, *.scr"/></copy>
-    <!-- copy the latest static HTML documents -->  
-    <copy todir="${git.wdir.doc}" preservelastmodified="true">
-      <fileset dir="${git.wdir.core}/src/install/doc/static" includes="*.htm, *.js, *.css"/></copy> 
-    <copy todir="${git.wdir.doc}" preservelastmodified="true">
-      <fileset dir="${git.wdir.core}/src/install/doc/info" includes="*.htm, *.jpg, *.png, *.gif"/></copy>
-    <!-- TODO copy the files to the parent of sqabasic2000 and push to github/sourceforge -->
-  
-    <echo>===&gt;&gt;&gt; Generating the SAFS Reference files ...</echo>
-    <!-- we MUST clean the value of some global variables.-->
-    <var name="exec.rc" unset="true"/>
-    <var name="exec.output" unset="true"/>
-    <var name="exec.error" unset="true"/>
-    <exec executable="cmd"
-          dir="${git.wdir.bin}"
-          resultproperty="exec.rc"
-          outputproperty="exec.output"
-          errorproperty="exec.error">
-      <!-- Set the environment SAFSDIR for execution of XSLBuildALLReferenceDocs.bat -->
-      <env key="SAFSDIR" value="${current.dir}/${safssource}"/>
-      <arg value="/c"/>
-      <arg value="XSLBuildALLReferenceDocs.bat"/>
-    </exec>
-    <echo>${exec.output}</echo><!-- Show the standard output. -->
-    <fail message="Generating SAFS HTML DOCUMENTS failed: ${exec.error}"><!-- Show the standard error if failed.-->
-      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
-    </fail>
-    <echo>Copying the generated SAFS Documents to GIT repository for push</echo>
-    <copy todir="${git.wdir.github.io}/sqabasic2000"  preservelastmodified="true" >
-        <fileset dir="${git.wdir.doc}" includes="*.html, *.htm, *.js, *.css, *.jpg, *.png, *.gif"/></copy>
-    <echo>Copying the psftp script files for 'copy to'/'delete from' sourceforge</echo>  
-    <copy todir="${git.repo.github.io}/sqabasic2000"  preservelastmodified="true" >
-        <fileset dir="${git.wdir.bin}" includes="*.scr"/></copy>
-
-    <echo>===&gt;&gt;&gt; Pushing modified SAFS Reference files to GITHUB and SOURCEFORGE ...</echo>
-    <var name="exec.rc" unset="true"/>
-    <var name="exec.output" unset="true"/>
-    <var name="exec.error" unset="true"/>
-    <exec executable="cmd"
-          dir="${git.wdir.bin}"
-          resultproperty="exec.rc"
-          outputproperty="exec.output"
-          errorproperty="exec.error">
-      <arg value="/c"/>
-      <arg value="Push_SAFS_Reference.bat"/>
-      <arg value="${current.dir}\${git.repo.github.io}\sqabasic2000"/>
-      <arg value="${sf.user.lei}"/>
-      <arg value="${sf.rsaid.lei}"/>
-      <arg value="${ftp.sf.put.script}"/>
-      <arg value="${ftp.sf.del.script}"/>
-      <arg value="${git.known_hosts}"/>
-      <arg value="${git.rsaid}"/>
-      <!-- arg value="enable_debug"/ -->
-    </exec>
-    <echo>${exec.output}</echo><!-- Show the standard output. -->
-    <fail message="Pushing SAFS HTML DOCUMENTS failed: ${exec.error}"><!-- Show the standard error if failed.-->
-      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
-    </fail>
-    
-    <echo>===&gt;&gt;&gt; Generating the SAFS Java Model files ...</echo>
-    <var name="exec.rc" unset="true"/>
-    <var name="exec.output" unset="true"/>
-    <var name="exec.error" unset="true"/>
-    <exec executable="cmd"
-          dir="${git.wdir.bin}"
-          resultproperty="exec.rc"
-          outputproperty="exec.output"
-          errorproperty="exec.error">
-      <!-- Set the environment SAFSDIR for execution of XSLJavaCommandModelPrep.bat -->
-      <env key="SAFSDIR" value="${current.dir}/${safssource}"/>
-      <arg value="/c"/>
-      <arg value="XSLJavaModelPrepAll.bat"/>
-    </exec>
-    <echo>${exec.output}</echo>
-    <fail message="Generating SAFS Java Model files failed: ${exec.error}">
-      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
-    </fail>
-    <echo>Copying the generated SAFS Java Model files to GIT repository for push ...</echo>
-    <copy todir="${git.wdir.core}/src/"  preservelastmodified="true" >
-        <fileset dir="${git.wdir.source}" includes="**/*.java"/></copy>
-        
-    <echo>===&gt;&gt;&gt; Pushing modified SAFS Java Model files to GITHUB ...</echo>
-    <var name="exec.rc" unset="true"/>
-    <var name="exec.output" unset="true"/>
-    <var name="exec.error" unset="true"/>
-    <exec executable="cmd"
-          dir="${git.wdir.bin}"
-          resultproperty="exec.rc"
-          outputproperty="exec.output"
-          errorproperty="exec.error">
-      <arg value="/c"/>
-      <arg value="Push_SAFS_JavaModel.bat"/>
-      <arg value="${current.dir}"/>
-      <arg value="${git.repo.core}"/>
-      <arg value="${git.known_hosts}"/>
-      <arg value="${git.rsaid}"/>
-      <!-- arg value="enable_debug"/ -->
-    </exec>
-    <echo>${exec.output}</echo><!-- Show the standard output. -->
-    <fail message="Pushing SAFS Java Model files failed: ${exec.error}"><!-- Show the standard error if failed.-->
-      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
-    </fail>
-    
-    <!-- TODO, We still need to compile safs.core, droid.engine, droid.messenger to get classes ready -->
-    <echo>===&gt;&gt;&gt; Generating the SAFS Java API files ...</echo>
-    <echo>Prepare the java source code for generating java API.</echo>
-    <path id="source.path.ref">
-        <pathelement location="${git.wdir.core}/src"/>
-        <pathelement location="${git.wdir.droid.engine}/src"/>
-        <pathelement location="${git.wdir.droid.engine}/gen"/>
-        <pathelement location="${git.wdir.droid.messenger}/src"/>
-        <pathelement location="${git.wdir.droid.messenger}/gen"/>
-        <pathelement location="${git.wdir.droid.remotecontrol}/src"/>
-    </path>
-    <echo>Prepare the dependency jar/zip files for generating java API.</echo>
-    <copy todir="${installlibs}" preservelastmodified="true" >
-        <fileset dir="${git.wdir.core}/src/install/lib" /></copy>
-    <copy todir="${safs.dependencies}" preservelastmodified="true" >
-        <fileset dir="${git.wdir.core}/dependencies/" /></copy>
-    <antcall target="prepare.dependencies" />
-    <path id="classes.path.ref">
-        <fileset dir="${libs}"  includes="**/*.jar **/*.zip"  />
-        <fileset dir="${ANDROID_HOME}/platforms/android-${android.sdk.version}"  includes="*.jar"  />
-        <fileset dir="${ANDROID_HOME}/tools/lib"  includes="*.jar"  />
-        <fileset dir="${git.wdir.droid.engine}/libs" includes="*.jar"/>
-        <fileset dir="${git.wdir.droid.remotecontrol}/libs" includes="*.jar"/>
-    </path>
-    <javadoc packageList="${git.wdir.build}/dev/javadocfiles.txt"
-           sourcepathref="source.path.ref"
-           classpathref="classes.path.ref"
-           destdir="${java.docs}"
-           maxmemory="1024m"
-           package="true"
-           author="true"
-           version="true"
-           use="true"
-           windowtitle="SAFS API DOCUMENT">
-        <doctitle><![CDATA[<h1>SAFS API DOCUMENT</h1>]]></doctitle>
-        <bottom><![CDATA[<i>Copyright &#169; SAS Institute. All Rights Reserved.</i>]]></bottom>
-        <tag name="example" scope="all" description="Example:"/>
-        <arg value="-notimestamp" /><!-- avoid generating the time stamp comments -->
-    </javadoc>
-    <delete file="${java.docs}/index.html"/>
-    <echo>Copying the generated SAFS Java API files to GIT repository for push ...</echo>
-    <copy todir="${git.wdir.github.io}/doc/"  preservelastmodified="true" >
-        <fileset dir="${java.docs}" includes="**/*"/></copy>
-    <echo>Copying the psftp script files for 'copy to'/'delete from' sourceforge</echo>  
-    <copy todir="${git.repo.github.io}/doc"  preservelastmodified="true" >
-        <fileset dir="${git.wdir.bin}" includes="*.scr"/></copy>
-
-    <echo>===&gt;&gt;&gt; Pushing modified SAFS Java API files to GITHUB and SOURCEFORGE ...</echo>
-    <var name="exec.rc" unset="true"/>
-    <var name="exec.output" unset="true"/>
-    <var name="exec.error" unset="true"/>
-    <exec executable="cmd"
-          dir="${git.wdir.bin}"
-          resultproperty="exec.rc"
-          outputproperty="exec.output"
-          errorproperty="exec.error">
-      <arg value="/c"/>
-      <arg value="Push_SAFS_API.bat"/>
-      <arg value="${current.dir}\${git.repo.github.io}\doc"/>
-      <arg value="${sf.user.lei}"/>
-      <arg value="${sf.rsaid.lei}"/>
-      <arg value="${ftp.sf.put.javadoc.script}"/>
-      <arg value="${ftp.sf.del.javadoc.script}"/>
-      <arg value="${git.known_hosts}"/>
-      <arg value="${git.rsaid}"/>
-      <!-- arg value="enable_debug"/ -->
-    </exec>
-    <echo>${exec.output}</echo><!-- Show the standard output. -->
-    <fail message="Pushing SAFS HTML DOCUMENTS failed: ${exec.error}"><!-- Show the standard error if failed.-->
-      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
-    </fail>
-  </target>
 
   <!--                                                                                              -->
   <!--              prepare.dependencies                                                            -->
@@ -1104,7 +893,234 @@
                      uninstall/**
                      jre/**" />
    </target>
-   
+
+  <!--                                                                                              -->
+  <!--   update.safs.reference                                                                      -->
+  <!--   This job will currently do the following things:                                           -->
+  <!--   1. Generate SAFS HTML documents according to the latest XML files                          -->
+  <!--      Then push the generated HTML files to GITHUB and SOURCEFORGE                            -->
+  <!--   2. Generate SAFS Java Model files according to the latest XML files                        -->
+  <!--      Then push the generated model files to GITHUB                                           -->
+  <!--   3. Generate SAFS Java API documents according to the latest source code                    -->
+  <!--      Then push the generated java API files to GITHUB and SOURCEFORGE                        -->
+  <!--   4. Get static web documents from the repository Core                                       -->
+  <!--      Then push/update them to GITHUB and SOURCEFORGE                                         -->
+  <!--   Prerequisite:                                                                              -->
+  <!--   1. GIT should be installed and configured                                                  -->
+  <!--   2. PUTTY should be installed                                                               -->
+  <!--   3. The OS should be configured correctly to upload files to                                -->
+  <!--      GITHUB and SOURCEFORGE automatically without asking for user/password                   -->
+  <!--                                                                                              -->
+  <target name="update.safs.reference" depends="cleansource,
+                                                git.clone.keywords,
+                                                git.clone.core,
+                                                git.clone.droid.remotecontrol,
+                                                git.clone.droid.engine,
+                                                git.clone.droid.messenger,
+                                                git.clone.github.io,
+                                                git.clone.build">
+    <property name="current.dir" location="." />
+
+    <mkdir dir="${safssource}"/>
+    <mkdir dir="${git.wdir.bin}"/>
+    <mkdir dir="${git.wdir.doc}"/>
+    <mkdir dir="${git.wdir.source}"/>
+    <mkdir dir="${git.wdir.data}"/>
+    <mkdir dir="${git.wdir.source}\org\safs\model\commands"/>
+    <mkdir dir="${git.wdir.source}\org\safs\model\components"/>
+    <mkdir dir="${git.wdir.doc.root}"/>
+    
+    <echo>Copy the latest script for generating SAFS HTML documents.</echo> 
+    <copy todir="${git.wdir.bin}" preservelastmodified="true">
+      <fileset dir="${git.wdir.core}/src/install/bin" includes="*.bat, *.exe, *.scr"/>
+    </copy>
+    <echo>Copy the latest static web documents from Core repository.</echo>  
+    <copy todir="${git.wdir.doc.root}" preservelastmodified="true">
+      <fileset dir="${git.wdir.core}/src/install/doc/" includes="*.htm, *.jpg, *.png, *.gif"/>
+    </copy>
+    <copy todir="${git.wdir.doc.root.sqabasic2000}" preservelastmodified="true">
+      <fileset dir="${git.wdir.core}/src/install/doc/static" includes="*.htm, *.js, *.css"/>
+      <fileset dir="${git.wdir.core}/src/install/doc/info" includes="*.htm, *.jpg, *.png, *.gif"/>
+    </copy>
+    <copy todir="${git.wdir.doc.root.selenium}" preservelastmodified="true">
+      <fileset dir="${git.wdir.core}/src/org/safs/selenium/install/doc/" includes="**/*"/>
+    </copy>
+    <copy todir="${git.wdir.doc.root.doc}" preservelastmodified="true">
+      <fileset dir="${git.wdir.core}/src/install/doc/info" includes="TestDesignGuidelines.htm, UsingJSAFS.htm"/>
+    </copy>
+
+    <echo>&gt;&gt;&gt;&gt;&gt;&gt; Generating the SAFS Reference files ...</echo>
+    <!-- we MUST clean the value of some global variables.-->
+    <var name="exec.rc" unset="true"/>
+    <var name="exec.output" unset="true"/>
+    <var name="exec.error" unset="true"/>
+    <exec executable="cmd"
+          dir="${git.wdir.bin}"
+          resultproperty="exec.rc"
+          outputproperty="exec.output"
+          errorproperty="exec.error">
+      <!-- Set the environment SAFSDIR for execution of XSLBuildALLReferenceDocs.bat -->
+      <env key="SAFSDIR" value="${current.dir}/${safssource}"/>
+      <arg value="/c"/>
+      <arg value="XSLBuildALLReferenceDocs.bat"/>
+    </exec>
+    <echo>${exec.output}</echo><!-- Show the standard output. -->
+    <fail message="Generating SAFS HTML DOCUMENTS failed: ${exec.error}"><!-- Show the standard error if failed.-->
+      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+    </fail>
+    <echo>Copying the generated SAFS Documents to GIT repository for push</echo>
+    <copy todir="${git.wdir.github.io}/sqabasic2000"  preservelastmodified="true" >
+        <fileset dir="${git.wdir.doc}" includes="*.html, *.htm, *.js, *.css, *.jpg, *.png, *.gif"/>
+    </copy>
+    <echo>Copying recursively the static SAFS Documents to GIT repository for push</echo>
+    <echo>Copying the psftp script files for 'copy to'/'delete from' sourceforge</echo>
+    <copy todir="${git.wdir.github.io}/"  preservelastmodified="true" >
+        <fileset dir="${git.wdir.doc.root}" includes="**/*"/>
+        <fileset dir="${git.wdir.bin}" includes="*.scr"/>
+    </copy>
+
+    <echo>&gt;&gt;&gt;&gt;&gt;&gt; Pushing modified SAFS Reference files and static documents to GITHUB and SOURCEFORGE ...</echo>
+    <var name="exec.rc" unset="true"/>
+    <var name="exec.output" unset="true"/>
+    <var name="exec.error" unset="true"/>
+    <exec executable="cmd"
+          dir="${git.wdir.bin}"
+          resultproperty="exec.rc"
+          outputproperty="exec.output"
+          errorproperty="exec.error">
+      <arg value="/c"/>
+      <arg value="Push_SAFS_Reference.bat"/>
+      <arg value="${current.dir}\${git.repo.github.io}"/>
+      <arg value="${sf.user.lei}"/>
+      <arg value="${sf.rsaid.lei}"/>
+      <arg value="${ftp.sf.put.script}"/>
+      <arg value="${ftp.sf.del.script}"/>
+      <arg value="${git.known_hosts}"/>
+      <arg value="${git.rsaid}"/>
+      <!-- arg value="enable_debug"/ -->
+    </exec>
+    <echo>${exec.output}</echo><!-- Show the standard output. -->
+    <fail message="Pushing SAFS HTML DOCUMENTS failed: ${exec.error}"><!-- Show the standard error if failed.-->
+      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+    </fail>
+    
+    <echo>&gt;&gt;&gt;&gt;&gt;&gt; Generating the SAFS Java Model files ...</echo>
+    <var name="exec.rc" unset="true"/>
+    <var name="exec.output" unset="true"/>
+    <var name="exec.error" unset="true"/>
+    <exec executable="cmd"
+          dir="${git.wdir.bin}"
+          resultproperty="exec.rc"
+          outputproperty="exec.output"
+          errorproperty="exec.error">
+      <!-- Set the environment SAFSDIR for execution of XSLJavaCommandModelPrep.bat -->
+      <env key="SAFSDIR" value="${current.dir}/${safssource}"/>
+      <arg value="/c"/>
+      <arg value="XSLJavaModelPrepAll.bat"/>
+    </exec>
+    <echo>${exec.output}</echo>
+    <fail message="Generating SAFS Java Model files failed: ${exec.error}">
+      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+    </fail>
+    <echo>Copying the generated SAFS Java Model files to GIT repository for push ...</echo>
+    <copy todir="${git.wdir.core}/src/"  preservelastmodified="true" >
+        <fileset dir="${git.wdir.source}" includes="**/*.java"/></copy>
+        
+    <echo>&gt;&gt;&gt;&gt;&gt;&gt; Pushing modified SAFS Java Model files to GITHUB ...</echo>
+    <var name="exec.rc" unset="true"/>
+    <var name="exec.output" unset="true"/>
+    <var name="exec.error" unset="true"/>
+    <exec executable="cmd"
+          dir="${git.wdir.bin}"
+          resultproperty="exec.rc"
+          outputproperty="exec.output"
+          errorproperty="exec.error">
+      <arg value="/c"/>
+      <arg value="Push_SAFS_JavaModel.bat"/>
+      <arg value="${current.dir}"/>
+      <arg value="${git.repo.core}"/>
+      <arg value="${git.known_hosts}"/>
+      <arg value="${git.rsaid}"/>
+      <!-- arg value="enable_debug"/ -->
+    </exec>
+    <echo>${exec.output}</echo><!-- Show the standard output. -->
+    <fail message="Pushing SAFS Java Model files failed: ${exec.error}"><!-- Show the standard error if failed.-->
+      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+    </fail>
+    
+    <!-- TODO, We still need to compile safs.core, droid.engine, droid.messenger to get classes ready -->
+    <echo>&gt;&gt;&gt;&gt;&gt;&gt; Generating the SAFS Java API files ...</echo>
+    <echo>Prepare the java source code for generating java API.</echo>
+    <path id="source.path.ref">
+        <pathelement location="${git.wdir.core}/src"/>
+        <pathelement location="${git.wdir.droid.engine}/src"/>
+        <pathelement location="${git.wdir.droid.engine}/gen"/>
+        <pathelement location="${git.wdir.droid.messenger}/src"/>
+        <pathelement location="${git.wdir.droid.messenger}/gen"/>
+        <pathelement location="${git.wdir.droid.remotecontrol}/src"/>
+    </path>
+    <echo>Prepare the dependency jar/zip files for generating java API.</echo>
+    <copy todir="${installlibs}" preservelastmodified="true" >
+        <fileset dir="${git.wdir.core}/src/install/lib" /></copy>
+    <copy todir="${safs.dependencies}" preservelastmodified="true" >
+        <fileset dir="${git.wdir.core}/dependencies/" /></copy>
+    <antcall target="prepare.dependencies" />
+    <path id="classes.path.ref">
+        <fileset dir="${libs}"  includes="**/*.jar **/*.zip"  />
+        <fileset dir="${ANDROID_HOME}/platforms/android-${android.sdk.version}"  includes="*.jar"  />
+        <fileset dir="${ANDROID_HOME}/tools/lib"  includes="*.jar"  />
+        <fileset dir="${git.wdir.droid.engine}/libs" includes="*.jar"/>
+        <fileset dir="${git.wdir.droid.remotecontrol}/libs" includes="*.jar"/>
+    </path>
+    <javadoc packageList="${git.wdir.build}/dev/javadocfiles.txt"
+           sourcepathref="source.path.ref"
+           classpathref="classes.path.ref"
+           destdir="${java.docs}"
+           maxmemory="1024m"
+           package="true"
+           author="true"
+           version="true"
+           use="true"
+           windowtitle="SAFS API DOCUMENT">
+        <doctitle><![CDATA[<h1>SAFS API DOCUMENT</h1>]]></doctitle>
+        <bottom><![CDATA[<i>Copyright &#169; SAS Institute. All Rights Reserved.</i>]]></bottom>
+        <tag name="example" scope="all" description="Example:"/>
+        <arg value="-notimestamp" /><!-- avoid generating the time stamp comments -->
+    </javadoc>
+    <delete file="${java.docs}/index.html"/>
+    <echo>Copying the generated SAFS Java API files to GIT repository for push ...</echo>
+    <copy todir="${git.wdir.github.io}/doc/"  preservelastmodified="true" >
+        <fileset dir="${java.docs}" includes="**/*"/></copy>
+    <echo>Copying the psftp script files for 'copy to'/'delete from' sourceforge</echo>  
+    <copy todir="${git.repo.github.io}/doc"  preservelastmodified="true" >
+        <fileset dir="${git.wdir.bin}" includes="*.scr"/></copy>
+
+    <echo>&gt;&gt;&gt;&gt;&gt;&gt; Pushing modified SAFS Java API files to GITHUB and SOURCEFORGE ...</echo>
+    <var name="exec.rc" unset="true"/>
+    <var name="exec.output" unset="true"/>
+    <var name="exec.error" unset="true"/>
+    <exec executable="cmd"
+          dir="${git.wdir.bin}"
+          resultproperty="exec.rc"
+          outputproperty="exec.output"
+          errorproperty="exec.error">
+      <arg value="/c"/>
+      <arg value="Push_SAFS_API.bat"/>
+      <arg value="${current.dir}\${git.repo.github.io}\doc"/>
+      <arg value="${sf.user.lei}"/>
+      <arg value="${sf.rsaid.lei}"/>
+      <arg value="${ftp.sf.put.javadoc.script}"/>
+      <arg value="${ftp.sf.del.javadoc.script}"/>
+      <arg value="${git.known_hosts}"/>
+      <arg value="${git.rsaid}"/>
+      <!-- arg value="enable_debug"/ -->
+    </exec>
+    <echo>${exec.output}</echo><!-- Show the standard output. -->
+    <fail message="Pushing SAFS HTML DOCUMENTS failed: ${exec.error}"><!-- Show the standard error if failed.-->
+      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+    </fail>
+  </target>
+    
    <target name="git.clone.tcafs" description="Clone from GitHub SAFSDEV/TCAFS" >
        <var name="git.repo.tree" value="${git.wdir.tcafs}" />
        <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
