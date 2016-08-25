@@ -932,7 +932,7 @@
     
     <echo>Copy the latest script for generating SAFS HTML documents.</echo> 
     <copy todir="${git.wdir.bin}" preservelastmodified="true">
-      <fileset dir="${git.wdir.core}/src/install/bin" includes="*.bat, *.exe, *.scr"/>
+      <fileset dir="${git.wdir.core}/src/install/bin" includes="*.bat, *.exe, *.scr, push_file_types_for_*.txt"/>
     </copy>
     <echo>Copy the latest static web documents from Core repository.</echo>  
     <copy todir="${git.wdir.doc.root}" preservelastmodified="true">
