@@ -1057,11 +1057,10 @@
       <arg value="${ftp.sf.put.javadoc.script}"/>
       <arg value="${ftp.sf.del.javadoc.script}"/>
       <arg value="${git.known_hosts}"/>
-      <arg value="GIT"/>
       <arg value="${git.rsaid}"/>
+      <arg value="GIT"/>
       <!-- arg value="enable_debug"/ -->
     </exec>
-    
     <echo>${exec.output}</echo><!-- Show the standard output. -->
     <fail message="Pushing SAFS Java Model files failed: ${exec.error}"><!-- Show the standard error if failed.-->
       <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
