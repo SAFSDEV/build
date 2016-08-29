@@ -71,7 +71,7 @@
 	    <!-- https://wiki.jenkins-ci.org/display/JENKINS/Spawning+processes+from+build             -->
         <exec executable="cscript.exe">
             <env key="ANTRUN_TITLE" value="Connecting Testing machine."/>
-            <env key="ANTRUN_OUTPUT" value="safs.rdc.{env.TestingMachine}.log"/>
+            <env key="ANTRUN_OUTPUT" value="safs.rdc.${env.TestingMachine}.log"/>
             <arg value="//NoLogo"/>
             <arg value="antExecAsync.vbs"/>
             <arg value="mstsc.exe"/>
