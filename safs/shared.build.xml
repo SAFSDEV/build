@@ -57,7 +57,7 @@
     <!-- 3. Test if the new connection is avaiable                            -->
     <target name="spawn.rdc">
     	<echo>Start a new Remote-Desktop to machine ${env.TestingMachine} from machine ${env.COMPUTERNAME}</echo>
-    	<echo>Kill any exist connection ...</echo>
+    	<echo>Kill any existing connection ...</echo>
         <exec executable="taskkill">
         	<arg value="/F"/>
         	<arg value="/FI"/>
@@ -66,12 +66,12 @@
         	<arg value="WINDOWTITLE eq ${env.TestingMachine}*"/>
         </exec>
         		
-    	<!-- Start a NEW process to handle the remote-desktop-connection to the testing machine.   -->
+    	<echo>Start a NEW process to handle the remote-desktop-connection to the testing machine.</echo>
 	    <!-- This will avoid the warning "file descriptor leak", described in                      -->
 	    <!-- https://wiki.jenkins-ci.org/display/JENKINS/Spawning+processes+from+build             -->
         <exec executable="cscript.exe">
             <env key="ANTRUN_TITLE" value="Connecting Testing machine."/>
-            <env key="ANTRUN_OUTPUT" value="safs.rdc.log"/>
+            <env key="ANTRUN_OUTPUT" value="safs.rdc.{env.TestingMachine}.log"/>
             <arg value="//NoLogo"/>
             <arg value="antExecAsync.vbs"/>
             <arg value="mstsc.exe"/>
@@ -81,6 +81,9 @@
     	<echo>Waiting for 30s until mstsc's remote desktop presents</echo>
     	<sleep seconds="30"/>
     	<echo>Check the connection's availibility</echo>
+        <var name="exec.rc" unset="true"/>
+        <var name="exec.output" unset="true"/>
+        <var name="exec.error" unset="true"/>
         <exec executable="tasklist"
               resultproperty="exec.rc"
               outputproperty="exec.output"
@@ -101,7 +104,6 @@
             </or>
           </condition>
         </fail>
-    	
     </target>
-	
+
 </project>
