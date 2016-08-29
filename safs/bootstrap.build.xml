@@ -13,7 +13,7 @@
   <!--                                                -->
   <target name="bootstrapbuild" depends="git.clone.build" >
       <move todir="." preservelastmodified="true" >
-          <fileset dir="safsdev.build/safs" includes="*.xml, *.properties, *.java"/>
+          <fileset dir="safsdev.build/safs" includes="*.xml, *.properties, *.java, *.vbs"/>
       </move>
       <delete dir="safsdev.build" />
   </target>

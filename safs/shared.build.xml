@@ -50,4 +50,58 @@
 		<!-- echo>passwd is ${passwd}</echo-->
 	</target>
 	
+   	<!-- Start a new Remote-Desktop-Connection to the testing machine         -->
+    <!-- This task will                                                       -->
+    <!-- 1. Kill the old connection if it exists                              -->
+    <!-- 2. Create a new connection                                           -->
+    <!-- 3. Test if the new connection is avaiable                            -->
+    <target name="spawn.rdc">
+    	<echo>Start a new Remote-Desktop to machine ${env.TestingMachine} from machine ${env.COMPUTERNAME}</echo>
+    	<echo>Kill any exist connection ...</echo>
+        <exec executable="taskkill">
+        	<arg value="/F"/>
+        	<arg value="/FI"/>
+        	<arg value="IMAGENAME eq mstsc.exe"/>
+        	<arg value="/FI"/>
+        	<arg value="WINDOWTITLE eq ${env.TestingMachine}*"/>
+        </exec>
+        		
+    	<!-- Start a NEW process to handle the remote-desktop-connection to the testing machine.   -->
+	    <!-- This will avoid the warning "file descriptor leak", described in                      -->
+	    <!-- https://wiki.jenkins-ci.org/display/JENKINS/Spawning+processes+from+build             -->
+        <exec executable="cscript.exe">
+            <env key="ANTRUN_TITLE" value="Connecting Testing machine."/>
+            <env key="ANTRUN_OUTPUT" value="safs.rdc.log"/>
+            <arg value="//NoLogo"/>
+            <arg value="antExecAsync.vbs"/>
+            <arg value="mstsc.exe"/>
+            <arg value="/v:${env.TestingMachine}"/>
+        </exec>
+    	
+    	<echo>Waiting for 30s until mstsc's remote desktop presents</echo>
+    	<sleep seconds="30"/>
+    	<echo>Check the connection's availibility</echo>
+        <exec executable="tasklist"
+              resultproperty="exec.rc"
+              outputproperty="exec.output"
+              errorproperty="exec.error">
+          <arg value="/V"/>
+          <arg value="/FI"/>
+          <arg value="IMAGENAME eq mstsc.exe"/>
+          <arg value="/FI"/>
+          <arg value="WINDOWTITLE eq ${env.TestingMachine}*"/>
+          <arg value="/NH"/>
+        </exec>
+        <echo>${exec.output}</echo>
+        <fail message="Failed to Remote-Desktop to machine '${env.TestingMachine}' with error code: ${exec.rc}">
+          <condition>
+            <or>
+                <not><equals arg1="${exec.rc}" arg2="0"/></not>
+                <not><contains string="${exec.output}" substring="${env.TestingMachine}"/></not>
+            </or>
+          </condition>
+        </fail>
+    	
+    </target>
+	
 </project>
