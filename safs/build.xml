@@ -61,7 +61,8 @@
   <!--          Make SeleniumPlus ditribution assets                             -->
   <!--                                                                           -->
   <target name="selenium.win.build" depends="selenium.win.plugin,
-                                             seleniumplus.win.dist" />
+                                             seleniumplus.win.dist,
+                                             selenium.lib.update.zip" />
                                              
   <!--                                                         -->
   <!--  safs.win.upload                                        -->
@@ -90,8 +91,12 @@
   <!--                                                         -->
   <!--  Prerequisite :  selenium.win.build                     -->
   <!--                                                         -->
-  <target name="selenium.win.upload" depends="selenium.lib.update.zip,
+  <!-- target name="selenium.win.upload" depends="selenium.lib.update.zip,
   	                                          git.updatesite.seleniumplus.asset.update,
+  	                                          git.release.seleniumplus.upload,
+  	                                          selenium.sourceforge.upload" /-->
+  <!-- Move the dependency 'selenium.lib.update.zip' to task 'selenium.win.build' -->
+  <target name="selenium.win.upload" depends="git.updatesite.seleniumplus.asset.update,
   	                                          git.release.seleniumplus.upload,
   	                                          selenium.sourceforge.upload" />
 
