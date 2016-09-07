@@ -105,5 +105,23 @@
           </condition>
         </fail>
     </target>
+	
+    <!-- Purpose: Copy the files from playpen to the folder source\common of current workspace          -->
+    <!--          So that we can make jar files with the playpen's source code for user's testing       -->
+    <target name="copy.playpen">
+        <property name="current.dir" location="." />
+        <if>
+            <isset property="env.safs.playpen.location" />
+            <then>
+                <echo>Copying files from playpen ${env.safs.playpen.location} to ${current.dir}/${safssource}</echo>
+                <copy todir="${safssource}"  preservelastmodified="true">
+                    <fileset dir="${env.safs.playpen.location}" />
+                </copy>
+            </then>
+        	<else>
+        		<echo>Ignoring copy.playpen task.</echo>
+        	</else>
+        </if>
+    </target>
 
 </project>
