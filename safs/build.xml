@@ -23,6 +23,7 @@
   <!--          them, then make jar files           -->
   <!--                                              -->
   <target name="safs.win.prepare" depends="cvs.checkout,
+                                           copy.playpen,
                                            safs.compile,
                                            safs.jar,
                                            seleniumplus.jar" />
