@@ -5,12 +5,14 @@ REM Purpose:
 REM   This script is supposed to push "modified source code" to a palypen location and
 REM   invoke JENKINS job SeleniumPlus_Development_Debug to make build with playpen files
 REM Parameter:
-REM   PlaypenLoc                a network path of the playpen location, writable by you
-REM                             and readable by others, such as \\huanghe\home\username\S1234567
+REM   PlaypenLoc                a network path of the playpen location, WRITABLE by you
+REM                             and READABLE by others, such as \\huanghe\home\username\S1234567
 REM   Debug                     whatever if provided then show the debug message
 REM Prerequisite:
-REM   The GIT should have been installed
-REM   The GIT_HOME environment should be set as the GIT installation folder
+REM   1. The GIT should have been installed
+REM   2. The GIT_HOME environment should be set as the GIT installation folder
+REM   3. New files (source file, jar file) should be added into the GIT stage area, otherwise
+REM      they will be not counted.
 REM Example:
 REM   playpen_build.bat \\huanghe\home\username\S1234567
 REM   playpen_build.bat \\huanghe\home\username\S1234567 debug
@@ -38,7 +40,7 @@ IF NOT DEFINED GIT_HOME (
     ECHO Abort.
     ECHO PLEASE set environment GIT_HOME and assign "the GIT installation folder" to it.
     ECHO Git could be downloaded from https://git-scm.com/download/win
-    GOTO :END  
+    GOTO :USAGE  
 ) ELSE (
     SET CURL="%GIT_HOME%\usr\bin\curl.exe"
 )
@@ -51,13 +53,23 @@ SET DEBUG=%1
 IF NOT DEFINED PLAYPEN_LOCATION (
     ECHO Abort.
     ECHO Parameter PLAYPEN_LOCATION is missing, please provide it, such as \\***REMOVED***\public\safs_playpen
-    ECHO It should be a network directory, which should be writable by you and readable by others.
-    GOTO :END  
+    ECHO It should be a network directory, which is WRITABLE by you and READABLE by others.
+    GOTO :USAGE  
 )
 
 ECHO GIT_HOME is "%GIT_HOME%"
 ECHO PLAYPEN_LOCATION is "%PLAYPEN_LOCATION%", source codes will be pushed there.
-    
+
+REM Clean the PLAYPEN if it exists.
+IF EXIST %PLAYPEN_LOCATION% (
+    FOR /D %%p IN ("%PLAYPEN_LOCATION%\*") DO (
+        IF DEFINED DEBUG ECHO RD "%%p" /S /Q
+        RD "%%p" /S /Q
+    )
+    IF DEFINED DEBUG ECHO ERASE %PLAYPEN_LOCATION%\* /F /Q
+    ERASE "%PLAYPEN_LOCATION%\*" /F /Q
+)
+
 REM Then, we use the 'git status' to get the modified files, which will be uploaded to PLAYPEN
 FOR /F "usebackq tokens=1,2* " %%i IN (`git status --short`) DO (
     SET Modified_File=%%j
@@ -87,14 +99,20 @@ REM %CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=%PLAYPEN_L
 REM TODO We have to add \\ in front of %PLAYPEN_LOCATION%, one back slash will be eaten, the leading \\ will be passed as \ 
 %CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=\\%PLAYPEN_LOCATION%" "%JENKINS_REQUEST%"
 
+GOTO :END
 
-:END
+:USAGE
 
-ECHO =========================== USAGE ===============================
+ECHO.
+ECHO ==================================================================
+ECHO Usage:
 ECHO %MY_NAME% PLAYPEN_LOCATION [debug]
+ECHO.
 ECHO Example:
 ECHO %MY_NAME% \\huanghe\home\username\S1234567
 ECHO %MY_NAME% \\huanghe\home\username\S1234567 debug
-ECHO =========================== USAGE ===============================
+ECHO ==================================================================
+
+:END
 
 ENDLOCAL
