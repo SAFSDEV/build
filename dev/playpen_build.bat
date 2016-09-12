@@ -34,6 +34,7 @@ SET JENKINS_TOKEN=JLWEILAFJELWONBHGHAWHANGKWOAHTNWHAOTOQPZNJG
 SET REQUEST_PATH=/jenkins/job/%JENKINS_JOB%/buildWithParameters
 SET JENKINS_REQUEST=%JENKINS_HOST%:%JENKINS_PORT%%REQUEST_PATH%
 SET SRC_LOCATION=src
+SET MODIFIED_FILE_SUMMARY=modified_files_summary.txt
 
 REM Check the environment GIT_HOME
 IF NOT DEFINED GIT_HOME (
@@ -85,8 +86,9 @@ FOR /F "usebackq tokens=1,2* " %%i IN (`git status --short`) DO (
     IF DEFINED DEBUG ECHO Git status %%i -- !OPERATION! !Modified_File!
 
     IF [!OPERATION!]==[ADD] (
-        IF DEFINED DEBUG ECHO ... %systemroot%\system32\xcopy /c /y /q !Modified_File! %PLAYPEN_LOCATION%\!Modified_File_Without_Src!
-        ECHO F | %systemroot%\system32\xcopy /c /y /q !Modified_File! %PLAYPEN_LOCATION%\!Modified_File_Without_Src!
+        IF DEFINED DEBUG ECHO ... %systemroot%\system32\xcopy /c /y /q /z !Modified_File! %PLAYPEN_LOCATION%\!Modified_File_Without_Src!
+        ECHO F | %systemroot%\system32\xcopy /c /y /q /z !Modified_File! %PLAYPEN_LOCATION%\!Modified_File_Without_Src!
+        ECHO !Modified_File_Without_Src! >> %PLAYPEN_LOCATION%\%MODIFIED_FILE_SUMMARY%
     )
     IF [!OPERATION!]==[DELETE] (
         IF DEFINED DEBUG ECHO TODO NEED A WAY TO DELETE FILE !Modified_File! FROM build location "workspace\source\common"
@@ -98,6 +100,10 @@ IF DEFINED DEBUG ECHO %CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.l
 REM %CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=%PLAYPEN_LOCATION%" "%JENKINS_REQUEST%"
 REM TODO We have to add \\ in front of %PLAYPEN_LOCATION%, one back slash will be eaten, the leading \\ will be passed as \ 
 %CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=\\%PLAYPEN_LOCATION%" "%JENKINS_REQUEST%"
+
+ECHO.
+ECHO Please check %PLAYPEN_LOCATION%\%MODIFIED_FILE_SUMMARY% to get a summary of modified files.
+ECHO You might need to wait a few minutes for the termination of Jenkins job %JENKINS_JOB% at %JENKINS_HOST%:%JENKINS_PORT%
 
 GOTO :END
 
