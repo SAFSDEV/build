@@ -114,7 +114,7 @@
             <isset property="env.safs.playpen.location" />
             <then>
                 <echo>Copying files from playpen ${env.safs.playpen.location} to ${current.dir}/${safssource}</echo>
-                <copy todir="${safssource}"  preservelastmodified="true">
+                <copy todir="${safssource}"  preservelastmodified="true" overwrite="true">
                     <fileset dir="${env.safs.playpen.location}" />
                 </copy>
             </then>
