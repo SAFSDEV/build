@@ -1068,15 +1068,6 @@
     
     <!-- TODO, We still need to compile safs.core, droid.engine, droid.messenger to get classes ready -->
     <echo>&gt;&gt;&gt;&gt;&gt;&gt; Generating the SAFS Java API files ...</echo>
-    <echo>Prepare the java source code for generating java API.</echo>
-    <path id="source.path.ref">
-        <pathelement location="${git.wdir.core}/src"/>
-        <pathelement location="${git.wdir.droid.engine}/src"/>
-        <pathelement location="${git.wdir.droid.engine}/gen"/>
-        <pathelement location="${git.wdir.droid.messenger}/src"/>
-        <pathelement location="${git.wdir.droid.messenger}/gen"/>
-        <pathelement location="${git.wdir.droid.remotecontrol}/src"/>
-    </path>
     <echo>Prepare the dependency jar/zip files for generating java API.</echo>
     <copy todir="${installlibs}" preservelastmodified="true" >
         <fileset dir="${git.wdir.core}/src/install/lib" /></copy>
@@ -1090,8 +1081,7 @@
         <fileset dir="${git.wdir.droid.engine}/libs" includes="*.jar"/>
         <fileset dir="${git.wdir.droid.remotecontrol}/libs" includes="*.jar"/>
     </path>
-    <javadoc packageList="${git.wdir.build}/dev/javadocfiles.txt"
-           sourcepathref="source.path.ref"
+    <javadoc 
            classpathref="classes.path.ref"
            destdir="${java.docs}"
            maxmemory="1024m"
@@ -1100,6 +1090,39 @@
            version="true"
            use="true"
            windowtitle="SAFS API DOCUMENT">
+           
+        <packageset dir="${git.wdir.core}/src" defaultexcludes="yes">
+          <include name="org/safs/**"/>
+          <include name="com/sebuilder/interpreter/**"/>
+          <include name="org/apache/hc/client5/http/testframework/**"/>
+          <include name="org/slf4j/impl/**"/>
+          <include name="org/w3c/tools/codec/**"/>
+          
+          <exclude name="org/safs/selenium/install/**"/>
+          <exclude name="org/safs/selenium/webdriver/lib/test/**"/>
+          <exclude name="org/safs/test/**"/>
+        </packageset>
+        <packageset dir="${git.wdir.droid.engine}/src" defaultexcludes="yes">
+          <include name="com/robotium/solo"/>
+          <include name="org/safs/**"/>
+          <include name="com/jayway/android/robotium/remotecontrol/client/**"/>
+        </packageset>
+        <!-- TODO compile droid engine project to get 'gen' -->
+        <!--packageset dir="${git.wdir.droid.engine}/gen" defaultexcludes="yes">
+          <include name="org/safs/android/engine/**"/>
+        </packageset-->
+        <packageset dir="${git.wdir.droid.messenger}/src" defaultexcludes="yes">
+          <include name="org/safs/android/messenger/**"/>
+        </packageset>
+        <!-- TODO compile droid messenger project to get 'gen' -->
+        <!--packageset dir="${git.wdir.droid.messenger}/gen" defaultexcludes="yes">
+          <include name="org/safs/android/messenger/**"/>
+        </packageset-->
+        <packageset dir="${git.wdir.droid.remotecontrol}/src" defaultexcludes="yes">
+          <include name="com/robotium/solo"/>
+          <include name="com/jayway/android/robotium/remotecontrol/**"/>
+        </packageset>
+        
         <doctitle><![CDATA[<h1>SAFS API DOCUMENT</h1>]]></doctitle>
         <bottom><![CDATA[<i>Copyright &#169; SAS Institute. All Rights Reserved.</i>]]></bottom>
         <tag name="example" scope="all" description="Example:"/>
