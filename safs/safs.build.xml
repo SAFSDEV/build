@@ -973,7 +973,7 @@
         <fileset dir="${git.wdir.doc}" includes="*.html, *.htm, *.js, *.css, *.jpg, *.png, *.gif"/>
     </copy>
     <echo>Copying recursively the static SAFS Documents to GIT repository working directory for push</echo>
-    <copy todir="${git.wdir.github.io}"  preservelastmodified="true" >
+    <copy todir="${git.wdir.github.io}"  preservelastmodified="true" overwrite="true">
         <fileset dir="${git.wdir.doc.root}" includes="**/*"/>
     </copy>
     <echo>Copying the psftp-scripts to ${git.repo.github.io} (for 'copy to'/'delete from' sourceforge)</echo>
