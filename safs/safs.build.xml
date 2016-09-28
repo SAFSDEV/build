@@ -936,6 +936,9 @@
     </copy>
     <echo>Copy the latest static web documents from Core repository.</echo>  
     <copy todir="${git.wdir.doc.root}" preservelastmodified="true">
+      <fileset dir="${git.wdir.core}/src/install/" includes="WhatsNewInSAFS.htm"/>
+    </copy>
+    <copy todir="${git.wdir.doc.root}" preservelastmodified="true">
       <fileset dir="${git.wdir.core}/src/install/doc/" includes="*.htm, *.jpg, *.png, *.gif"/>
     </copy>
     <copy todir="${git.wdir.doc.root.sqabasic2000}" preservelastmodified="true">
