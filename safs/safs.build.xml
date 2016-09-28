@@ -946,7 +946,15 @@
       <fileset dir="${git.wdir.core}/src/org/safs/selenium/install/doc/" includes="**/*"/>
     </copy>
     <copy todir="${git.wdir.doc.root.doc}" preservelastmodified="true">
-      <fileset dir="${git.wdir.core}/src/install/doc/info" includes="TestDesignGuidelines.htm, UsingJSAFS.htm"/>
+      <!-- For history reason, we have 2 copies of these files under 'doc' and 'sqabasic2000' on web site. -->
+      <fileset dir="${git.wdir.core}/src/install/doc/info" includes="TestDesignGuidelines.htm, 
+                                                                     UsingJSAFS.htm, 
+                                                                     SAFSComponentRecognition.htm, 
+                                                                     SAFSEngineDetails.htm,
+                                                                     SAFSFramework.gif,
+                                                                     SAFSFramework.htm,
+                                                                     SAFSFramework2.gif,
+                                                                     UsingSAFSDRIVER.htm"/>
     </copy>
 
     <echo>&gt;&gt;&gt;&gt;&gt;&gt; Generating the SAFS Reference files ...</echo>
