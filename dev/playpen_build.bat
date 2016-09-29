@@ -2,6 +2,7 @@
 
 REM =============================================================================================
 REM Purpose:
+REM   This script is only for developers.
 REM   This script is supposed to push "modified source code" to a palypen location and
 REM   invoke JENKINS job SeleniumPlus_Development_Debug to make build with playpen files
 REM Parameter:
@@ -9,7 +10,7 @@ REM   PlaypenLoc                a network path of the playpen location, WRITABLE
 REM                             and READABLE by others, such as \\huanghe\home\username\S1234567
 REM   Debug                     whatever if provided then show the debug message
 REM Prerequisite:
-REM   1. The GIT should have been installed
+REM   1. The GIT (2.7.4 or above) should have been installed
 REM   2. The GIT_HOME environment should be set as the GIT installation folder
 REM   3. New files (source file, jar file) should be added into the GIT stage area, otherwise
 REM      they will be not counted.
