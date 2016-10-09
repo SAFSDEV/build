@@ -150,6 +150,7 @@
                                                 safsvars.jar
                                                 seleniumplus*.jar
                                                 SPFilterImage*.jar" />
+          <fileset dir="${safs.dependencies}/saxon/" includes="Saxon-HE-9.7.0-8.jar"/>
           <fileset dir="${safssource}/install/lib/" includes="commons-logging-*.jar
                                                               ja*.jar
                                                               JSTAFEmbedded.jar
