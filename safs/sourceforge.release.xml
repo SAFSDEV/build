@@ -93,6 +93,7 @@
 						<fileset dir="${dir.autoit}/" includes="*.dll
 																AutoItX4Java.jar
 																jacob.jar" />
+						<fileset dir="${dir.libs}/saxon/" includes="Saxon-HE-9.7.0-8.jar" />															
 		</copy>
 
 		<copy todir="${dir.temp}/extra" preservelastmodified="true">
@@ -156,6 +157,7 @@
 				<fileset dir="${dir.autoit}/" includes="*.dll
 														AutoItX4Java.jar
 														jacob.jar" />
+			    <fileset dir="${dir.libs}/saxon/" includes="Saxon-HE-9.7.0-8.jar" />
 		</copy>
 		
 		<copy todir="${dir.temp}/extra" preservelastmodified="true">

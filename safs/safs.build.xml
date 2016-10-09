@@ -701,7 +701,8 @@
           <fileset dir="${safssource}/keywords/" /></copy>
 
       <copy todir="${safsdist}/lib" preservelastmodified="true" >      
-          <fileset dir="${safssource}/org/safs/"    includes="*.dat"/>
+          <fileset dir="${safssource}/org/safs/" includes="*.dat"/>
+          <fileset dir="${safs.dependencies}/saxon/" includes="Saxon-HE-9.7.0-8.jar"/>
           <fileset dir="${safssource}/install/lib/" includes="clibwrapper*.jar
                                                               commons-logging-*.jar
                                                               Dynamic*.*
