@@ -480,6 +480,7 @@
            includes="*.dat,
                      *ResourceBundle*.properties,
                      *ResourceBundle*.properties.txt,
+                     org\apache\hc\client5\**,
                      org\safs\*.class,
                      org\safs\*.dat,
                      org\safs\control\**,
@@ -493,6 +494,7 @@
                      org\safs\natives\**,
                      org\safs\net\**,
                      org\safs\reflect\**,
+                     org\safs\rest\**,
                      org\safs\rmi\**,
                      org\safs\robot\**,
                      org\safs\sockets\**,
@@ -600,8 +602,14 @@
 	 	includes="javax.mail.jar
 	 	          org.json.jar 
 	 	          groovy-all-2.4.3.jar 
-	 	          spock-core-1.0-groovy-2.4.jar
+	 	          spock-core-1.0-groovy-2.4.jar 
 	 	          slf4j-api-1.7.21.jar" />
+
+       <fileset dir="${safs.dependencies}/saxon/" 
+                includes="Saxon-HE-9.7.0-8.jar"/>
+       <fileset dir="${safs.dependencies}/httpclient5/" 
+                includes="httpc*.jar"/>
+       
      </zip>
   </target>
 
@@ -618,6 +626,7 @@
      <mkdir  dir="${safsdist}/install" />
      <mkdir  dir="${safsdist}/install/lib" />
      <mkdir  dir="${safsdist}/jre" />
+     <mkdir  dir="${safsdist}/jre/Java64" />
      <mkdir  dir="${safsdist}/keywords" />
      <mkdir  dir="${safsdist}/lib" />
      <mkdir  dir="${safsdist}/ocr" />
@@ -637,16 +646,26 @@
   <target name="safs.win.dist" depends="_make.safs.dist, prepare.download" >
       <!-- ftp action="get" remotedir="${safsdev.win.java}" server="$server}" userid="$userid}" password="$passwd}"  preservelastmodified="true" >
           <fileset dir="${safsdist}/jre" includes="${JRE_WINDOWS}" /></ftp-->
+
+      <!-- Java 32-bit JVM -->
       <get dest="${safsdist}/jre" username="${userid}" password="${passwd}" usetimestamp="true">
-            <url url="${server}${safsdev.win.java}/${JRE_WINDOWS}"/></get>
-          
+            <url url="${server}${safsdev.win.java}/${JRE_WINDOWS}"/></get>          
       <unzip dest="${safsdist}/jre" >
           <fileset dir="${safsdist}/jre/" includes="${JRE_WINDOWS}" >
               <patternset  includes="jre/**" /></fileset></unzip>
-              
       <delete >
           <fileset dir="${safsdist}/jre/" includes="${JRE_WINDOWS}" /></delete>
       
+      <!-- Java 64-bit JVM -->
+      <get dest="${safsdist}/jre" username="${userid}" password="${passwd}" usetimestamp="true">
+            <url url="${server}${safsdev.win.java}/${JRE64_WINDOWS}"/></get>
+      <unzip dest="${safsdist}/jre" >
+          <fileset dir="${safsdist}/jre" includes="${JRE64_WINDOWS}" >
+              <patternset  includes="jre/Java64/**" /></fileset></unzip>
+      <delete >
+          <fileset dir="${safsdist}/jre/" includes="${JRE64_WINDOWS}" /></delete>
+     
+     
       <copy todir="${safsdist}/" preservelastmodified="true" >
           <fileset dir="${safssource}/install/" includes="GNU*.txt
                                                           safstid.ini
@@ -701,8 +720,9 @@
           <fileset dir="${safssource}/keywords/" /></copy>
 
       <copy todir="${safsdist}/lib" preservelastmodified="true" >      
-          <fileset dir="${safssource}/org/safs/" includes="*.dat"/>
+          <fileset dir="${safssource}/org/safs/"    includes="*.dat"/>
           <fileset dir="${safs.dependencies}/saxon/" includes="Saxon-HE-9.7.0-8.jar"/>
+          <fileset dir="${safs.dependencies}/httpclient5/" includes="httpc*.jar"/>
           <fileset dir="${safssource}/install/lib/" includes="clibwrapper*.jar
                                                               commons-logging-*.jar
                                                               Dynamic*.*
@@ -724,7 +744,7 @@
                                                               slf4j-api-1.7.21.jar
                                                               win32-x86.zip" 
                                                               
-                                                    excludes="JSTAF3.jar
+                                                    excludes="JSTAF3.jar 
                                                               re-sign.jar" />                                                    
           <fileset dir="${seleniumlibs}" excludes="*-2.37.0.jar" />
           <fileset dir="${staflibs}"  includes="JSTAF2.jar" />
