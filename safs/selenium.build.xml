@@ -30,7 +30,7 @@
 		     *.dat 
 		     *ResourceBundle*.properties 
 		     *ResourceBundle*.properties.txt  
-             org\apache\hc\client5\**,
+             org\apache\hc\client5\** 
 		     org\safs\*.class 
 		     org\safs\*.dat
       		 org\safs\autoit\**
