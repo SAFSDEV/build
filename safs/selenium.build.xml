@@ -30,6 +30,7 @@
 		     *.dat 
 		     *ResourceBundle*.properties 
 		     *ResourceBundle*.properties.txt  
+             org\apache\hc\client5\**,
 		     org\safs\*.class 
 		     org\safs\*.dat
 		     org\safs\control\**
@@ -40,6 +41,7 @@
 		     org\safs\jvmagent\**
 		     org\safs\logging\**
 		     org\safs\natives\**
+		     org\safs\rest\**
 		     org\safs\reflect\**
 		     org\safs\robot\**
 		     org\safs\staf\**
@@ -81,6 +83,12 @@
 			 		      spock-core-1.0-groovy-2.4.jar 
 			 		      slf4j-api-1.7.21.jar 
 			 		      groovy-all-2.4.3.jar" />
+
+             <fileset dir="${safs.dependencies}/saxon/" 
+                      includes="Saxon-HE-9.7.0-8.jar"/>
+             <fileset dir="${safs.dependencies}/httpclient5/" 
+                      includes="httpc*.jar"/>
+
 		      </zip>
   </target>
   
@@ -151,6 +159,7 @@
                                                 seleniumplus*.jar
                                                 SPFilterImage*.jar" />
           <fileset dir="${safs.dependencies}/saxon/" includes="Saxon-HE-9.7.0-8.jar"/>
+          <fileset dir="${safs.dependencies}/httpclient5/" includes="httpc*.jar"/>
           <fileset dir="${safssource}/install/lib/" includes="commons-logging-*.jar
                                                               ja*.jar
                                                               JSTAFEmbedded.jar
