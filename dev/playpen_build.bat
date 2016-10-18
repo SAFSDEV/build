@@ -47,6 +47,10 @@ IF NOT DEFINED GIT_HOME (
     SET CURL="%GIT_HOME%\usr\bin\curl.exe"
 )
 
+IF NOT EXIST %CURL% (
+    SET CURL="%GIT_HOME%\mingw32\bin\curl.exe"
+)
+
 REM Get input parameters
 SET PLAYPEN_LOCATION=%1
 SHIFT
