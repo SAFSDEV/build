@@ -45,10 +45,12 @@ IF NOT DEFINED GIT_HOME (
     GOTO :USAGE  
 ) ELSE (
     SET CURL="%GIT_HOME%\usr\bin\curl.exe"
+    SET USE_OLD_CURL=TRUE
 )
 
 IF NOT EXIST %CURL% (
     SET CURL="%GIT_HOME%\mingw32\bin\curl.exe"
+    SET USE_OLD_CURL=FALSE
 )
 
 REM Get input parameters
@@ -103,8 +105,11 @@ FOR /F "usebackq tokens=1,2* " %%i IN (`git status --short`) DO (
 REM call Jenkins job SeleniumPlus_Development_Debug, it is a post request
 IF DEFINED DEBUG ECHO %CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=%PLAYPEN_LOCATION%" "%JENKINS_REQUEST%"
 REM %CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=%PLAYPEN_LOCATION%" "%JENKINS_REQUEST%"
-REM TODO We have to add \\ in front of %PLAYPEN_LOCATION%, one back slash will be eaten, the leading \\ will be passed as \ 
-%CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=\\%PLAYPEN_LOCATION%" "%JENKINS_REQUEST%"
+IF [%USE_OLD_CURL%]==[TRUE] (
+    REM For older version of curl.exe, we have to add \\ in front of %PLAYPEN_LOCATION%, one "back slash" will be eaten, the leading \\ will be parsed as \
+    SET PLAYPEN_LOCATION=\\%%PLAYPEN_LOCATION%%
+)
+%CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=%PLAYPEN_LOCATION%" "%JENKINS_REQUEST%"
 
 ECHO.
 ECHO Please check %PLAYPEN_LOCATION%\%MODIFIED_FILE_SUMMARY% to get a summary of modified files.
