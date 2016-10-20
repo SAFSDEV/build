@@ -2,26 +2,26 @@
 
 REM =============================================================================================
 REM Purpose:
-REM   This script is only for developers.
-REM   This script is supposed to push "modified source code" to a palypen location and
-REM   invoke JENKINS job SeleniumPlus_Development_Debug to make build with playpen files
+REM   This script is supposed to push "modified source code" to a playpen location and
+REM   invoke JENKINS job SeleniumPlus_Development_Debug to make build with latest source
+REM   code plus files from playpen.
 REM Parameter:
 REM   PlaypenLoc                a network path of the playpen location, WRITABLE by you
-REM                             and READABLE by others, such as \\huanghe\home\username\S1234567
+REM                             and READABLE by the build machine, such as \\huanghe\home\username\S1234567
 REM   Debug                     whatever if provided then show the debug message
 REM Prerequisite:
 REM   1. The GIT (2.7.4 or above) should have been installed
 REM   2. The GIT_HOME environment should be set as the GIT installation folder
 REM   3. New files (source file, jar file) should be added into the GIT stage area, otherwise
-REM      they will be not counted.
+REM      they will not be counted.
 REM Example:
 REM   playpen_build.bat \\huanghe\home\username\S1234567
 REM   playpen_build.bat \\huanghe\home\username\S1234567 debug
 REM Note:
 REM   This script should run in the SAFS Core repository:
 REM   Run the command "git clone https://github.com/SAFSDEV/Core", 
-REM   we will have a "SAFS Core" in the Core directory.
-REM   Then, we copy this batch script to Core directory.
+REM   we will have a "SAFS Core Project" in the "Core" directory.
+REM   Then, we copy this batch script to "Core" directory.
 REM   Then we modify some source code.
 REM   Finally, run this batch with our own playpen location.
 REM ===============================================================================================
@@ -104,7 +104,6 @@ FOR /F "usebackq tokens=1,2* " %%i IN (`git status --short`) DO (
 
 REM call Jenkins job SeleniumPlus_Development_Debug, it is a post request
 IF DEFINED DEBUG ECHO %CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=%PLAYPEN_LOCATION%" "%JENKINS_REQUEST%"
-REM %CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=%PLAYPEN_LOCATION%" "%JENKINS_REQUEST%"
 IF [%USE_OLD_CURL%]==[TRUE] (
     REM For older version of curl.exe, we have to add \\ in front of %PLAYPEN_LOCATION%, one "back slash" will be eaten, the leading \\ will be parsed as \
     SET PLAYPEN_LOCATION=\\%%PLAYPEN_LOCATION%%
