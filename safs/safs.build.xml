@@ -702,6 +702,7 @@
           <fileset dir="${safssource}/install/install/" />
           <fileset dir="${safssource}/install/" includes="_Shared*.vbs
                                                           Setup*README.htm
+                                                          SetupTCAFS.wsf
                                                           SetupCustomClasspath.wsf
                                                           SetupRationalClasspath.wsf" 
                                                 

@@ -76,7 +76,6 @@
 		<!-- safs lib files -->
 		<unzip src="${dir.safsjars}/${safs.zip._lib}" dest="${dir.temp}/lib" />
 
-
 		<!-- copy selenium stuff -->
 		<timestampselector property="sel.latest.modified">
 			<path>
@@ -95,6 +94,10 @@
 																jacob.jar" />
 						<fileset dir="${dir.libs}/saxon/" includes="Saxon-HE-9.7.0-8.jar" />															
 						<fileset dir="${dir.libs}/httpclient5/" includes="httpc*.jar" />															
+		</copy>
+		
+		<copy todir="${dir.temp}/install" preservelastmodified="true">
+			<fileset dir="${dir.dist}/install" includes="SetupTCAFS.wsf" />
 		</copy>
 
 		<copy todir="${dir.temp}/extra" preservelastmodified="true">
