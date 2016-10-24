@@ -106,7 +106,7 @@ REM call Jenkins job SeleniumPlus_Development_Debug, it is a post request
 IF DEFINED DEBUG ECHO %CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=%PLAYPEN_LOCATION%" "%JENKINS_REQUEST%"
 IF [%USE_OLD_CURL%]==[TRUE] (
     REM For older version of curl.exe, we have to add \\ in front of %PLAYPEN_LOCATION%, one "back slash" will be eaten, the leading \\ will be parsed as \
-    SET PLAYPEN_LOCATION=\\%%PLAYPEN_LOCATION%%
+    SET PLAYPEN_LOCATION=\\%PLAYPEN_LOCATION%
 )
 %CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=%PLAYPEN_LOCATION%" "%JENKINS_REQUEST%"
 
