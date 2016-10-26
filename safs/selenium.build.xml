@@ -57,7 +57,10 @@
            excludes="org/safs/selenium/install/
                      org/safs/model/examples/
                      org/safs/selenium/SeleniumProcessContainer/
-                     org/safs/selenium/webdriver/lib/test/" />
+                     org/safs/selenium/webdriver/lib/test/">
+          <service type="javax.xml.transform.TransformerFactory"
+                   provider="com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"/>
+      </jar>
 
       <jar jarfile="${safsjars}/seleniumplus.jar" update="true"   
            basedir="${safssource}"

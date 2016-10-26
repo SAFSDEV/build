@@ -503,7 +503,10 @@
                      org\safs\tools\**,
                      org\slf4j\impl\**,
                      org\w3c\tools\codec\**,
-                     org\safs\xml\**" />
+                     org\safs\xml\**">
+          <service type="javax.xml.transform.TransformerFactory"
+                   provider="com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl"/>
+      </jar>
 
       <jar destfile="${safsjars}/safsmaps.jar"
            manifest="${classes}/STAF-INF/classes/META-INF/SAFSAppMapsManifest.mf"
