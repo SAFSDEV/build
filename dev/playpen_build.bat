@@ -86,25 +86,25 @@ IF NOT DEFINED PLAYPEN_LOCATION (
 IF DEFINED PLAYPEN_LOCATION_PREFIX (
     REM add file-separator(\) at the end of PLAYPEN_LOCATION_PREFIX if it does not exist.
     IF NOT !PLAYPEN_LOCATION_PREFIX:~-1!==\ SET PLAYPEN_LOCATION_PREFIX=!PLAYPEN_LOCATION_PREFIX!\
-    IF DEFINED DEBUG ECHO Add prefix !PLAYPEN_LOCATION_PREFIX! to %PLAYPEN_LOCATION%
-    SET PLAYPEN_LOCATION=!PLAYPEN_LOCATION_PREFIX!%PLAYPEN_LOCATION%
+    IF DEFINED DEBUG ECHO Add prefix !PLAYPEN_LOCATION_PREFIX! to !PLAYPEN_LOCATION!
+    SET PLAYPEN_LOCATION=!PLAYPEN_LOCATION_PREFIX!!PLAYPEN_LOCATION!
 )
 
 ECHO GIT_HOME is "%GIT_HOME%"
-ECHO PLAYPEN_LOCATION is "%PLAYPEN_LOCATION%", source codes will be copied there.
+ECHO PLAYPEN_LOCATION is "!PLAYPEN_LOCATION!", source codes will be copied there.
 Echo.
 
 REM Clean the PLAYPEN if it exists.
-IF EXIST %PLAYPEN_LOCATION% (
-    FOR /D %%p IN ("%PLAYPEN_LOCATION%\*") DO (
+IF EXIST !PLAYPEN_LOCATION! (
+    FOR /D %%p IN ("!PLAYPEN_LOCATION!\*") DO (
         IF DEFINED DEBUG ECHO RD "%%p" /S /Q
         RD "%%p" /S /Q
     )
-    IF DEFINED DEBUG ECHO ERASE %PLAYPEN_LOCATION%\* /F /Q
-    ERASE "%PLAYPEN_LOCATION%\*" /F /Q
+    IF DEFINED DEBUG ECHO ERASE !PLAYPEN_LOCATION!\* /F /Q
+    ERASE "!PLAYPEN_LOCATION!\*" /F /Q
 )
 
-SET MODIFIEDFILES_SUMMARY_FILE=%PLAYPEN_LOCATION%\%MODIFIEDFILE_SUMMARY%
+SET MODIFIEDFILES_SUMMARY_FILE=!PLAYPEN_LOCATION!\%MODIFIEDFILE_SUMMARY%
 
 REM Then, we use the 'git status' to get the modified files, which will be uploaded to PLAYPEN
 FOR /F "usebackq tokens=1,2* " %%i IN (`git status --short`) DO (
@@ -123,8 +123,8 @@ FOR /F "usebackq tokens=1,2* " %%i IN (`git status --short`) DO (
     IF DEFINED DEBUG ECHO Git status %%i -- !OPERATION! !Modified_File!
 
     IF [!OPERATION!]==[ADD] (
-        IF DEFINED DEBUG ECHO ... %systemroot%\system32\xcopy /c /y /q /z !Modified_File! %PLAYPEN_LOCATION%\!Modified_File_Without_Src!
-        ECHO F | %systemroot%\system32\xcopy /c /y /q /z !Modified_File! %PLAYPEN_LOCATION%\!Modified_File_Without_Src!
+        IF DEFINED DEBUG ECHO ... %systemroot%\system32\xcopy /c /y /q /z !Modified_File! !PLAYPEN_LOCATION!\!Modified_File_Without_Src!
+        ECHO F | %systemroot%\system32\xcopy /c /y /q /z !Modified_File! !PLAYPEN_LOCATION!\!Modified_File_Without_Src!
         ECHO !Modified_File_Without_Src! >> %MODIFIEDFILES_SUMMARY_FILE%
     )
     
@@ -135,12 +135,12 @@ FOR /F "usebackq tokens=1,2* " %%i IN (`git status --short`) DO (
 
 IF EXIST %MODIFIEDFILES_SUMMARY_FILE% (
     REM call Jenkins job SeleniumPlus_Development_Debug, it is a post request
-    IF DEFINED DEBUG ECHO %CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=%PLAYPEN_LOCATION%" "%JENKINS_REQUEST%"
+    IF DEFINED DEBUG ECHO %CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=!PLAYPEN_LOCATION!" "%JENKINS_REQUEST%"
     IF [%USE_OLD_CURL%]==[TRUE] (
-        REM For older version of curl.exe, we have to add \\ in front of %PLAYPEN_LOCATION%, one "back slash" will be eaten, the leading \\ will be parsed as \
-        SET PLAYPEN_LOCATION=\\%PLAYPEN_LOCATION%
+        REM For older version of curl.exe, we have to add \\ in front of !PLAYPEN_LOCATION!, one "back slash" will be eaten, the leading \\ will be parsed as \
+        SET PLAYPEN_LOCATION=\\!PLAYPEN_LOCATION!
     )
-    %CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=%PLAYPEN_LOCATION%" "%JENKINS_REQUEST%"
+    %CURL% -d "token=%JENKINS_TOKEN%&delay=0sec&safs.playpen.location=!PLAYPEN_LOCATION!" "%JENKINS_REQUEST%"
     
     ECHO.
     ECHO Please check %MODIFIEDFILES_SUMMARY_FILE% to get a summary of modified files.
