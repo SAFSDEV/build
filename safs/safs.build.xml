@@ -170,10 +170,11 @@
   <target name="javac.compile">
     <taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy" classpath="${safs.classpath}" />
     <groovy>
-      ant.javac(
+      ant.typedef(name:'groovyc', classname:'org.codehaus.groovy.ant.Groovyc', classpath:'${safs.classpath}')
+      ant.groovyc(
+        srcdir:'${safssource}',
         destdir:'${classes}',
         classpath:'${safs.classpath}',
-        debug:'on',
         encoding:'UTF-8',
         excludes:'''
           **/*.sh **/*.bat **/*.vbs **/*.wsf 
@@ -183,8 +184,8 @@
           **/*.classpath **/*.project
         ''',
       ) {
-      	src(path:'${safssource}')
-      	[
+        javac(debug:'on')
+        [
       	  'eclipse/**',
       	  'com/jayway/android/robotium/solo/**',
       	  'eclipse/**',
@@ -202,19 +203,19 @@
       	  'org/safs/tools/drivers/test/**',
       	  'org/safs/tools/engines/test/**',
       	  'org/safs/tools/expressions/test/**',
-      	].each { path ->
-          exclude(name:path)
-      	}
-      	if (!properties.'Private.FTPServer.isConnected') {
-      	  // Exclude all things importing rational
-      	  [
-      	    'TestScript.java',
-      	    'org/safs/rational/**/*.java',
-      	    'resources/*.java',
-      	  ]. each { path ->
-      	    exclude(name:path)
-      	  }
-      	}
+        ].each { path ->
+            exclude(name:path)
+        }
+        if (!properties.'Private.FTPServer.isConnected') {
+          // Exclude all things importing rational
+          [
+            'TestScript.java',
+            'org/safs/rational/**/*.java',
+            'resources/*.java',
+          ]. each { path ->
+            exclude(name:path)
+          }
+        }
       }
     </groovy>
   </target>
