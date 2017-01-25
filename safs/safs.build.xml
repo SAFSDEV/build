@@ -200,6 +200,7 @@
       	  'org/safs/jmx/**',
       	  'org/safs/jrex/**',
       	  'org/safs/selenium/install/**',
+      	  'org/safs/test/compile/groovy/**',
       	  'org/safs/tools/drivers/test/**',
       	  'org/safs/tools/engines/test/**',
       	  'org/safs/tools/expressions/test/**',
