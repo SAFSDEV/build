@@ -19,10 +19,20 @@
   </target>
                                            
   <target name="git.clone.build" description="Clone from GitHub SAFSDEV/build" >
-      <var name="git.repo.tree" value="safsdev.build" />
-      <var name="git.repo.url.prefix" value="git://github.com/SAFSDEV/" />
-      <var name="git.repo.name" value="build" />
-      <var name="git.repo.branch" value="master" />
+  
+      <!-- Set properties to defaults if they have not already been set -->
+      <property name="git.repo.tree" value="safsdev.build" />
+      <!-- Note: for testing with a local repo, set the url prefix to something like
+           file://c:\Users\userid\git\
+           Make sure it ends with a trailing "\" or "/". -->
+      <property name="git.repo.url.prefix" value="git://github.com/SAFSDEV/" />
+      <property name="git.repo.name" value="build" />
+      <property name="git.repo.branch" value="master" />
+  
+      <var name="git.repo.tree" value="${git.repo.tree}" />
+      <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
+      <var name="git.repo.name" value="${git.repo.name}" />
+      <var name="git.repo.branch" value="${git.repo.branch}" />
       <antcall target="git.repo.clone" />
   </target>
 
