@@ -168,73 +168,55 @@
   <!--     the availability of private FTP Server.    -->
   <!--                                                -->
   <target name="javac.compile">
-    <if>
-      <isset property="Private.FTPServer.isConnected" />
-      <then>
-        <javac destdir="${classes}"
-         classpath="${safs.classpath}"
-         debug="on"
-         encoding="UTF-8"
-         excludes="**/*.sh **/*.bat **/*.vbs **/*.wsf 
-             **/*.ini **/*.dat **/*.properties 
-             **/*.htm **/*.html 
-             **/*.png **/.gif  **/.jpg 
-             **/*.classpath **/*.project" >
-            <src path="${safssource}" /> 
-            <exclude name="eclipse/**" />
-            <exclude name="com/jayway/android/robotium/solo/**" />
-            <exclude name="eclipse/**" />
-            <exclude name="install/**" />
-            <exclude name="keywords/**" />
-            <exclude name="META-INF/**" />
-            <exclude name="STAF-INF/**" />
-            <exclude name="org/*.*" />
-            <exclude name="org/safstag/**" />
-            <exclude name="org/safs/abbot/**" />
-            <exclude name="org/safs/jfcunit/**" />
-            <exclude name="org/safs/jmx/**" />
-            <exclude name="org/safs/jrex/**" />
-            <exclude name="org/safs/selenium/install/**" />
-            <exclude name="org/safs/tools/drivers/test/**" />
-            <exclude name="org/safs/tools/engines/test/**" />
-            <exclude name="org/safs/tools/expressions/test/**" />
-        </javac> 
-      </then>
-      <else>
-        <javac destdir="${classes}"
-         classpath="${safs.classpath}"
-         debug="on"
-         encoding="UTF-8"
-         excludes="**/*.sh **/*.bat **/*.vbs **/*.wsf 
-             **/*.ini **/*.dat **/*.properties 
-             **/*.htm **/*.html 
-             **/*.png **/.gif  **/.jpg 
-             **/*.classpath **/*.project " >
-          <src path="${safssource}" /> 
-          <exclude name="eclipse/**" />
-          <exclude name="com/jayway/android/robotium/solo/**" />
-          <exclude name="eclipse/**" />
-          <exclude name="install/**" />
-          <exclude name="keywords/**" />
-          <exclude name="META-INF/**" />
-          <exclude name="STAF-INF/**" />
-          <exclude name="org/*.*" />
-          <exclude name="org/safstag/**" />
-          <exclude name="org/safs/abbot/**" />
-          <exclude name="org/safs/jfcunit/**" />
-          <exclude name="org/safs/jmx/**" />
-          <exclude name="org/safs/jrex/**" />
-          <exclude name="org/safs/selenium/install/**" />
-          <exclude name="org/safs/tools/drivers/test/**" />
-          <exclude name="org/safs/tools/engines/test/**" />
-          <exclude name="org/safs/tools/expressions/test/**" />
-          <!-- Exclude all things importing rational -->
-          <exclude name="TestScript.java" />
-          <exclude name="org/safs/rational/**/*.java" />
-          <exclude name="resources/*.java" />
-        </javac> 
-      </else>      
-    </if>
+    <taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy" classpath="${safs.classpath}" />
+    <groovy>
+      ant.javac(
+        destdir:'${classes}',
+        classpath:'${safs.classpath}',
+        debug:'on',
+        encoding:'UTF-8',
+        excludes:'''
+          **/*.sh **/*.bat **/*.vbs **/*.wsf 
+	  **/*.ini **/*.dat **/*.properties 
+	  **/*.htm **/*.html 
+	  **/*.png **/.gif  **/.jpg 
+          **/*.classpath **/*.project
+        ''',
+      ) {
+      	src(path:'${safssource}')
+      	[
+      	  'eclipse/**',
+      	  'com/jayway/android/robotium/solo/**',
+      	  'eclipse/**',
+      	  'install/**',
+      	  'keywords/**',
+      	  'META-INF/**',
+      	  'STAF-INF/**',
+      	  'org/*.*',
+      	  'org/safstag/**',
+      	  'org/safs/abbot/**',
+      	  'org/safs/jfcunit/**',
+      	  'org/safs/jmx/**',
+      	  'org/safs/jrex/**',
+      	  'org/safs/selenium/install/**',
+      	  'org/safs/tools/drivers/test/**',
+      	  'org/safs/tools/engines/test/**',
+      	  'org/safs/tools/expressions/test/**',
+      	].each { path ->
+          exclude(name:path)
+      	}
+      	if (!properties.'Private.FTPServer.isConnected') {
+      	  // Exclude all things importing rational
+      	  [
+      	    'TestScript.java',
+      	    'org/safs/rational/**/*.java',
+      	    'resources/*.java',
+      	  ]. each { path ->
+      	    exclude(name:path)
+      	  }
+      	}
+      }
+    </groovy>
   </target>
 
   <!--                                              -->
