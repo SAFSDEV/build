@@ -164,6 +164,7 @@
           <fileset dir="${safs.dependencies}/saxon/" includes="Saxon-HE-9.7.0-8.jar"/>
           <fileset dir="${safs.dependencies}/httpclient5/" includes="httpc*.jar"/>
           <fileset dir="${safssource}/install/lib/" includes="commons-logging-*.jar
+                                                              commons-lang*.jar
                                                               ja*.jar
                                                               JSTAFEmbedded.jar
                                                               groovy-all-2.4.3.jar
