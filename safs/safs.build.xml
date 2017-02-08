@@ -711,6 +711,7 @@
           <fileset dir="${safs.dependencies}/httpclient5/" includes="httpc*.jar"/>
           <fileset dir="${safssource}/install/lib/" includes="clibwrapper*.jar
                                                               commons-logging-*.jar
+                                                              commons-lang*.jar
                                                               Dynamic*.*
                                                               dom4j-*.jar
                                                               IExplorer*.*
