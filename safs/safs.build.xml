@@ -711,6 +711,7 @@
           <fileset dir="${safssource}/org/safs/"    includes="*.dat"/>
           <fileset dir="${safs.dependencies}/saxon/" includes="Saxon-HE-9.7.0-8.jar"/>
           <fileset dir="${safs.dependencies}/httpclient5/" includes="httpc*.jar"/>
+          <fileset dir="${safs.dependencies}/log4j/" includes="log4j*.jar"/>
           <fileset dir="${safssource}/install/lib/" includes="clibwrapper*.jar
                                                               commons-logging-*.jar
                                                               commons-lang*.jar
