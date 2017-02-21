@@ -95,6 +95,7 @@
 						<fileset dir="${dir.libs}/saxon/" includes="Saxon-HE-9.7.0-8.jar" />															
 						<fileset dir="${dir.libs}/httpclient5/" includes="httpc*.jar" />															
 						<fileset dir="${dir.libs}/log4j/" includes="log4j*.jar" />															
+						<fileset dir="${dir.libs}/groovy/" includes="groovy-all*.jar" />
 						<fileset dir="${dir.libs}/" includes="commons-lang*.jar" />
 		</copy>
 		
@@ -165,7 +166,8 @@
 														jacob.jar" />
 				<fileset dir="${dir.libs}/saxon/" includes="Saxon-HE-9.7.0-8.jar" />															
 				<fileset dir="${dir.libs}/httpclient5/" includes="httpc*.jar" />
-				<fileset dir="${dir.libs}/log4j" includes="log4j*.jar" />
+				<fileset dir="${dir.libs}/log4j/" includes="log4j*.jar" />
+			    <fileset dir="${dir.libs}/groovy/" includes="groovy-all*.jar" />
 			    <fileset dir="${dir.libs}/" includes="commons-lang*.jar" />
 		</copy>
 		
