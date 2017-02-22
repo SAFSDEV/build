@@ -33,14 +33,16 @@
              org\apache\hc\client5\**,
 		     org\safs\*.class 
 		     org\safs\*.dat
+      		 org\safs\autoit\**
+      		 org\safs\auth\**
 		     org\safs\control\**
 		     org\safs\custom\**
 		     org\safs\image\**
 		     org\safs\install\**
-      		 org\safs\autoit\**
 		     org\safs\jvmagent\**
 		     org\safs\logging\**
 		     org\safs\natives\**
+		     org\safs\persist\**
 		     org\safs\rest\**
 		     org\safs\reflect\**
 		     org\safs\robot\**
