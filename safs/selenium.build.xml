@@ -84,15 +84,13 @@
 			 	includes="javax.mail.jar
 			 		      org.json.jar 
 			 		      spock-core-1.0-groovy-2.4.jar 
-			 		      slf4j-api-1.7.21.jar 
-			 		      groovy-all-2.4.3.jar" />
+			 		      slf4j-api-1.7.21.jar" />
 
-             <fileset dir="${safs.dependencies}/saxon/" 
-                      includes="Saxon-HE-9.7.0-8.jar"/>
-             <fileset dir="${safs.dependencies}/httpclient5/" 
-                      includes="httpc*.jar"/>
+             <fileset dir="${safs.dependencies}/saxon/" includes="Saxon-HE-9.7.0-8.jar"/>
+             <fileset dir="${safs.dependencies}/httpclient5/" includes="httpc*.jar"/>
+             <fileset dir="${safs.dependencies}/groovy/" includes="groovy-all-2.4.7.jar"/>
 
-		      </zip>
+	   </zip>
   </target>
   
   <target name="_make.sp.dist" >  
@@ -164,11 +162,11 @@
           <fileset dir="${safs.dependencies}/saxon/" includes="Saxon-HE-9.7.0-8.jar"/>
           <fileset dir="${safs.dependencies}/httpclient5/" includes="httpc*.jar"/>
           <fileset dir="${safs.dependencies}/log4j/" includes="log4j*.jar"/>
+          <fileset dir="${safs.dependencies}/groovy/" includes="groovy-all-2.4.7.jar"/>
           <fileset dir="${safssource}/install/lib/" includes="commons-logging-*.jar
                                                               commons-lang*.jar
                                                               ja*.jar
                                                               JSTAFEmbedded.jar
-                                                              groovy-all-2.4.3.jar
                                                               slf4j-api-1.7.21.jar
                                                               spock-core-1.0-groovy-2.4.jar
                                                               org.json.jar
