@@ -34,10 +34,12 @@
   <!--  Purpose:                                    -->
   <!--          Check out source code and compile   -->
   <!--          them, then make jar files.          -->
-  <!--          Make SAFS ditribution assets        -->
+  <!--          Make SAFS distribution assets       -->
+  <!--          Prepare SAFS update zip assets      -->
   <!--                                              -->
   <target name="safs.win.build" depends="safs.win.prepare,
-                                         safs.win.dist" />
+                                         safs.win.dist,
+                                         safs.lib.update.zip" />
 	
   <!--                                                                                                                -->
   <!--  selenium.win.plugin                                                                                           -->
@@ -59,7 +61,8 @@
   <!--  Purpose:                                                                 -->
   <!--          Check out source code and compile them, then make jar files.     -->
   <!--          Compile and create jar for SE+ plugin.                           -->
-  <!--          Make SeleniumPlus ditribution assets                             -->
+  <!--          Make SeleniumPlus distribution assets                            -->
+  <!--          Prepare SeleniumPlus update zip assets                           -->
   <!--                                                                           -->
   <target name="selenium.win.build" depends="selenium.win.plugin,
                                              seleniumplus.win.dist,
@@ -76,8 +79,7 @@
   <!--                                                         -->
   <!--  Prerequisite :  safs.win.build                         -->
   <!--                                                         -->
-  <target name="safs.win.upload" depends="safs.lib.update.zip,
-  	                                      git.updatesite.safs.asset.update,
+  <target name="safs.win.upload" depends="git.updatesite.safs.asset.update,
   	                                      git.release.safs.upload,
   	                                      safs.sourceforge.upload" />
 
@@ -92,11 +94,6 @@
   <!--                                                         -->
   <!--  Prerequisite :  selenium.win.build                     -->
   <!--                                                         -->
-  <!-- target name="selenium.win.upload" depends="selenium.lib.update.zip,
-  	                                          git.updatesite.seleniumplus.asset.update,
-  	                                          git.release.seleniumplus.upload,
-  	                                          selenium.sourceforge.upload" /-->
-  <!-- Move the dependency 'selenium.lib.update.zip' to task 'selenium.win.build' -->
   <target name="selenium.win.upload" depends="git.updatesite.seleniumplus.asset.update,
   	                                          git.release.seleniumplus.upload,
   	                                          selenium.sourceforge.upload" />
