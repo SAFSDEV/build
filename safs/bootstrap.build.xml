@@ -27,7 +27,7 @@
            Make sure it ends with a trailing "\" or "/". -->
       <property name="git.repo.url.prefix" value="git://github.com/SAFSDEV/" />
       <property name="git.repo.name" value="build" />
-      <property name="git.repo.branch" value="master" />
+      <property name="git.repo.branch" value="keyword_driven_safs_rest_testing" />
   
       <var name="git.repo.tree" value="${git.repo.tree}" />
       <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
