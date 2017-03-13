@@ -956,6 +956,9 @@
       <fileset dir="${git.wdir.core}/src/install/doc/static" includes="*.htm, *.js, *.css"/>
       <fileset dir="${git.wdir.core}/src/install/doc/info" includes="*.htm, *.jpg, *.png, *.gif"/>
     </copy>
+    <copy todir="${git.wdir.doc.root.configure}" preservelastmodified="true">
+      <fileset dir="${git.wdir.core}/src/install/doc/configure" includes="*.xml"/>
+    </copy>
     <copy todir="${git.wdir.doc.root.selenium}" preservelastmodified="true">
       <fileset dir="${git.wdir.core}/src/org/safs/selenium/install/doc/" includes="**/*"/>
     </copy>
