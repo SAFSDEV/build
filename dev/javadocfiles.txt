@@ -49,6 +49,7 @@ org.safs.natives
 org.safs.net
 org.safs.natives.win32
 org.safs.persist
+org.safs.persist.test
 org.safs.rational
 org.safs.rational.custom
 org.safs.rational.flex
