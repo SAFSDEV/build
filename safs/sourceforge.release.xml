@@ -92,11 +92,14 @@
 						<fileset dir="${dir.autoit}/" includes="*.dll
 																AutoItX4Java.jar
 																jacob.jar" />
-						<fileset dir="${dir.libs}/saxon/" includes="Saxon-HE-9.7.0-8.jar" />															
+						<fileset dir="${dir.libs}/saxon/" includes="Saxon-HE-*.jar" />															
 						<fileset dir="${dir.libs}/httpclient5/" includes="httpc*.jar" />															
 						<fileset dir="${dir.libs}/log4j/" includes="log4j*.jar" />															
 						<fileset dir="${dir.libs}/groovy/" includes="groovy-all*.jar" />
-						<fileset dir="${dir.libs}/" includes="commons-lang*.jar" />
+						<fileset dir="${dir.libs}/spring-core/" includes="spring-core*.jar" />
+						<fileset dir="${dir.libs}/spring-web/" includes="spring-web*.jar" />
+						<fileset dir="${dir.libs}/" includes="commons-lang*.jar
+							                                  slf4j-api*.jar" />
 		</copy>
 		
 		<copy todir="${dir.temp}/install" preservelastmodified="true">
@@ -164,11 +167,14 @@
 				<fileset dir="${dir.autoit}/" includes="*.dll
 														AutoItX4Java.jar
 														jacob.jar" />
-				<fileset dir="${dir.libs}/saxon/" includes="Saxon-HE-9.7.0-8.jar" />															
+				<fileset dir="${dir.libs}/saxon/" includes="Saxon-HE-*.jar" />															
 				<fileset dir="${dir.libs}/httpclient5/" includes="httpc*.jar" />
 				<fileset dir="${dir.libs}/log4j/" includes="log4j*.jar" />
 			    <fileset dir="${dir.libs}/groovy/" includes="groovy-all*.jar" />
-			    <fileset dir="${dir.libs}/" includes="commons-lang*.jar" />
+			    <fileset dir="${dir.libs}/spring-core/" includes="spring-core*.jar" />
+                <fileset dir="${dir.libs}/spring-web/" includes="spring-web*.jar" />
+			    <fileset dir="${dir.libs}/" includes="commons-lang*.jar
+                                                      slf4j-api*.jar" />
 		</copy>
 		
 		<copy todir="${dir.temp}/extra" preservelastmodified="true">
