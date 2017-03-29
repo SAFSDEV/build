@@ -741,7 +741,8 @@
           <fileset dir="${seleniumlibs}" excludes="*-2.37.0.jar
                                                    *.exe"/>
           <fileset dir="${staflibs}"  includes="JSTAF2.jar" />
-      	  <fileset dir="${autoitlibs}" includes="*.dll *.exe *.jar" />
+          <!-- autoit *.exe will NOT be put into folder "libs", they will be put into folder "extra" -->
+      	  <fileset dir="${autoitlibs}" includes="*.dll *.jar" />
           <fileset dir="${safsjars}/" excludes="_safs-lib-update.zip
                                                 _seleniumplus-lib-update.zip
                                                 robotium-messages.jar
@@ -751,6 +752,15 @@
                                                 seleniumplus.jar
                                                 SPFilterImageGUI.jar" /></copy>   
 
+      <!-- put "selenium-browser-driver *.exe", "autoit *.exe" and "selenium extra scripts" into folder "extra" -->
+      <copy todir="${safsdist}/extra" preservelastmodified="true" >
+          <fileset dir="${seleniumlibs}" includes="*.exe"/>
+          <fileset dir="${autoitlibs}/" includes="Au3Info*.exe" />
+          <!--  TODO Modify the batch script to use %SAFSDIR% instead of %SELNIUM_PLUS% -->
+          <fileset dir="${safssource}/org/safs/selenium/install/extra" includes="*.bat
+                                                                                 *.vbs" />
+      </copy>
+      
       <copy todir="${safsdist}/ocr" preservelastmodified="true" >
           <fileset dir="${safssource}/install/ocr/" excludes="tessdata.zip"/></copy>
           
@@ -884,6 +894,7 @@
                      datastorej/**
                      datastorej_logs/**
                      doc/**
+                     extra/**
                      keywords/**
                      lib/**
                      ocr/**
