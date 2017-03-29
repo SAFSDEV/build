@@ -5,6 +5,7 @@ com.jayway.android.robotium.remotecontrol.client.processor
 com.jayway.android.robotium.remotecontrol.install
 com.jayway.android.robotium.remotecontrol.solo
 org.safs
+org.safs.auth
 org.safs.android
 org.safs.android.auto.lib
 org.safs.android.auto.tools
@@ -47,6 +48,8 @@ org.safs.model.tools
 org.safs.natives
 org.safs.net
 org.safs.natives.win32
+org.safs.persist
+org.safs.persist.test
 org.safs.rational
 org.safs.rational.custom
 org.safs.rational.flex

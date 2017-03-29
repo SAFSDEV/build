@@ -467,16 +467,18 @@
                      org\apache\hc\client5\**,
                      org\safs\*.class,
                      org\safs\*.dat,
+                     org\safs\auth\**,
+      				 org\safs\autoit\**,
                      org\safs\control\**,
                      org\safs\cukes\**,
                      org\safs\custom\**,
                      org\safs\image\**,
                      org\safs\install\**,
-      				 org\safs\autoit\**,
                      org\safs\jvmagent\**,
                      org\safs\logging\**,
                      org\safs\natives\**,
                      org\safs\net\**,
+                     org\safs\persist\**,
                      org\safs\reflect\**,
                      org\safs\rest\**,
                      org\safs\rmi\**,
@@ -953,6 +955,9 @@
     <copy todir="${git.wdir.doc.root.sqabasic2000}" preservelastmodified="true">
       <fileset dir="${git.wdir.core}/src/install/doc/static" includes="*.htm, *.js, *.css"/>
       <fileset dir="${git.wdir.core}/src/install/doc/info" includes="*.htm, *.jpg, *.png, *.gif"/>
+    </copy>
+    <copy todir="${git.wdir.doc.root.configure}" preservelastmodified="true">
+      <fileset dir="${git.wdir.core}/src/install/doc/configure" includes="*.xml"/>
     </copy>
     <copy todir="${git.wdir.doc.root.selenium}" preservelastmodified="true">
       <fileset dir="${git.wdir.core}/src/org/safs/selenium/install/doc/" includes="**/*"/>
