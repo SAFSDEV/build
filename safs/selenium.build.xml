@@ -153,7 +153,7 @@
                              
       <copy todir="${seleniumdist}/libs"  preservelastmodified="true" >
           <fileset dir="${seleniumlibs}"  excludes="*-2.37.0.jar
-						    *.exe"/>
+						                            *.exe"/>
           <fileset dir="${safsjars}/" includes="safsinput.jar
                                                 safslogs.jar
                                                 safsmaps.jar
@@ -161,15 +161,17 @@
                                                 safsvars.jar
                                                 seleniumplus*.jar
                                                 SPFilterImage*.jar" />
-          <fileset dir="${safs.dependencies}/saxon/" includes="Saxon-HE-9.7.0-8.jar"/>
+          <fileset dir="${safs.dependencies}/saxon/" includes="Saxon-HE-*.jar"/>
           <fileset dir="${safs.dependencies}/httpclient5/" includes="httpc*.jar"/>
           <fileset dir="${safs.dependencies}/log4j/" includes="log4j*.jar"/>
-          <fileset dir="${safs.dependencies}/groovy/" includes="groovy-all-2.4.7.jar"/>
+          <fileset dir="${safs.dependencies}/groovy/" includes="groovy-all-*.jar"/>
+          <fileset dir="${safs.dependencies}/spring-core/" includes="spring-core*.jar"/>
+          <fileset dir="${safs.dependencies}/spring-web/" includes="spring-web*.jar"/>
           <fileset dir="${safssource}/install/lib/" includes="commons-logging-*.jar
                                                               commons-lang*.jar
                                                               ja*.jar
                                                               JSTAFEmbedded.jar
-                                                              slf4j-api-1.7.21.jar
+                                                              slf4j-api-*.jar
                                                               spock-core-1.0-groovy-2.4.jar
                                                               org.json.jar
                                                               juniversalchardet*.jar
@@ -202,7 +204,7 @@
                      install/**
                      uninstall/**
                      Java/**
-		     Java64/**
+		             Java64/**
                      extra/**
                      eclipse/**
                      doc/**" />

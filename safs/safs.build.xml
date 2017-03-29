@@ -709,10 +709,12 @@
 
       <copy todir="${safsdist}/lib" preservelastmodified="true" >      
           <fileset dir="${safssource}/org/safs/"    includes="*.dat"/>
-          <fileset dir="${safs.dependencies}/saxon/" includes="Saxon-HE-9.7.0-8.jar"/>
+          <fileset dir="${safs.dependencies}/saxon/" includes="Saxon-HE-*.jar"/>
           <fileset dir="${safs.dependencies}/httpclient5/" includes="httpc*.jar"/>
           <fileset dir="${safs.dependencies}/log4j/" includes="log4j*.jar"/>
-          <fileset dir="${safs.dependencies}/groovy/" includes="groovy-all-2.4.7.jar"/>
+          <fileset dir="${safs.dependencies}/groovy/" includes="groovy-all-*.jar"/>
+          <fileset dir="${safs.dependencies}/spring-core/" includes="spring-core*.jar"/>
+          <fileset dir="${safs.dependencies}/spring-web/" includes="spring-web*.jar"/>
           <fileset dir="${safssource}/install/lib/" includes="clibwrapper*.jar
                                                               commons-logging-*.jar
                                                               commons-lang*.jar
@@ -731,12 +733,13 @@
                                                               safsjvmagent.properties
                                                               javax.mail.jar
                                                               spock-core-1.0-groovy-2.4.jar
-                                                              slf4j-api-1.7.21.jar
+                                                              slf4j-api-*.jar
                                                               win32-x86.zip" 
                                                               
                                                     excludes="JSTAF3.jar 
                                                               re-sign.jar" />                                                    
-          <fileset dir="${seleniumlibs}" excludes="*-2.37.0.jar" />
+          <fileset dir="${seleniumlibs}" excludes="*-2.37.0.jar
+                                                   *.exe"/>
           <fileset dir="${staflibs}"  includes="JSTAF2.jar" />
       	  <fileset dir="${autoitlibs}" includes="*.dll *.exe *.jar" />
           <fileset dir="${safsjars}/" excludes="_safs-lib-update.zip
