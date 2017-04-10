@@ -8,7 +8,13 @@
 	<condition property="Private.FTPServer.isConnected">
 		<isreachable host="${private.ftpserver}" timeout="10" />
 	</condition>
-    
+	
+	<!-- Property 'Eclipse.is.Mars' is used to tell us if -->
+	<!-- the embedded Eclipse is Mars or not.             -->
+	<condition property="Eclipse.is.Mars">
+		<equals arg1="${ECLIPSE_WINDOWS}" arg2="MARS_WIN64.ZIP" />
+	</condition>
+	
 	<!-- Prepare for server connection  -->
 	<!-- Currently, we set the server-name, user and password. -->
 	<!-- We have 2 FTP servers, one is private and the other is public -->
