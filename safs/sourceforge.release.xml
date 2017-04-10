@@ -196,6 +196,11 @@
 	    <!--  Get ready the "Plugin zip files"  -->		
 		<zip destfile="${dir.updatesite}/${dir.plugin}/${dir.latest}/${selenium.zip.plugin}">
 			<fileset dir="${dir.safsjars}" includes="${selenium.jar.plugin}"/>
+			<!-- Includes the cvs plugins for SeleniumPlus if the embedded Eclipse is "Mars". -->
+			<fileset dir="${dir.dist}/eclipse/plugins">
+				<include name="org.eclipse.cvs_*.jar" if="Eclipse.is.Mars"/>
+				<include name="org.eclipse.team.cvs*.jar" if="Eclipse.is.Mars"/>
+			</fileset>
 		</zip>
 		<copy file="${dir.updatesite}/${dir.plugin}/${dir.latest}/${selenium.zip.plugin}" 
     	  tofile="${dir.updatesite}/${dir.plugin}/${build.date}_${build.time}/${selenium.zip.plugin}" 
