@@ -140,6 +140,7 @@
     <copy todir="${libs}" preservelastmodified="true" >
         <fileset dir="${installlibs}" excludes="*.js,*.htm,*.properties"/>
     </copy>
+    <!--   copy all dependencies including the golden safsupdate.jar                                -->
     <copy todir="${libs}" preservelastmodified="true" >
         <fileset dir="${safs.dependencies}"/>
     </copy>
@@ -339,18 +340,26 @@
       <copy todir="${safsjars}" preservelastmodified="true" >
         <fileset dir="${safslibs}" includes="safsupdate.jar"/></copy>
 
-      <!-- promote as golden copy to ftpserver after testing -->  
+      <!-- promote as golden copy to Core/dependencies/safs after testing -->  
       <jar destfile="${safsjars}/safsupdate_latest.jar"
            manifest="${classes}/META-INF/MANIFEST.LIBRARYUPDATE.MF"
            basedir="${classes}"
            includes="org/safs/IndependantLog.*,
+                     org/safs/Constants*.*,
+                     org/safs/JavaConstant.*,
+                     org/safs/StatusCodes.*,
+                     org/safs/selenium/util/SePlusInstallInfo*.*,
+                     org/safs/selenium/webdriver/lib/SeleniumPlusException.*,
                      org/safs/sockets/NamedListener.*,
                      org/safs/sockets/DebugListener.*,
                      org/safs/install/LibraryUpdate*.*,
                      org/safs/install/ProgressIndicator*.*,
-                     org/safs/text/FileUtilities.*,
-                     org/safs/SAFSException.*,
+                     org/safs/logging/AbstractLogFacility.*,
+                     org/safs/text/FileUtilities*.*,
+                     org/safs/SAFSStringTokenizer.*,
+                     org/safs/SAFS*Exception.*,
                      org/safs/StringUtils.*,
+                     org/safs/tools/drivers/DriverConstant*.*,
                      org/safs/tools/stringutils/StringUtilities.*,
                      org/safs/tools/MainClass.*,
                      org/safs/tools/RuntimeDataInterface.*,
