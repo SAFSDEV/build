@@ -66,7 +66,8 @@
 
       <jar jarfile="${safsjars}/seleniumplus.jar" update="true"   
            basedir="${safssource}"
-           includes="org/safs/selenium/**/*.java" 
+           includes="org/safs/selenium/**/*.java
+                     org/safs/SAFSPlus.java" 
            excludes="org/safs/selenium/install/
                      org/safs/selenium/webdriver/lib/test/" />
       
