@@ -607,6 +607,38 @@
        <fileset dir="${safs.dependencies}/groovy/" includes="groovy-all-2.4.7.jar"/>
        
      </zip>
+     <!-- compress source code to zip files -->
+     <antcall target="safs.source.zip" />
+  </target>
+
+  <!--                                                                                              -->
+  <!--   compress core project's source code to source_core.zip                                     -->
+  <!--   compress SeleniumPlus-Plugin project's source code to source_seplusplugin.zip              -->
+  <!--                                                                                              -->
+  <target name="safs.source.zip">
+     <echo>Compress source code of project ${git.repo.core} to zip file ${source_core.name} </echo>
+     <zip destfile="${safsjars}/${source_core.name}" 
+          basedir="${safssource}"
+          includes="org/**
+                    com/**
+                    resources/*
+                    META-INF/**
+                    STAF-INF/**
+                    *.dat
+                    *.properties
+                    *.java" 
+     />
+
+     <echo>Compress source code of project ${git.repo.seplus} to zip file ${source_seplusplugin.name} </echo>
+     <zip destfile="${safsjars}/${source_seplusplugin.name}" 
+          basedir="${safssource}/eclipse/plugins/Seleniumplus_plugin/src"
+          includes="com/**" 
+     />
+        
+     <zip destfile="${safsjars}/_source.zip">
+         <fileset dir="${safsjars}" includes="${source_core.name}
+                                              ${source_seplusplugin.name}"/>
+     </zip>
   </target>
 
   <target name="_make.safs.dist" >  
@@ -888,7 +920,12 @@
 
       <copy todir="${safsdist}/uninstall"  preservelastmodified="true" >
           <fileset dir="${safssource}/install/uninstall/" /></copy>
-                             
+      
+      <!--  copy source code of core seleniumplus -->
+      <copy todir="${safsdist}/"  preservelastmodified="true" >
+          <fileset dir="${safsjars}" includes="${source_core.name}
+                                               ${source_seplusplugin.name}"/></copy>
+                                     
       <!--                                -->
       <!--  BUILD the Release ZIP files   -->
       <!--                                -->
