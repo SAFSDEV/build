@@ -614,10 +614,11 @@
   <!--                                                                                              -->
   <!--   compress core project's source code to source_core.zip                                     -->
   <!--   compress SeleniumPlus-Plugin project's source code to source_seplusplugin.zip              -->
+  <!--   This is called within target "safs.jar"                                                    -->
   <!--                                                                                              -->
   <target name="safs.source.zip">
-     <echo>Compress source code of project ${git.repo.core} to zip file ${source_core.name} </echo>
-     <zip destfile="${safsjars}/${source_core.name}" 
+     <echo>Compress source code of project ${git.repo.core} to zip file ${source_core.zip} </echo>
+     <zip destfile="${safsjars}/${source_core.zip}" 
           basedir="${safssource}"
           includes="org/**
                     com/**
@@ -629,15 +630,15 @@
                     *.java" 
      />
 
-     <echo>Compress source code of project ${git.repo.seplus} to zip file ${source_seplusplugin.name} </echo>
-     <zip destfile="${safsjars}/${source_seplusplugin.name}" 
+     <echo>Compress source code of project ${git.repo.seplus} to zip file ${source_seplusplugin.zip} </echo>
+     <zip destfile="${safsjars}/${source_seplusplugin.zip}" 
           basedir="${safssource}/eclipse/plugins/Seleniumplus_plugin/src"
           includes="com/**" 
      />
         
      <zip destfile="${safsjars}/_source.zip">
-         <fileset dir="${safsjars}" includes="${source_core.name}
-                                              ${source_seplusplugin.name}"/>
+         <fileset dir="${safsjars}" includes="${source_core.zip}
+                                              ${source_seplusplugin.zip}"/>
      </zip>
   </target>
 
@@ -923,8 +924,8 @@
       
       <!--  copy source code of core seleniumplus -->
       <copy todir="${safsdist}/"  preservelastmodified="true" >
-          <fileset dir="${safsjars}" includes="${source_core.name}
-                                               ${source_seplusplugin.name}"/></copy>
+          <fileset dir="${safsjars}" includes="${source_core.zip}
+                                               ${source_seplusplugin.zip}"/></copy>
                                      
       <!--                                -->
       <!--  BUILD the Release ZIP files   -->
