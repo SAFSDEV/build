@@ -922,7 +922,7 @@
       <copy todir="${safsdist}/uninstall"  preservelastmodified="true" >
           <fileset dir="${safssource}/install/uninstall/" /></copy>
       
-      <!--  copy source code of core seleniumplus -->
+      <!--  copy source code of core seleniumplus_plugin -->
       <copy todir="${safsdist}/"  preservelastmodified="true" >
           <fileset dir="${safsjars}" includes="${source_core.zip}
                                                ${source_seplusplugin.zip}"/></copy>

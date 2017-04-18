@@ -197,6 +197,12 @@
           <mapper type="flatten" />
       </unzip>
       -->
+      
+      <!--  copy source code of core and seleniumplus_plugin -->
+      <copy todir="${seleniumdist}/"  preservelastmodified="true" >
+          <fileset dir="${safsjars}" includes="${source_core.zip}
+                                               ${source_seplusplugin.zip}"/></copy>
+      
       <zip destfile="${seleniumdist}/TestDesigner.ZIP"
            basedir="${seleniumdist}"
            includes="Setup.bat
