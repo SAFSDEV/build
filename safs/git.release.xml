@@ -32,13 +32,14 @@
   <!--====================                  targets in safs.build.xml                                    =====================-->
   <!--====================                      "safs.jar"                                               =====================-->
   <!--========================================================================================================================-->
+	
+	
   <!--                                                                                    -->
   <!-- Update the GitHub SAFSDEV UpdateSite "safs" release with assets                    -->
   <!--                                                                                    -->
   <!--                                                SAFS.LIB.UPDATE.ZIP                 -->
   <!--                                                source_core.zip                     -->
   <!--                                                                                    -->
-
   <target name="git.updatesite.safs.asset.update" description="Update asset of SAFS release at GitHub SAFSDEV/UpdateSite" >
   	<!-- SAFS.LIB.UPDATE.ZIP -->
   	<!-- delete the asset-->
@@ -70,6 +71,7 @@
   <!--                                                                               -->
   <!--                                                SEPLUS.LIB.UPDATE.ZIP          -->
   <!--                                                SEPLUS.PLUGIN.UPDATE.ZIP       -->
+  <!--                                                source_core.zip                -->
   <!--                                                source_seplusplugin.zip        -->
   <!--                                                                               -->
   <target name="git.updatesite.seleniumplus.asset.update" description="Update asset of SELENIUMPLUS release at GitHub SAFSDEV/UpdateSite" >
@@ -97,16 +99,17 @@
 	<var name="git.release.asset.data" value="${git.release.updatesite.seleniumplus.asset.plugin.data}" />
 	<antcall target="git.release.upload.asset" />
   	
-  	<!-- source_core.zip will only be pushed to SAFS Update site
+  	<!-- source_core.zip -->
+  	<!-- delete the asset-->
     <var name="git.release.id" value="${git.release.updatesite.seleniumplus.id}" />
 	<var name="git.release.asset.name" value="${source_core.zip}" />
   	<antcallback target="git.get.asset.id" return="exec.rc, exec.output, exec.error, git.asset.id"/>
   	<antcall target="git.release.delete.asset"/>
+  	<!-- upload asset -->
 	<var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
 	<var name="git.release.asset.type" value="${source_core.type}" />
 	<var name="git.release.asset.data" value="${safsjars}/${source_core.zip}" />
 	<antcall target="git.release.upload.asset" />
-  	-->
   	
   	<!-- source_seplusplugin.zip -->
   	<!-- delete the asset-->
@@ -134,7 +137,7 @@
     <var name="git.release.asset.name" value="${git.release.asset.safs.name}" />
     <antcall target="git.release.upload.asset" />
     <!-- source_core.zip -->
-    <var name="git.release.uploads.url" value="${git.release.uploads.seleniumplus.url}" />
+    <var name="git.release.uploads.url" value="${git.release.uploads.safs.url}" />
     <var name="git.release.asset.type" value="${source_core.type}" />
     <var name="git.release.asset.data" value="${safsdist}/${source_core.zip}" />
     <var name="git.release.asset.name" value="${source_core.zip}" />
