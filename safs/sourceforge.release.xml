@@ -185,6 +185,17 @@
 			<fileset dir="${source}/common/org/safs/selenium/install/extra" includes="*.bat
 				                                                                      *.vbs" />
 		</copy>
+		
+		<!-- includes the custom resource bundle properties files for seleniumplus-plugin -->
+		<!-- TODO
+		     we probably should zip these properties files to seleniumplugin zip file, but that
+		     zip file will be unzip to the specific folder 'eclipse/plugins'. Here we want
+		     them to be copied to 'eclipse/configuration/com.sas.seleniumplus'.
+		     So I just zip them to SEPLUS.LIB.UPDATE.ZIP for now.
+	    -->
+		<copy todir="${dir.temp}/eclipse/configuration/com.sas.seleniumplus" preservelastmodified="true">
+	         <fileset dir="${dir.dist}/eclipse/configuration/com.sas.seleniumplus" includes="*.properties" />
+		</copy>
 
 	    <!--  Get ready the "Update zip files"  -->	
 		<zip destfile="${dir.updatesite}/${dir.lib}/${dir.latest}/${selenium.zip.lib}" basedir="${dir.temp}" />
