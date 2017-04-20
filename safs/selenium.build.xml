@@ -203,6 +203,11 @@
           <fileset dir="${safsjars}" includes="${source_core.zip}
                                                ${source_seplusplugin.zip}"/></copy>
       
+      <!--  copy resource bundle properties files to custom location -->
+      <copy todir="${seleniumdist}/eclipse/configuration/com.sas.seleniumplus" preservelastmodified="true" >
+        <fileset dir="${safssource}/eclipse/plugins/Seleniumplus_plugin/" includes="preferences.properties"/>
+      </copy>
+      
       <zip destfile="${seleniumdist}/TestDesigner.ZIP"
            basedir="${seleniumdist}"
            includes="Setup.bat
