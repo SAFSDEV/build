@@ -18,6 +18,7 @@
 	<property name="dir.dist" value="dist"/>
 	<property name="dir.lib" value="lib"/>
 	<property name="dir.libs" value="libs"/>
+	<property name="dir.source" value="source"/>
 	<property name="dir.selenium" value="libs/selenium"/>
 	<property name="dir.autoit" value="libs/autoit"/>
 	<property name="dir.plugin" value="plugin"/>
@@ -115,20 +116,28 @@
 				                                                                      *.vbs" />
 		</copy>
 		
-		<!--  Get ready the "Update zip files"  -->
+		<!--  Get ready the "Library Update zip files"  -->
 		<zip destfile="${dir.updatesite}/${dir.lib}/${dir.latest}/${safs.zip.lib}" basedir="${dir.temp}"/>
 		<copy file="${dir.updatesite}/${dir.lib}/${dir.latest}/${safs.zip.lib}" 
-    	  tofile="${dir.updatesite}/${dir.lib}/${build.date}_${build.time}/${safs.zip.lib}" 
-    	  preservelastmodified="true"/>
+    	      tofile="${dir.updatesite}/${dir.lib}/${build.date}_${build.time}/${safs.zip.lib}" 
+    	      preservelastmodified="true"/>
 		<delete dir="${dir.temp}" />
-
+		
 		<!--  Get ready the "Release zip files"  -->
 		<copy file="${dir.dist}/${safs.zip.release}"
-          tofile="${dir.updatesite}/${dir.release}/${dir.latest}/${safs.zip.release}" 
-          preservelastmodified="true"/>
+              tofile="${dir.updatesite}/${dir.release}/${dir.latest}/${safs.zip.release}" 
+              preservelastmodified="true"/>
 		<copy file="${dir.updatesite}/${dir.release}/${dir.latest}/${safs.zip.release}"
-          tofile="${dir.updatesite}/${dir.release}/${build.date}_${build.time}/${safs.zip.release}" 
-          preservelastmodified="true"/>
+              tofile="${dir.updatesite}/${dir.release}/${build.date}_${build.time}/${safs.zip.release}" 
+              preservelastmodified="true"/>
+
+        <!--  Get ready the "Source zip files"  -->
+        <copy todir="${dir.updatesite}/${dir.source}/${dir.latest}" preservelastmodified="true">
+            <fileset dir="${safsjars}" includes="source_*.zip" />
+        </copy>
+        <copy todir="${dir.updatesite}/${dir.source}/${build.date}_${build.time}" preservelastmodified="true">
+            <fileset dir="${safsjars}" includes="source_*.zip" />
+        </copy>
 
 	</target>
 
@@ -197,14 +206,14 @@
 	         <fileset dir="${dir.dist}/eclipse/configuration/com.sas.seleniumplus" includes="*.properties" />
 		</copy>
 
-	    <!--  Get ready the "Update zip files"  -->	
+	    <!--  Get ready the "Library Update zip files"  -->	
 		<zip destfile="${dir.updatesite}/${dir.lib}/${dir.latest}/${selenium.zip.lib}" basedir="${dir.temp}" />
 		<copy file="${dir.updatesite}/${dir.lib}/${dir.latest}/${selenium.zip.lib}" 
-    	  tofile="${dir.updatesite}/${dir.lib}/${build.date}_${build.time}/${selenium.zip.lib}" 
-    	  preservelastmodified="true"/>
+    	      tofile="${dir.updatesite}/${dir.lib}/${build.date}_${build.time}/${selenium.zip.lib}" 
+    	      preservelastmodified="true"/>
 		<delete dir="${dir.temp}" />
 
-	    <!--  Get ready the "Plugin zip files"  -->		
+	    <!--  Get ready the "Plugin Update zip files"  -->		
 		<zip destfile="${dir.updatesite}/${dir.plugin}/${dir.latest}/${selenium.zip.plugin}">
 			<fileset dir="${dir.safsjars}" includes="${selenium.jar.plugin}"/>
 			<!-- Includes the cvs plugins for SeleniumPlus if the embedded Eclipse is "Mars". -->
@@ -214,18 +223,27 @@
 			</fileset>
 		</zip>
 		<copy file="${dir.updatesite}/${dir.plugin}/${dir.latest}/${selenium.zip.plugin}" 
-    	  tofile="${dir.updatesite}/${dir.plugin}/${build.date}_${build.time}/${selenium.zip.plugin}" 
-    	  preservelastmodified="true"/>
+    	      tofile="${dir.updatesite}/${dir.plugin}/${build.date}_${build.time}/${selenium.zip.plugin}" 
+    	      preservelastmodified="true"/>
 
 	    <!--  Get ready the "Release zip files"  -->		
 		<copy file="${dir.dist}/${selenium.zip.designer}"
-          tofile="${dir.updatesite}/${dir.release}/${dir.latest}/${selenium.zip.release}" 
-          preservelastmodified="true"/>
+              tofile="${dir.updatesite}/${dir.release}/${dir.latest}/${selenium.zip.release}" 
+              preservelastmodified="true"/>
 		<copy file="${dir.updatesite}/${dir.release}/${dir.latest}/${selenium.zip.release}"
-          tofile="${dir.updatesite}/${dir.release}/${build.date}_${build.time}/${selenium.zip.release}" 
-          preservelastmodified="true"/>
+              tofile="${dir.updatesite}/${dir.release}/${build.date}_${build.time}/${selenium.zip.release}" 
+              preservelastmodified="true"/>
+		
+        <!--  Get ready the "Source zip files"  -->
+        <copy todir="${dir.updatesite}/${dir.source}/${dir.latest}" preservelastmodified="true">
+        	<fileset dir="${safsjars}" includes="source_*.zip" />
+        </copy>
+        <copy todir="${dir.updatesite}/${dir.source}/${build.date}_${build.time}" preservelastmodified="true">
+        	<fileset dir="${safsjars}" includes="source_*.zip" />
+        </copy>
 
 	</target>
+
 	<!--========================================================================================================================-->
 	<!--====================    END of Prepare SAFS/SeleniumPlus update assets.                            =====================-->
 	<!--========================================================================================================================-->

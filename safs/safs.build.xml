@@ -636,7 +636,7 @@
           includes="com/**" 
      />
         
-     <zip destfile="${safsjars}/_source.zip">
+     <zip destfile="${safsjars}/${source_all.zip}">
          <fileset dir="${safsjars}" includes="${source_core.zip}
                                               ${source_seplusplugin.zip}"/>
      </zip>
