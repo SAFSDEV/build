@@ -18,8 +18,9 @@
   <!--====================                                  SAFS.LIB.UPDATE.ZIP                          =====================-->
   <!--====================                                  SEPLUS.LIB.UPDATE.ZIP                        =====================-->
   <!--====================                                  SEPLUS.PLUGIN.UPDATE.ZIP                     =====================-->
-  <!--====================                                  source_core.zip                              =====================-->
-  <!--====================                                  source_seplusplugin.zip                      =====================-->
+  <!--====================                                  source_all.zip (UpdateSite)                  =====================-->
+  <!--====================                                  source_core.zip (Release)                    =====================-->
+  <!--====================                                  source_seplusplugin.zip (Release)            =====================-->
   <!--====================    Targets could be called directly:                                          =====================-->
   <!--====================                                  git.updatesite.safs.asset.update             =====================-->
   <!--====================                                  git.updatesite.seleniumplus.asset.update     =====================-->
@@ -38,7 +39,7 @@
   <!-- Update the GitHub SAFSDEV UpdateSite "safs" release with assets                    -->
   <!--                                                                                    -->
   <!--                                                SAFS.LIB.UPDATE.ZIP                 -->
-  <!--                                                source_core.zip                     -->
+  <!--                                                source_all.zip                      -->
   <!--                                                                                    -->
   <target name="git.updatesite.safs.asset.update" description="Update asset of SAFS release at GitHub SAFSDEV/UpdateSite" >
   	<!-- SAFS.LIB.UPDATE.ZIP -->
@@ -53,16 +54,16 @@
 	<var name="git.release.asset.data" value="${git.release.updatesite.safs.asset.data}" />
 	<antcall target="git.release.upload.asset" />
   	
-  	<!-- source_core.zip -->
+  	<!-- source_all.zip -->
   	<!-- delete the asset-->
     <var name="git.release.id" value="${git.release.updatesite.safs.id}" />
-	<var name="git.release.asset.name" value="${source_core.zip}" />
+	<var name="git.release.asset.name" value="${source_all.zip}" />
   	<antcallback target="git.get.asset.id" return="exec.rc, exec.output, exec.error, git.asset.id"/>
   	<antcall target="git.release.delete.asset"/>
   	<!-- upload asset -->
 	<var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
-	<var name="git.release.asset.type" value="${source_core.type}" />
-	<var name="git.release.asset.data" value="${safsjars}/${source_core.zip}" />
+	<var name="git.release.asset.type" value="${source_all.type}" />
+	<var name="git.release.asset.data" value="${source}/${source_all.zip}" />
 	<antcall target="git.release.upload.asset" />
   </target>
 	
@@ -71,8 +72,7 @@
   <!--                                                                               -->
   <!--                                                SEPLUS.LIB.UPDATE.ZIP          -->
   <!--                                                SEPLUS.PLUGIN.UPDATE.ZIP       -->
-  <!--                                                source_core.zip                -->
-  <!--                                                source_seplusplugin.zip        -->
+  <!--                                                source_all.zip                 -->
   <!--                                                                               -->
   <target name="git.updatesite.seleniumplus.asset.update" description="Update asset of SELENIUMPLUS release at GitHub SAFSDEV/UpdateSite" >
   	<!-- SEPLUS.LIB.UPDATE.ZIP -->
@@ -98,30 +98,18 @@
 	<var name="git.release.asset.type" value="${git.release.updatesite.seleniumplus.asset.plugin.type}" />
 	<var name="git.release.asset.data" value="${git.release.updatesite.seleniumplus.asset.plugin.data}" />
 	<antcall target="git.release.upload.asset" />
-  	
-  	<!-- source_core.zip -->
-  	<!-- delete the asset-->
+  	  	
+    <!-- source_all.zip -->
+    <!-- delete the asset-->
     <var name="git.release.id" value="${git.release.updatesite.seleniumplus.id}" />
-	<var name="git.release.asset.name" value="${source_core.zip}" />
-  	<antcallback target="git.get.asset.id" return="exec.rc, exec.output, exec.error, git.asset.id"/>
-  	<antcall target="git.release.delete.asset"/>
-  	<!-- upload asset -->
-	<var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
-	<var name="git.release.asset.type" value="${source_core.type}" />
-	<var name="git.release.asset.data" value="${safsjars}/${source_core.zip}" />
-	<antcall target="git.release.upload.asset" />
-  	
-  	<!-- source_seplusplugin.zip -->
-  	<!-- delete the asset-->
-    <var name="git.release.id" value="${git.release.updatesite.seleniumplus.id}" />
-	<var name="git.release.asset.name" value="${source_seplusplugin.zip}" />
-  	<antcallback target="git.get.asset.id" return="exec.rc, exec.output, exec.error, git.asset.id"/>
-  	<antcall target="git.release.delete.asset"/>
-  	<!-- upload asset -->
-	<var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
-	<var name="git.release.asset.type" value="${source_seplusplugin.type}" />
-	<var name="git.release.asset.data" value="${safsjars}/${source_seplusplugin.zip}" />
-	<antcall target="git.release.upload.asset" />
+    <var name="git.release.asset.name" value="${source_all.zip}" />
+    <antcallback target="git.get.asset.id" return="exec.rc, exec.output, exec.error, git.asset.id"/>
+    <antcall target="git.release.delete.asset"/>
+    <!-- upload asset -->
+    <var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
+    <var name="git.release.asset.type" value="${source_all.type}" />
+    <var name="git.release.asset.data" value="${source}/${source_all.zip}" />
+    <antcall target="git.release.upload.asset" />
   </target>
 	
   <!--                                                                           -->

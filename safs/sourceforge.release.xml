@@ -133,10 +133,10 @@
 
         <!--  Get ready the "Source zip files"  -->
         <copy todir="${dir.updatesite}/${dir.source}/${dir.latest}" preservelastmodified="true">
-            <fileset dir="${safsjars}" includes="source_*.zip" />
+            <fileset dir="${source}" includes="source_*.zip" />
         </copy>
         <copy todir="${dir.updatesite}/${dir.source}/${build.date}_${build.time}" preservelastmodified="true">
-            <fileset dir="${safsjars}" includes="source_*.zip" />
+            <fileset dir="${source}" includes="source_*.zip" />
         </copy>
 
 	</target>
@@ -236,10 +236,10 @@
 		
         <!--  Get ready the "Source zip files"  -->
         <copy todir="${dir.updatesite}/${dir.source}/${dir.latest}" preservelastmodified="true">
-        	<fileset dir="${safsjars}" includes="source_*.zip" />
+        	<fileset dir="${source}" includes="source_*.zip" />
         </copy>
         <copy todir="${dir.updatesite}/${dir.source}/${build.date}_${build.time}" preservelastmodified="true">
-        	<fileset dir="${safsjars}" includes="source_*.zip" />
+        	<fileset dir="${source}" includes="source_*.zip" />
         </copy>
 
 	</target>
