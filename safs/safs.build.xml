@@ -614,11 +614,17 @@
   <!--                                                                                              -->
   <!--   compress core project's source code to source_core.zip                                     -->
   <!--   compress SeleniumPlus-Plugin project's source code to source_seplusplugin.zip              -->
+  <!--   compress source_core.zip and source_seplusplugin.zip into source_all.zip                   -->
+  <!--   all these source zip files will be put into folder 'source'                                -->
   <!--   This is called within target "safs.jar"                                                    -->
   <!--                                                                                              -->
   <target name="safs.source.zip">
+     <delete>
+       <fileset dir="${source}" includes="source_*.zip"/>
+     </delete>
+
      <echo>Compress source code of project ${git.repo.core} to zip file ${source_core.zip} </echo>
-     <zip destfile="${safsjars}/${source_core.zip}" 
+     <zip destfile="${source}/${source_core.zip}" 
           basedir="${safssource}"
           includes="org/**
                     com/**
@@ -627,19 +633,22 @@
                     STAF-INF/**
                     *.dat
                     *.properties
-                    *.java" 
+                    *.java"
      />
 
      <echo>Compress source code of project ${git.repo.seplus} to zip file ${source_seplusplugin.zip} </echo>
-     <zip destfile="${safsjars}/${source_seplusplugin.zip}" 
+     <zip destfile="${source}/${source_seplusplugin.zip}" 
           basedir="${safssource}/eclipse/plugins/Seleniumplus_plugin/src"
-          includes="com/**" 
+          includes="com/**"
      />
         
-     <zip destfile="${safsjars}/${source_all.zip}">
-         <fileset dir="${safsjars}" includes="${source_core.zip}
-                                              ${source_seplusplugin.zip}"/>
-     </zip>
+     <echo>Compress ${source}/${source_core.zip} and ${source}/${source_seplusplugin.zip} to zip file ${source_all.zip} </echo>
+     <zip destfile="${source}/${source_all.zip}"
+          basedir="."
+          includes="${source}/${source_core.zip}
+                    ${source}/${source_seplusplugin.zip}"
+      />
+
   </target>
 
   <target name="_make.safs.dist" >  
