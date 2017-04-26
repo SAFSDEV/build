@@ -226,7 +226,10 @@
   <target name="selenium.plugin.build" >
       <java jar="${ECLIPSEJARS}/${ECLIPSELAUNCHER}"
             fork="true"
-            output="${basedir}/selenium.plugin.build.log" >
+            output="${basedir}/${selenium.plugin.build.log}"
+            resultproperty="java.rc"
+            outputproperty="java.output"
+            errorproperty="java.error" >
             <sysproperty key="ECLIPSEJARS" value="${ECLIPSEJARS}" />
             <sysproperty key="SAFSJARS" value="${basedir}/safsjars" />
             <arg value="-application" /> 
@@ -235,6 +238,22 @@
             <arg value="${basedir}/source/common/eclipse/plugins/Seleniumplus_plugin/build.xml" />
             <arg value="build.update.jar" />
       </java>
+
+      <echo>java.rc: ${java.rc}</echo>
+      <echo>java.error: ${java.error}</echo>
+      <!-- echo>${java.output}</echo -->
+      <echo message="For build detail information, please refer to file '${basedir}/${selenium.plugin.build.log}.'"/>
+    
+	  <fail message="Fail to build selenium plus plugin. For details, refer to file '${basedir}/${selenium.plugin.build.log}'.">
+	    <condition>
+	      <or>
+	        <not>
+	           <equals arg1="${java.rc}" arg2="0" trim="true"/>
+	        </not>
+	        <contains string="${java.error}" substring="BUILD FAILED" casesensitive="false"/>
+	      </or>
+	    </condition>
+	  </fail>
   </target>
   
   <target name="run.regression.test" depends="seleniumplus.lib.update.runtime, git.clone.se.regression">
@@ -352,6 +371,12 @@
 	  <echo>java out put can be found in file: ${update.runtime.log}</echo>
 	</then></if>
 	<copy todir="${SELENIUM_PLUS}\update_bak\libs" preservelastmodified="true" file="${SELENIUM_PLUS}\libs\safsupdate.jar"/>
+	
+    <!-- we MUST clean the value of some global variables.-->
+    <var name="java.rc" unset="true"/>
+    <var name="java.output" unset="true"/>
+    <var name="java.error" unset="true"/>
+	
     <java jar="${update.runtime.jar}"
     	   fork="true"
     	   output="${update.runtime.log}"
