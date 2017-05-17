@@ -208,6 +208,18 @@
         <fileset dir="${safssource}/eclipse/plugins/Seleniumplus_plugin/" includes="preferences.properties"/>
       </copy>
       
+      <!--
+      Run the SeleniumPlus-Plugin test.
+      -->
+      <ant
+        target="test.compile.and.run.only"
+        dir="${basedir}/source/common/eclipse/plugins/Seleniumplus_plugin"
+        useNativeBasedir="true"
+        >
+        <property name="ECLIPSEJARS" location="${ECLIPSEJARS}" />
+        <property name="SAFSJARS" location="${basedir}/safsjars" />
+      </ant>
+
       <zip destfile="${seleniumdist}/TestDesigner.ZIP"
            basedir="${seleniumdist}"
            includes="Setup.bat
