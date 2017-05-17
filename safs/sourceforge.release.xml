@@ -205,6 +205,12 @@
 		<copy todir="${dir.temp}/eclipse/configuration/com.sas.seleniumplus" preservelastmodified="true">
 	         <fileset dir="${dir.dist}/eclipse/configuration/com.sas.seleniumplus" includes="*.properties" />
 		</copy>
+		
+		<!-- includes the VB script for creating Selenium shortcuts in Program Group -->
+		<copy todir="${dir.temp}/install" preservelastmodified="true">
+	         <fileset dir="${dir.dist}/install" includes="_SharedFunctions.vbs
+	         	                                          CreateSeleniumPlusProgramGroup.wsf" />
+		</copy>
 
 	    <!--  Get ready the "Library Update zip files"  -->	
 		<zip destfile="${dir.updatesite}/${dir.lib}/${dir.latest}/${selenium.zip.lib}" basedir="${dir.temp}" />
