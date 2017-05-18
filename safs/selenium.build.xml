@@ -218,6 +218,7 @@
         >
         <property name="ECLIPSEJARS" location="${ECLIPSEJARS}" />
         <property name="SAFSJARS" location="${basedir}/safsjars" />
+        <property name="seleniumdist" location="${seleniumdist}" />
       </ant>
 
       <zip destfile="${seleniumdist}/TestDesigner.ZIP"
