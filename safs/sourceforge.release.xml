@@ -206,10 +206,16 @@
 	         <fileset dir="${dir.dist}/eclipse/configuration/com.sas.seleniumplus" includes="*.properties" />
 		</copy>
 		
-		<!-- includes the VB script for creating Selenium shortcuts in Program Group -->
+		<!-- includes the VB script for creating SeleniumPlus shortcuts in Program Group -->
 		<copy todir="${dir.temp}/install" preservelastmodified="true">
 	         <fileset dir="${dir.dist}/install" includes="_SharedFunctions.vbs
 	         	                                          CreateSeleniumPlusProgramGroup.wsf" />
+		</copy>
+		
+		<!-- includes the VB script for deleting SeleniumPlus/STAF shortcuts in Program Group -->
+		<copy todir="${dir.temp}/uninstall" preservelastmodified="true">
+	         <fileset dir="${dir.dist}/uninstall" includes="UninstallSeleniumPlusProgramGroup.vbs
+	         	                                            UninstallSTAFProgramGroup.vbs" />
 		</copy>
 
 	    <!--  Get ready the "Library Update zip files"  -->	
