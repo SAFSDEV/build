@@ -106,6 +106,14 @@
      <mkdir dir="${seleniumdist}/eclipse" />
   </target>
   
+  <!-- ========================================================================================================= -->
+  <!-- seleniumplus.win.dist will                                                                                -->
+  <!--   1. get everything ready in the folder ${seleniumdist}: get embedded Java, get Eclipse, get jar files    -->
+  <!--      and other script files etc.                                                                          -->
+  <!--   2. Run the SeleniumPlus-Plugin test                                                                     -->
+  <!--   3. make a TestDesigner.ZIP                                                                              -->
+  <!--                                                                                                           -->
+  <!-- ========================================================================================================= -->
   <target name="seleniumplus.win.dist" depends="_make.sp.dist, prepare.download" >
 
       <!-- ftp action="get" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
