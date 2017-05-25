@@ -530,7 +530,8 @@
            includes="org\safs\install\*.class
                      org\safs\natives\*.class 
                      org\safs\natives\win32\*.class
-                     org\safs\text\FileUtilities.class 
+                     org\safs\text\FileUtilities.class
+                     org\safs\text\FileUtilities$*.class 
                      org\safs\text\FileUtilitiesByThirdParty.class 
                      org\safs\tools\CaseInsensitiveFile.class
                      org\safs\tools\MainClass.class
