@@ -21,6 +21,7 @@
            manifest="${classes}/META-INF/MANIFEST.SELENIUMPLUS.MF"
            basedir="${classes}"
            includes="org/safs/selenium/**
+                     org/safs/seleniumplus/**
                      org\safs\sockets\DebugListener.class 
                      org\safs\sockets\NamedListener.class
 		     org\safs\android\auto\lib\*Console*.class 
