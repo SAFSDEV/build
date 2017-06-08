@@ -934,8 +934,8 @@
       
       <!--  copy source code of core seleniumplus_plugin -->
       <copy todir="${safsdist}/"  preservelastmodified="true" >
-          <fileset dir="${safsjars}" includes="${source_core.zip}
-                                               ${source_seplusplugin.zip}"/></copy>
+          <fileset dir="${source}" includes="${source_core.zip}
+                                             ${source_seplusplugin.zip}"/></copy>
                                      
       <!--                                -->
       <!--  BUILD the Release ZIP files   -->

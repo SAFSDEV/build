@@ -127,7 +127,7 @@
     <!-- source_core.zip -->
     <var name="git.release.uploads.url" value="${git.release.uploads.safs.url}" />
     <var name="git.release.asset.type" value="${source_core.type}" />
-    <var name="git.release.asset.data" value="${safsjars}/${source_core.zip}" />
+    <var name="git.release.asset.data" value="${source}/${source_core.zip}" />
     <var name="git.release.asset.name" value="${source_core.zip}" />
     <antcall target="git.release.upload.asset" />
   </target>
@@ -148,13 +148,13 @@
   	  <!-- source_core.zip -->
       <var name="git.release.uploads.url" value="${git.release.uploads.seleniumplus.url}" />
       <var name="git.release.asset.type" value="${source_core.type}" />
-      <var name="git.release.asset.data" value="${safsjars}/${source_core.zip}" />
+      <var name="git.release.asset.data" value="${source}/${source_core.zip}" />
       <var name="git.release.asset.name" value="${source_core.zip}" />
       <antcall target="git.release.upload.asset" />
   	  <!-- source_seplusplugin.zip -->
       <var name="git.release.uploads.url" value="${git.release.uploads.seleniumplus.url}" />
       <var name="git.release.asset.type" value="${source_seplusplugin.type}" />
-      <var name="git.release.asset.data" value="${safsjars}/${source_seplusplugin.zip}" />
+      <var name="git.release.asset.data" value="${source}/${source_seplusplugin.zip}" />
       <var name="git.release.asset.name" value="${source_seplusplugin.zip}" />
       <antcall target="git.release.upload.asset" />
   </target>
