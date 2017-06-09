@@ -22,6 +22,7 @@
   <!--                                               -->
   <target name="cleanclasses" >
     <delete dir="${classes}" />
+    <delete dir="${test.core.classes}" />
   </target>
   
   
@@ -96,6 +97,9 @@
         <fileset dir="${git.wdir.core}/rrafs/" /></move>
     <move todir="${safssource}" preservelastmodified="true" >
         <fileset dir="${git.wdir.core}/src/" /></move>
+    <mkdir dir="${git.wdir.core}/test" />
+    <move todir="${safs.test.core.source}" preservelastmodified="true" >
+        <fileset dir="${git.wdir.core}/test" /></move>
     <move todir="${safs.dependencies}" preservelastmodified="true" >
         <fileset dir="${git.wdir.core}/dependencies/" /></move>
     
@@ -168,10 +172,8 @@
   <!--     NOT free testing engines JARs based on     -->
   <!--     the availability of private FTP Server.    -->
   <!--                                                -->
-  <target name="javac.compile">
-    <taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy" classpath="${safs.classpath}" />
+  <target name="javac.compile" depends="groovy.init">
     <groovy>
-      ant.typedef(name:'groovyc', classname:'org.codehaus.groovy.ant.Groovyc', classpath:'${safs.classpath}')
       ant.groovyc(
         srcdir:'${safssource}',
         destdir:'${classes}',
@@ -219,6 +221,16 @@
           }
         }
       }
+    </groovy>
+  </target>
+
+  <target name="groovy.init">
+    <path id="groovy.classpath">
+      <fileset dir="${libs}"  includes="**/groovy*.jar" />
+    </path>
+    <taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy" classpath="${groovy.classpath}" />
+    <groovy>
+      ant.typedef(name:'groovyc', classname:'org.codehaus.groovy.ant.Groovyc', classpath:'${groovy.classpath}')
     </groovy>
   </target>
 
@@ -308,12 +320,80 @@
         <fileset dir="${classes}/org/safs/staf/service/logging/v3" includes="SAFSLoggingService3.class" /></copy>   
   </target>
 
+  <target name="safs.test.core.compile" depends="safs.compile,groovy.init">
+    <groovy>
+      ant.mkdir(dir:'${test.core.classes}')
+      ant.mkdir(dir:'${safs.test.core.source}/groovy')
+
+      ant.groovyc(
+        srcdir:'${safs.test.core.source}/groovy',
+        destdir:'${test.core.classes}',
+        classpath:'${safs.classpath}',
+        encoding:'UTF-8',
+      ) {
+        javac(debug:'on')
+      }
+    </groovy>
+  </target>
+
+  <target name="safs.test.core" depends="safs.test.core.compile">
+    <groovy>
+      // Clean the report directories.
+      ant.delete(dir:'${test.core.reports}/xml', failonerror:false)
+      ant.delete(dir:'${test.core.reports}/html', failonerror:false)
+      ant.mkdir(dir:'${test.core.reports}/xml')
+
+      // Run the tests.
+      def debugPort = properties.'test.core.debug.port'  // set to non-zero to attach to a debugger.
+      ant.property(name:'test.core.timeout', value:'300000') // 5 min default
+
+      ant.junit(
+        failureProperty:"tests-failed",
+        fork:true,
+        printsummary:true,
+        timeout:'${test.core.timeout}',
+        dir:'${basedir}',
+      ) {
+        classpath {
+           path(refid:"safs.classpath")
+           pathelement(location:'${test.core.classes}')
+        }
+        env(key:'SELENIUM_PLUS', value:'${seleniumdist}')
+        if (debugPort) {
+          jvmarg(value:"-Xdebug")
+          jvmarg(value:"-Xrunjdwp:transport=dt_socket,address=$debugPort,suspend=y,server=y")
+        }
+        formatter(type:"xml")
+        batchtest(todir:'${test.core.reports}/xml') {
+          fileset(dir:'${test.core.classes}') {
+            include(name:"**/*.class")
+            exclude(name:'**/*$$*.class')
+            exclude(name:'**/LogFileUtil.class')
+            exclude(name:'**/SeleniumPlusTestUtil.class')
+            exclude(name:'**/TestUtil.class')
+          }
+        }
+      }
+      // run the junit report
+      ant.mkdir(dir:'${test.core.reports}/html')
+      ant.junitreport(todir:'${test.core.reports}/html') {
+        fileset(dir:'${test.core.reports}/xml') {
+          include(name:'TEST-*.xml')
+        }
+        report(format:'frames', todir:'${test.core.reports}/html')
+      }
+      // if there were test failures, fail the build.
+      if (properties.'tests-failed') {
+      ant.fail(message:'One or more tests have failed.  See ${test.core.reports}/html/index.html for details.')
+    }
+    </groovy>
+  </target>
 
   <!--                                              -->
   <!--              safsjar                         -->
   <!-- Create ALL SAFS related JAR files            -->
   <!--                                              -->
-  <target name="safs.jar" >
+  <target name="safs.jar" depends="safs.test.core">
       <delete dir="${safsjars}" />
       <mkdir dir="${safsjars}" />
 
