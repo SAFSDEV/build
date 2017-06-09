@@ -234,12 +234,7 @@
     </groovy>
   </target>
 
-  <!--                                              -->
-  <!--              safscompile                     -->
-  <!-- Compile/Build ALL sourcecode for a SAFS dist -->
-  <!--                                              -->
-  <target name="safs.compile" depends="cleanclasses" >
-
+  <target name="safs.classpath">
     <!--                                             -->
     <!--              safs.classpath                 -->
     <!-- 3rd Party Libraries to be included for SAFS -->
@@ -249,6 +244,13 @@
     </path>
 
     <property name="safs.classpath"  refid="safs.classpath" />
+  </target>
+
+  <!--                                              -->
+  <!--              safscompile                     -->
+  <!-- Compile/Build ALL sourcecode for a SAFS dist -->
+  <!--                                              -->
+  <target name="safs.compile" depends="cleanclasses,safs.classpath" >
   
     <mkdir dir="${classes}"/>
     <copy todir="${classes}" preservelastmodified="true" >
@@ -273,6 +275,8 @@
         <fileset dir="${safssource}/org/safs/rational/flex/custom" includes="*.dat"/></copy>
     <copy todir="${classes}/org/safs/image/icons" preservelastmodified="true" >
         <fileset dir="${safssource}/org/safs/image/icons" /></copy>
+    <copy todir="${classes}/org/safs/projects/seleniumplus/projects/samples" preservelastmodified="true" >
+        <fileset dir="${safssource}/org/safs/projects/seleniumplus/projects/samples" /></copy>
     <copy todir="${classes}/org/safs/selenium" preservelastmodified="true" >
         <fileset dir="${safssource}/org/safs/selenium" includes="*.js"/></copy>
     <copy todir="${classes}/org/safs/selenium/webdriver" preservelastmodified="true" >
@@ -320,7 +324,17 @@
         <fileset dir="${classes}/org/safs/staf/service/logging/v3" includes="SAFSLoggingService3.class" /></copy>   
   </target>
 
-  <target name="safs.test.core.compile" depends="safs.compile,groovy.init">
+  <target name="test.core.compile.classpath" depends="groovy.init,safs.classpath">
+    <groovy>
+      ant.path(id:'test.core.compile.classpath') {
+           path(refid:"safs.classpath")
+           pathelement(location:'${classes}')
+      }
+      ant.property(name:"test.core.compile.classpath", refid:"test.core.compile.classpath")
+    </groovy>
+  </target>
+
+  <target name="safs.test.core.compile" depends="safs.compile,test.core.compile.classpath">
     <groovy>
       ant.mkdir(dir:'${test.core.classes}')
       ant.mkdir(dir:'${safs.test.core.source}/groovy')
@@ -328,7 +342,7 @@
       ant.groovyc(
         srcdir:'${safs.test.core.source}/groovy',
         destdir:'${test.core.classes}',
-        classpath:'${safs.classpath}',
+        classpath:'${test.core.compile.classpath}',
         encoding:'UTF-8',
       ) {
         javac(debug:'on')
@@ -336,7 +350,10 @@
     </groovy>
   </target>
 
-  <target name="safs.test.core" depends="safs.test.core.compile">
+  <target name="safs.test.core" depends="safs.test.core.compile,safs.test.core.only" />
+
+  <macrodef name="safs.test.core">
+    <sequential>
     <groovy>
       // Clean the report directories.
       ant.delete(dir:'${test.core.reports}/xml', failonerror:false)
@@ -345,7 +362,10 @@
 
       // Run the tests.
       def debugPort = properties.'test.core.debug.port'  // set to non-zero to attach to a debugger.
+      def safsDebugPortProperty = 'org.safs.test.forked.jvm.debug.port'
+      def safsDebugPort = properties.get(safsDebugPortProperty)
       ant.property(name:'test.core.timeout', value:'300000') // 5 min default
+      ant.property(name:'seleniumdist.location', location:'${seleniumdist}')
 
       ant.junit(
         failureProperty:"tests-failed",
@@ -355,13 +375,16 @@
         dir:'${basedir}',
       ) {
         classpath {
-           path(refid:"safs.classpath")
+           path(refid:"test.core.compile.classpath")
            pathelement(location:'${test.core.classes}')
         }
-        env(key:'SELENIUM_PLUS', value:'${seleniumdist}')
+        env(key:'SELENIUM_PLUS', value:'${seleniumdist.location}')
         if (debugPort) {
           jvmarg(value:"-Xdebug")
           jvmarg(value:"-Xrunjdwp:transport=dt_socket,address=$debugPort,suspend=y,server=y")
+        }
+        if (safsDebugPort) {
+          sysproperty(key:safsDebugPortProperty, value:safsDebugPort)
         }
         formatter(type:"xml")
         batchtest(todir:'${test.core.reports}/xml') {
@@ -371,6 +394,7 @@
             exclude(name:'**/LogFileUtil.class')
             exclude(name:'**/SeleniumPlusTestUtil.class')
             exclude(name:'**/TestUtil.class')
+            exclude(name:'**/AppMapBuilder.class')
           }
         }
       }
@@ -387,13 +411,19 @@
       ant.fail(message:'One or more tests have failed.  See ${test.core.reports}/html/index.html for details.')
     }
     </groovy>
+    </sequential>
+  </macrodef>
+
+  <!-- Use this target to only run the tests -->
+  <target name="safs.test.core.only" depends="test.core.compile.classpath">
+    <safs.test.core />
   </target>
 
   <!--                                              -->
   <!--              safsjar                         -->
   <!-- Create ALL SAFS related JAR files            -->
   <!--                                              -->
-  <target name="safs.jar" depends="safs.test.core">
+  <target name="safs.jar">
       <delete dir="${safsjars}" />
       <mkdir dir="${safsjars}" />
 
@@ -762,7 +792,7 @@
      <mkdir  dir="${safsdist}/uninstall" />
   </target>
   
-  <target name="safs.win.dist" depends="_make.safs.dist, prepare.download" >
+  <target name="safs.win.dist" depends="safs.test.core.compile,_make.safs.dist, prepare.download" >
       <!-- ftp action="get" remotedir="${safsdev.win.java}" server="$server}" userid="$userid}" password="$passwd}"  preservelastmodified="true" >
           <fileset dir="${safsdist}/jre" includes="${JRE_WINDOWS}" /></ftp-->
 
