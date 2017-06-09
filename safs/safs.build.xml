@@ -228,6 +228,7 @@
     <path id="groovy.classpath">
       <fileset dir="${libs}"  includes="**/groovy*.jar" />
     </path>
+    <property name="groovy.classpath"  refid="groovy.classpath" />
     <taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy" classpath="${groovy.classpath}" />
     <groovy>
       ant.typedef(name:'groovyc', classname:'org.codehaus.groovy.ant.Groovyc', classpath:'${groovy.classpath}')
