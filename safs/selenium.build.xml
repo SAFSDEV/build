@@ -115,7 +115,7 @@
   <!--   3. make a TestDesigner.ZIP                                                                              -->
   <!--                                                                                                           -->
   <!-- ========================================================================================================= -->
-  <target name="seleniumplus.win.dist" depends="_make.sp.dist, prepare.download" >
+  <target name="seleniumplus.win.dist" depends="safs.test.core.compile,_make.sp.dist, prepare.download" >
 
       <!-- ftp action="get" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
           <fileset dir="${seleniumdist}/Java" includes="${JDK_WINDOWS}" /></ftp>
@@ -216,7 +216,10 @@
       <copy todir="${seleniumdist}/eclipse/configuration/com.sas.seleniumplus" preservelastmodified="true" >
         <fileset dir="${safssource}/eclipse/plugins/Seleniumplus_plugin/" includes="preferences.properties"/>
       </copy>
-      
+
+      <!--  Run the Core tests.  They require the seleniumdist/extra/automation directory. -->
+      <safs.test.core />
+
       <!--
       Run the SeleniumPlus-Plugin test.
       -->
