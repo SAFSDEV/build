@@ -44,7 +44,7 @@ REM ============================================================================
 
 SETLOCAL ENABLEDELAYEDEXPANSION
 SET MY_NAME=playpen_build.bat
-SET JENKINS_HOST=http://***REMOVED***
+SET JENKINS_HOST=http://safsbuild
 SET JENKINS_PORT=81
 SET JENKINS_JOB=SeleniumPlus_Development_Debug
 SET JENKINS_TOKEN=JLWEILAFJELWONBHGHAWHANGKWOAHTNWHAOTOQPZNJG
@@ -78,7 +78,7 @@ SET DEBUG=%1
 
 IF NOT DEFINED PLAYPEN_LOCATION (
     ECHO Abort.
-    ECHO Parameter PLAYPEN_LOCATION is missing, please provide it, such as \\***REMOVED***\public\safs_playpen
+    ECHO Parameter PLAYPEN_LOCATION is missing, please provide it, such as \\safsbuild\public\safs_playpen
     ECHO It should be a network directory, which is WRITABLE by you and READABLE by others.
     GOTO :USAGE  
 )

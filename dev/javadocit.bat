@@ -14,6 +14,6 @@ cd .\javadoc
 del index.html
 
 pause CTRL-C to abort pscp push to SAFSDEV, any key to continue...
-pscp -r * ***REMOVED***,safsdev@web.sourceforge.net:/home/project-web/safsdev/htdocs/doc/
+pscp -r * sascanagl,safsdev@web.sourceforge.net:/home/project-web/safsdev/htdocs/doc/
 
 set path=oldpath

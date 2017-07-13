@@ -44,7 +44,7 @@
    "message": "Automatically committed by script.",
    "committer": {
      "name": "safsdev",
-     "email": "safsdev@yourCompany.com"
+     "email": "safsdev@sas.com"
    },
    "content": "${base64.encoded.content}",
    "sha": "${git.update.file.sha}"
