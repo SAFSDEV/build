@@ -15,3 +15,11 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+
+#Tell git not to perform EOL conversions on any files under folder "docker/linux" and any bash script files
+docker/linux/* -text
+docker/linux/base/* -text
+docker/linux/hub/* -text
+docker/linux/node/* -text
+docker/linux/standalone/* -text
+*.sh -text
