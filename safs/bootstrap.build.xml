@@ -35,6 +35,9 @@
   <condition property="git.branch.build" value="master">
   	<not><isset property="git.branch.build"/></not>
   </condition>
+  <condition property="git.repo.suffix" value=".git">
+  	<not><isset property="git.repo.suffix"/></not>
+  </condition>
 
   <target name="git.clone.build" description="Clone from GitHub SAFSDEV/build" >
       <var name="git.repo.tree" value="${git.wdir.build}" />
