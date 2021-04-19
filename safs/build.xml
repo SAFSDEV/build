@@ -41,6 +41,18 @@
                                          safs.win.dist,
                                          safs.lib.update.zip" />
 	
+  <!--                                              -->
+  <!--  safs.lnx.build                              -->
+  <!--                                              -->
+  <!--  Purpose:                                    -->
+  <!--          Check out source code and compile   -->
+  <!--          them, then make jar files.          -->
+  <!--          Make SAFS distribution assets       -->
+  <!--          TODO Prepare SAFS update zip assets      -->
+  <!--                                              -->
+  <target name="safs.lnx.build" depends="safs.win.prepare,
+                                         safs.lnx.dist" />
+	
   <!--                                                                                                                -->
   <!--  selenium.win.plugin                                                                                           -->
   <!--                                                                                                                -->
@@ -67,6 +79,18 @@
   <target name="selenium.win.build" depends="selenium.win.plugin,
                                              seleniumplus.win.dist,
                                              selenium.lib.update.zip" />
+	
+  <!--                                                                           -->
+  <!--  selenium.lnx.build                                                       -->
+  <!--                                                                           -->
+  <!--  Purpose:                                                                 -->
+  <!--          Check out source code and compile them, then make jar files.     -->
+  <!--          Compile and create jar for SE+ plugin.                           -->
+  <!--          Make SeleniumPlus distribution assets                            -->
+  <!--          TODO: Prepare SeleniumPlus update zip assets                     -->
+  <!--                                                                           -->
+  <target name="selenium.lnx.build" depends="selenium.win.plugin,
+  	                                         seleniumplus.lnx.dist" />
                                              
   <!--                                                         -->
   <!--  safs.win.upload                                        -->
@@ -74,14 +98,11 @@
   <!--  Purpose:                                               -->
   <!--           Update SAFS "Update assets" on github.        -->
   <!--           Create SAFS Release on github.                -->
-  <!--           Update SAFS "Update assets" on sourceforge.   -->
-  <!--           Update SAFS Release on sourceforge.           -->
   <!--                                                         -->
   <!--  Prerequisite :  safs.win.build                         -->
   <!--                                                         -->
   <target name="safs.win.upload" depends="git.updatesite.safs.asset.update,
-  	                                      git.release.safs.upload,
-  	                                      safs.sourceforge.upload" />
+  	                                      git.release.safs.upload" />
 
   <!--                                                         -->
   <!--  selenium.win.upload                                    -->
@@ -89,13 +110,10 @@
   <!--  Purpose:                                               -->
   <!--           Update SE+ "Update assets" on github.         -->
   <!--           Create SE+ Release on github.                 -->
-  <!--           Update SE+ "Update assets" on sourceforge.    -->
-  <!--           Update SE+ Release on sourceforge.            -->
   <!--                                                         -->
   <!--  Prerequisite :  selenium.win.build                     -->
   <!--                                                         -->
   <target name="selenium.win.upload" depends="git.updatesite.seleniumplus.asset.update,
-  	                                          git.release.seleniumplus.upload,
-  	                                          selenium.sourceforge.upload" />
+  	                                          git.release.seleniumplus.upload" />
 
 </project>  

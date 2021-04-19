@@ -1,0 +1,48 @@
+#==============================================
+#===  install SeleniumPlus inside powershell   =====
+#==============================================
+
+Write-Verbose "Installing SeleniumPlus ..." -Verbose
+$StartDTM = (Get-Date)
+$Vendor = "SAFS"
+$Product = "SeleniumPlus"
+$URL = "http://safsbuild:81/jenkins/job/SeleniumPlus/lastSuccessfulBuild/artifact/dist/TestDesigner.ZIP"
+$Version = "1.0"
+$TempDir = "${env:SystemRoot}\Temp"
+$LogPS = "${TempDir}\$Vendor $Product $Version PS Wrapper.log"
+$TempInstallZip = "${TempDir}\$Product.zip"
+$SEPLUSHOME = "c:\SeleniumPlus"
+
+Start-Transcript $LogPS
+
+#Download the SeleniumPlus installer zip file
+Write-Verbose "Downloading $Vendor $Product $Version, from URL $URL to zip file $TempInstallZip" -Verbose
+wget -O "$TempInstallZip" "$URL"
+
+Write-Verbose "Making $Vendor $Product Home Directory $SEPLUSHOME" -Verbose
+mkdir "$SEPLUSHOME"
+cd "$SEPLUSHOME"
+Write-Verbose "Extracting installation asset to Home Directory $SEPLUSHOME" -Verbose
+Expand-Archive -LiteralPath "$TempInstallZip" -DestinationPath "$SEPLUSHOME"
+Write-Verbose "Installing $Product silently ... " -Verbose
+cmd.exe /c Setup.bat "c:\staf" "--silent"
+Write-Verbose "Deleting the SeleniumPlus install zip file $TempInstallZip ..." -Verbose
+Remove-Item $TempInstallZip
+#In previous steps we have downloaded the latest matched browser driver for chrome and firefox, we copy them to selenimplus folder "extra"
+Write-Verbose "Copying the latest chromedriver to folder ${SEPLUSHOME}\extra\ ..." -Verbose
+Copy-Item -Force "${TempDir}\chromedriver.exe" "${SEPLUSHOME}\extra\"
+IF ( "$ENV:PROCESSOR_ARCHITECTURE" -eq "AMD64" ) {
+  Write-Verbose "Copying the latest 64 bits geckodriver_64 to folder ${SEPLUSHOME}\extra\ ..." -Verbose
+  Copy-Item -Force "${TempDir}\geckodriver.exe" "${SEPLUSHOME}\extra\geckodriver_64.exe"
+} ELSE {
+  Write-Verbose "Copying the latest 32 bits geckodriver to folder ${SEPLUSHOME}\extra\ ..." -Verbose
+  Copy-Item -Force "${TempDir}\geckodriver.exe" "${SEPLUSHOME}\extra\" 
+}
+
+Write-Verbose "Stop logging" -Verbose
+$EndDTM = (Get-Date)
+Write-Verbose "Elapsed Time: $(($EndDTM-$StartDTM).TotalSeconds) Seconds" -Verbose
+Write-Verbose "Elapsed Time: $(($EndDTM-$StartDTM).TotalMinutes) Minutes" -Verbose
+Stop-Transcript
+
+#==============================================

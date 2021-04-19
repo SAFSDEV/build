@@ -23,7 +23,8 @@ REM   playpen_build.bat \\huanghe\home\username\S1234567 debug
 REM
 REM Note:
 REM   This script should run in the SAFS Core repository
-REM   1. Run the command "git clone https://github.com/SAFSDEV/Core", 
+REM   1. Run the command 
+REM          "git clone https://github.com/SAFSDEV/Core", 
 REM      we will have a "SAFS Core Project" in the Core directory.
 REM   2. Then, we copy this batch script to Core directory.
 REM   3. Then we modify/delete/add some source codes.
@@ -55,6 +56,11 @@ SET MODIFIEDFILE_SUMMARY=modified_files_summary.txt
 REM Define PLAYPEN_LOCATION_PREFIX so that only a simple "defect number" is enough as argument.
 REM SET PLAYPEN_LOCATION_PREFIX=\\huanghe\home\username\
 
+REM Get input parameters
+SET PLAYPEN_LOCATION=%1
+SHIFT
+SET DEBUG=%1
+
 REM Check the environment GIT_HOME
 IF NOT DEFINED GIT_HOME (
     ECHO Abort.
@@ -67,14 +73,23 @@ IF NOT DEFINED GIT_HOME (
 )
 
 IF NOT EXIST %CURL% (
+	IF DEFINED DEBUG ECHO %CURL% does not exist
     SET CURL="%GIT_HOME%\mingw32\bin\curl.exe"
     SET USE_OLD_CURL=FALSE
 )
 
-REM Get input parameters
-SET PLAYPEN_LOCATION=%1
-SHIFT
-SET DEBUG=%1
+IF NOT EXIST %CURL% (
+    IF DEFINED DEBUG ECHO %CURL% does not exist
+    SET CURL="%GIT_HOME%\mingw64\bin\curl.exe"
+    SET USE_OLD_CURL=FALSE
+)
+
+IF NOT EXIST %CURL% (
+    IF DEFINED DEBUG ECHO %CURL% does not exist
+	ECHO Abort.
+    ECHO Cannot detected the executable curl.exe
+    GOTO :END
+)
 
 IF NOT DEFINED PLAYPEN_LOCATION (
     ECHO Abort.
@@ -161,6 +176,8 @@ ECHO Example:
 ECHO %MY_NAME% \\huanghe\home\username\S1234567
 ECHO %MY_NAME% \\huanghe\home\username\S1234567 debug
 ECHO ==================================================================
+GOTO :END
+
 
 :END
 

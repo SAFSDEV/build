@@ -39,16 +39,16 @@
 		</if-->
 		<!-- currently we are using ant <get> to download resources -->
 		<if>
-			<isset property="Private.FTPServer.isConnecte" />
+			<isset property="Private.FTPServer.isConnected" />
 			<then>
 				<property name="server"  value="ftp://${private.ftpserver}" />
 				<property name="userid"  value="${private.ftpuserid}" />
 				<property name="passwd"  value="${private.ftppasswd}" />
 			</then>
 			<else>
-				<property name="server"  value="http://${public.httpserver}" />
-				<property name="userid"  value="" />
-				<property name="passwd"  value="" />
+				<property name="server"  value="ftp://${public.ftpserver}" />
+				<property name="userid"  value="${public.ftpuserid}" />
+				<property name="passwd"  value="${public.ftppasswd}" />
 			</else>
 		</if>
 		<echo>we are using '${server}' as download server.</echo>
