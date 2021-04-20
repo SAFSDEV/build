@@ -129,20 +129,13 @@
   <!-- ========================================================================================================= -->
   <target name="seleniumplus.win.dist" depends="safs.test.core.compile,_make.sp.dist, prepare.download" >
 
-      <!-- ftp action="get" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
-          <fileset dir="${seleniumdist}/Java" includes="${JDK_WINDOWS}" /></ftp>
-      <ftp action="get" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
-          <fileset dir="${seleniumdist}/Java64" includes="${JRE64_WINDOWS}" /></ftp>
-      <ftp action="get" remotedir="${safsdev.win.eclipse}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
-          <fileset dir="${seleniumdist}/eclipse" includes="${ECLIPSE_WINDOWS}" /></ftp-->
-
       <!-- Get JRE and Eclipse -->
-      <get dest="${seleniumdist}/Java" username="${userid}" password="${passwd}" usetimestamp="true">
-          <url url="${server}${safsdev.win.java}/${JDK_WINDOWS}"/></get>   
-      <get dest="${seleniumdist}/Java64" username="${userid}" password="${passwd}" usetimestamp="true">
-          <url url="${server}${safsdev.win.java}/${JRE64_WINDOWS}"/></get>   
-      <get dest="${seleniumdist}/eclipse" username="${userid}" password="${passwd}" usetimestamp="true">
-          <url url="${server}${safsdev.win.eclipse}/${ECLIPSE_WINDOWS}"/></get>   
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/Java" includes="${JDK_WINDOWS}" /></ftp>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/Java64" includes="${JRE64_WINDOWS}" /></ftp>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.win.eclipse}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/eclipse" includes="${ECLIPSE_WINDOWS}" /></ftp> 
   	
       <copy todir="${seleniumdist}/extra/automation/bin/" preservelastmodified="true" >
         <fileset dir="${safs.dependencies}/tools/ocr/ocrbin/" />
@@ -241,10 +234,11 @@
       -->
    
       <!-- Get STAF installer (32bit and 64bit) -->
-      <get dest="${seleniumdist}/install" username="${userid}" password="${passwd}" usetimestamp="true">
-        <url url="${server}${tools.staf}/${STAF_WINDOWS}"/></get>
-      <get dest="${seleniumdist}/install" username="${userid}" password="${passwd}" usetimestamp="true">
-        <url url="${server}${tools.staf}/${STAF64_WINDOWS}"/></get>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${tools.staf}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/install" includes="${STAF_WINDOWS}" /></ftp>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${tools.staf}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/install" includes="${STAF64_WINDOWS}" /></ftp>
+  	
   	
   	  <!-- GHOSTSCRIPT installation binary -->
       <copy todir="${seleniumdist}/install" preservelastmodified="true" >
@@ -345,20 +339,13 @@
   <!-- ========================================================================================================= -->
   <target name="seleniumplus.lnx.dist" depends="safs.test.core.compile,_make.sp.dist, prepare.download" >
 
-      <!-- ftp action="get" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
-          <fileset dir="${seleniumdist}/Java" includes="${JDK_WINDOWS}" /></ftp>
-      <ftp action="get" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
-          <fileset dir="${seleniumdist}/Java64" includes="${JRE64_WINDOWS}" /></ftp>
-      <ftp action="get" remotedir="${safsdev.win.eclipse}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
-          <fileset dir="${seleniumdist}/eclipse" includes="${ECLIPSE_WINDOWS}" /></ftp-->
-
   	  <!-- Get JRE and Eclipse -->
-      <get dest="${seleniumdist}/Java" username="${userid}" password="${passwd}" usetimestamp="true">
-          <url url="${server}${safsdev.lnx.java}/${JDK_LINUX}"/></get>   
-      <get dest="${seleniumdist}/Java64" username="${userid}" password="${passwd}" usetimestamp="true">
-          <url url="${server}${safsdev.lnx.java}/${JDK64_LINUX}"/></get>     
-      <get dest="${seleniumdist}/eclipse" username="${userid}" password="${passwd}" usetimestamp="true">
-          <url url="${server}${safsdev.lnx.eclipse}/${ECLIPSE_LINUX}"/></get>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.lnx.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/Java" includes="${JDK_LINUX}" /></ftp>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.lnx.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/Java64" includes="${JDK64_LINUX}" /></ftp>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.lnx.eclipse}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/eclipse" includes="${ECLIPSE_LINUX}" /></ftp>
   	
       <copy todir="${seleniumdist}/extra/automation/bin/" preservelastmodified="true" >
         <fileset dir="${safs.dependencies}/tools/ocr/ocrbin/" />
@@ -476,11 +463,11 @@
       -->
    
       <!-- Get STAF installer (32bit and 64bit) -->
-      <get dest="${seleniumdist}/install" username="${userid}" password="${passwd}" usetimestamp="true">
-        <url url="${server}${tools.staf}/${STAF_LINUX}"/></get>
-      <get dest="${seleniumdist}/install" username="${userid}" password="${passwd}" usetimestamp="true">
-        <url url="${server}${tools.staf}/${STAF64_LINUX}"/></get>
-  	
+      <ftp action="get" verbose="true" passive="yes" remotedir="${tools.staf}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/install" includes="${STAF_LINUX}" /></ftp>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${tools.staf}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/install" includes="${STAF64_LINUX}" /></ftp>
+  	  	
   	  <!-- TODO: GHOSTSCRIPT installation binary: For Linux -->
       <!--copy todir="${seleniumdist}/install" preservelastmodified="true" >
         <fileset dir="${safs.dependencies}/ghostscript" includes="gs923*.exe" />

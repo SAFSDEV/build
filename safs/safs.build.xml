@@ -799,12 +799,10 @@
   </target>
   
   <target name="safs.win.dist" depends="safs.test.core.compile,_make.safs.dist, prepare.download" >
-      <!-- ftp action="get" remotedir="${safsdev.win.java}" server="$server}" userid="$userid}" password="$passwd}"  preservelastmodified="true" >
-          <fileset dir="${safsdist}/jre" includes="${JRE_WINDOWS}" /></ftp-->
 
-      <!-- Java 32-bit JVM -->
-      <get dest="${safsdist}/jre" username="${userid}" password="${passwd}" usetimestamp="true">
-            <url url="${server}${safsdev.win.java}/${JRE_WINDOWS}"/></get>          
+      <!-- Java 32-bit JVM -->         
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${safsdist}/jre" includes="${JRE_WINDOWS}" /></ftp>
       <unzip dest="${safsdist}/jre" >
           <fileset dir="${safsdist}/jre/" includes="${JRE_WINDOWS}" >
               <patternset  includes="jre/**" /></fileset></unzip>
@@ -812,8 +810,8 @@
           <fileset dir="${safsdist}/jre/" includes="${JRE_WINDOWS}" /></delete>
       
       <!-- Java 64-bit JVM -->
-      <get dest="${safsdist}/jre" username="${userid}" password="${passwd}" usetimestamp="true">
-            <url url="${server}${safsdev.win.java}/${JRE64_WINDOWS}"/></get>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${safsdist}/jre" includes="${JRE64_WINDOWS}" /></ftp>
       <unzip dest="${safsdist}/jre" >
           <fileset dir="${safsdist}/jre" includes="${JRE64_WINDOWS}" >
               <patternset  includes="jre/Java64/**" /></fileset></unzip>
@@ -1112,22 +1110,19 @@
    </target>
 	
   <target name="safs.lnx.dist" depends="safs.test.core.compile,_make.safs.dist, prepare.download" >
-      <!-- ftp action="get" remotedir="${safsdev.lnx.java}" server="$server}" userid="$userid}" password="$passwd}"  preservelastmodified="true" >
-          <fileset dir="${safsdist}/jre" includes="${JRE_LINUX}" /></ftp-->
 
       <!-- Java 32-bit JVM -->
-      <get dest="${safsdist}/jre" username="${userid}" password="${passwd}" usetimestamp="true">
-            <url url="${server}${safsdev.lnx.java}/${JRE_LINUX}"/></get>
-      
-      <!-- Java 64-bit JVM -->
-      <get dest="${safsdist}/jre/Java64" username="${userid}" password="${passwd}" usetimestamp="true">
-            <url url="${server}${safsdev.lnx.java}/${JRE64_LINUX}"/></get>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.lnx.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${safsdist}/jre" includes="${JRE_LINUX}" /></ftp>
   	
+      <!-- Java 64-bit JVM -->
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.lnx.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${safsdist}/jre/Java64" includes="${JRE64_LINUX}" /></ftp>
       <!-- Get STAF installer (32bit and 64bit) -->
-      <get dest="${safsdist}/install" username="${userid}" password="${passwd}" usetimestamp="true">
-            <url url="${server}${tools.staf}/${STAF_LINUX}"/></get>
-      <get dest="${safsdist}/install" username="${userid}" password="${passwd}" usetimestamp="true">
-            <url url="${server}${tools.staf}/${STAF64_LINUX}"/></get>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${tools.staf}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${safsdist}/install" includes="${STAF_LINUX}" /></ftp>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${tools.staf}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${safsdist}/install" includes="${STAF64_LINUX}" /></ftp>
   	
       <copy todir="${safsdist}/install/" preservelastmodified="true" >
           <fileset dir="${safssource}/install/" includes="Linux_Install_Readme.txt
