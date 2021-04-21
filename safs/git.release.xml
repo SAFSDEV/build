@@ -435,11 +435,13 @@
       <!-- We need to first find the portion of the response for our specific content.filename            -->
       <!-- Then we must find the "sha": value for that content filename.                                  -->
       <!-- This is only complicated by the fact that there can be more than 1 file in the response array. -->
-  	
+  	  <echo>Searching 'git.asset.id' for git asset "${git.release.asset.name}"</echo>
+  	  <!-- use regex to search asset id, there are probably mutilple lines between the "id" and "name"    -->
+  	  <!-- (.*\n.*){1,5} to match 0 to 4 lines, if more than 4 lines, need to modify the regex pattern    -->
       <propertyregex property="git.asset.id"
       	      override="true"
               input="${exec.output}"
-              regexp='"id": (\d+),.*\n.*"name": "${git.release.asset.name}",'
+              regexp='"id": (\d+),(.*\n.*){1,5}"name": "${git.release.asset.name}",'
               select="\1"
               casesensitive="false" />
 
