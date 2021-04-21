@@ -280,7 +280,7 @@
   <!--                                                                                      -->
   <target name="git.release.create" description="Create Git release" >
       <!-- DO NOT show usertoken in the command line output, only echo following line during debug -->
-      <echo>curl -i -k -H "Content-Type: application/json" -H "Authorization: token ${env.git.usertoken}" -X POST -d @${git.release.json} ${git.release.url}</echo>
+      <!-- echo>curl -i -k -H "Content-Type: application/json" -H "Authorization: token ${env.git.usertoken}" -X POST -d @${git.release.json} ${git.release.url}</echo -->
 
   	  <!-- we MUST clean the value of some global variables.-->
 	  <var name="exec.rc" unset="true"/>
@@ -317,8 +317,6 @@
               casesensitive="false" />
   		
     <echo>Created release ${git.release.id} at ${git.release.url}</echo>
-  	<echo> RC ${exec.rc}</echo>
-  	<echo>${exec.output}</echo>
   </target>
 	
   <!--                                                                                      -->
