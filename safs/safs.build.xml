@@ -107,7 +107,7 @@
     
     <echo>Get/Update all 3rd party jars from FTP Server</echo>
 	<if>
-  		<isset property="Private.FTPServer.isConnected" />
+		<isreachable host="${private.ftpserver}" timeout="10"/>
   		<then>
   			<ftp action="get" remotedir="${rftlibs}" server="${private.ftpserver}" userid="${private.ftpuserid}" password="${private.ftppasswd}"  preservelastmodified="true" >
   				<fileset dir="${rftlibs}"/> 
@@ -129,6 +129,13 @@
   <!--     the availability of private FTP Server.    -->
   <!--                                                -->
   <target name="javac.compile" depends="groovy.init">
+	<!-- Property 'Private.FTPServer.isConnected' is set to true if the private FTP server is reachable. -->
+	<!-- The RFT dependencies are only put in the private FTP server, if we use the public FTP server    -->  	
+	<!-- We cannot get RFT dependencies, so don't compile source code like 'org/safs/rational/**/*.java' -->  	
+	<condition property="Private.FTPServer.isConnected">
+		<isreachable host="${private.ftpserver}" timeout="10"/>
+	</condition>
+  	
     <groovy>
       ant.groovyc(
         srcdir:'${safssource}',

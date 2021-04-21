@@ -3,11 +3,15 @@
 
 <project name="shared_target" basedir=".">
 
-	<!-- Property 'Private.FTPServer.isConnected' is used -->
-	<!-- to test if the private FTP server is reachable. -->
-	<condition property="Private.FTPServer.isConnected">
-		<isreachable host="${private.ftpserver}" timeout="10" />
-	</condition>
+	<!-- Property 'Private.FTPServer.isConnected' is used                                           -->
+	<!-- to test if the private FTP server is reachable.                                            -->
+	<!-- Lei: Comment this global property setting:                                                  -->
+	<!-- If the private FTP server is not reachable, this will show message "Unknown host: xxxx"    -->
+	<!-- and this message will show every time we call a target, it is annoying                     -->
+	<!-- Moved this definition to target 'prepare.download'/'javac.compile'                         -->
+	<!--condition property="Private.FTPServer.isConnected">
+		<isreachable host="${private.ftpserver}" timeout="10"/>
+	</condition-->
 	
 	<!-- Property 'Eclipse.is.Mars' is used to tell us if -->
 	<!-- the embedded Eclipse is Mars or not.             -->
@@ -34,6 +38,9 @@
 	     Ant <ftp> provide an attribute 'passive', set it to "yes" to let ftp work in passive mode.
 	-->
 	<target name="prepare.download">
+		<condition property="Private.FTPServer.isConnected">
+			<isreachable host="${private.ftpserver}" timeout="10"/>
+		</condition>
 		<!-- set 'server', 'userid' and 'passwd' for FTP Server, using ant <ftp> to download resources 
 		     <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.win.java}" server="$server}" userid="$userid}" password="$passwd}" preservelastmodified="true" >
                <fileset dir="${safsdist}/jre" includes="${JRE_WINDOWS}" /></ftp>
