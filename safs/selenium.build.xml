@@ -314,19 +314,30 @@
     <var name="exec.rc" unset="true"/>
     <var name="exec.output" unset="true"/>
     <var name="exec.error" unset="true"/>
-  	<echo>Deploying seleniumplus dependency jar files to maven artifactory ...</echo>
-	<exec executable="cmd"
-		  dir="${maven.runtime.folder}"
-		  resultproperty="exec.rc"
-		  outputproperty="exec.output"
-		  errorproperty="exec.error">
-	  <arg value="/c"/>
-	  <arg value="mavenDeploySeplusJars.bat"/>
-	</exec>
-    <echo>${exec.output}</echo><!-- Show the standard output. -->
-    <fail message="Deleting all stopped containers: ${exec.error}"><!-- Show the standard error if failed.-->
-	      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
-    </fail>
+  	
+	<if>
+		<isreachable url="${maven.server}" timeout="10"/>
+  		<then>
+		  	<echo>Deploying seleniumplus dependency jar files to maven artifactory "${maven.server}" ...</echo>
+			<exec executable="cmd"
+				  dir="${maven.runtime.folder}"
+				  resultproperty="exec.rc"
+				  outputproperty="exec.output"
+				  errorproperty="exec.error">
+			  <arg value="/c"/>
+			  <arg value="mavenDeploySeplusJars.bat"/>
+			  <arg value="${maven.server}"/>
+			</exec>
+		    <echo>${exec.output}</echo><!-- Show the standard output. -->
+		    <fail message="Deleting all stopped containers: ${exec.error}"><!-- Show the standard error if failed.-->
+			      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+		    </fail>
+  		</then>
+		<else>
+			<echo>The maven server "${maven.server}" is not valid, cannot deploy seleniumplus dependency jar files!</echo>
+		</else>
+  	</if>
+  	
   </target>
 	
   <!-- ========================================================================================================= -->
