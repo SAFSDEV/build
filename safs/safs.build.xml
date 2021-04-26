@@ -441,19 +441,21 @@
                      org/safs/Constants*.*,
                      org/safs/JavaConstant*.*,
                      org/safs/StatusCodes*.*,
-      	             org/safs/natives/NativeWrapper*.*,
-      	             org/safs/natives/WinRegistry*.*,
-      	             org/safs/natives/win32/*.*,
-      	             org/safs/android/auto/lib/Console*.*,
-      	             org/safs/android/auto/lib/Process2*.*,
-      	             org/safs/android/auto/lib/*ConsoleTool*.*,
+    	             org/safs/natives/NativeWrapper*.*,
+    	             org/safs/natives/WinRegistry*.*,
+    	             org/safs/natives/win32/*.*,
+    	             org/safs/android/auto/lib/*Console*.*,
+    	             org/safs/android/auto/lib/Process2*.*,
+    	             org/safs/android/auto/lib/*ConsoleTool*.*,
                      org/safs/selenium/util/SePlusInstallInfo*.*,
+    	             org/safs/selenium/util/*DriverUpdater*.*,
                      org/safs/selenium/webdriver/lib/SeleniumPlusException*.*,
                      org/safs/sockets/NamedListener*.*,
                      org/safs/sockets/DebugListener*.*,
                      org/safs/install/*.*,
                      org/safs/logging/AbstractLogFacility*.*,
                      org/safs/net/NetUtilities*.*,
+                     org/safs/net/*HttpRequest.*,
                      org/safs/text/FileUtilities*.*,
                      org/safs/SAFSStringTokenizer*.*,
                      org/safs/SAFS*Exception.*,
@@ -465,7 +467,10 @@
                      org/safs/tools/stringutils/StringUtilities*.*,
                      org/safs/tools/MainClass*.*,
                      org/safs/tools/RuntimeDataInterface*.*,
-                     org/safs/tools/CaseInsensitiveFile*.*" />
+                     org/safs/tools/CaseInsensitiveFile*.*"
+	       excludes="org/safs/android/auto/lib/DUtilities.*,
+	                 org/safs/android/auto/lib/ImageUtils.*, 
+	                 org/safs/android/auto/lib/*ColorModel.*"/>
       
       <jar destfile="${safsjars}/safsselenium.jar"
            manifest="${classes}/META-INF/MANIFEST.SELENIUM.MF"
