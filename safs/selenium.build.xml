@@ -744,6 +744,31 @@
 
   </target>
 
+	  <target name="docker.login">
+	  	<echo>Logging on SAS public registry '${docker.registry.url}' by user '${docker.registry.user}' with pass '${docker.registry.pass}' ...</echo>
+		<!-- we need to login the SAS registry before we can push image -->
+	  	<!-- docker login -u robot$seplusAdmin -p ****** https://registry.unx.sas.com -->
+	    <var name="exec.rc" unset="true"/>
+	    <var name="exec.output" unset="true"/>
+	    <var name="exec.error" unset="true"/>
+		<exec executable="docker"
+			  dir="${seleniumdocker.runtime}"
+			  resultproperty="exec.rc"
+			  outputproperty="exec.output"
+			  errorproperty="exec.error">
+		  <arg value="login"/>
+		  <arg value="-u"/>
+		  <arg value="${docker.registry.user}"/>
+		  <arg value="-p"/>
+		  <arg value="${docker.registry.pass}"/>
+		  <arg value="${docker.registry.url}"/>
+		</exec>
+	    <echo>${exec.output}</echo><!-- Show the standard output. -->
+	    <fail message="Logging SAS public registry failed: ${exec.error}"><!-- Show the standard error if failed.-->
+	      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+	    </fail>
+	  </target>
+	
   <!-- ========================================================================================================= -->
   <!-- Purpose:                                                                                                  -->
   <!--               Clean the remain stopped containers and dangling images after build seplus image            -->
