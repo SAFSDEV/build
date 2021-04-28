@@ -433,7 +433,7 @@ COPY seleniumplus.conf /etc/supervisor/conf.d/
 # Install SeleniumPlus
 #=====================
 #Download the SeleniumPlus installer zip file
-RUN wget --progress=bar:force -O /tmp/TestDesigner.tar.gz http://safsbuild.na.sas.com:81/jenkins/job/SeleniumPlus_Linux/lastSuccessfulBuild/artifact/dist/TestDesigner.tar.gz
+RUN wget --progress=bar:force -O /tmp/TestDesigner.tar.gz https://github.com/SAFSDEV/UpdateSite/releases/download/seleniumplus-linux/TestDesigner.tar.gz
 RUN mkdir /usr/local/seleniumplus
 #Change the working directory to "usr/local/seleniumplus", the following command like "RUN" will run within that directory.
 WORKDIR /usr/local/seleniumplus

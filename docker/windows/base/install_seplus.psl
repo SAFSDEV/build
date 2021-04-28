@@ -6,7 +6,7 @@ Write-Verbose "Installing SeleniumPlus ..." -Verbose
 $StartDTM = (Get-Date)
 $Vendor = "SAFS"
 $Product = "SeleniumPlus"
-$URL = "http://safsbuild:81/jenkins/job/SeleniumPlus/lastSuccessfulBuild/artifact/dist/TestDesigner.ZIP"
+$URL = "https://github.com/SAFSDEV/UpdateSite/releases/download/seleniumplus/SeleniumPlusReleaseCandidate.ZIP"
 $Version = "1.0"
 $TempDir = "${env:SystemRoot}\Temp"
 $LogPS = "${TempDir}\$Vendor $Product $Version PS Wrapper.log"

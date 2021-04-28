@@ -115,5 +115,15 @@
   <!--                                                         -->
   <target name="selenium.win.upload" depends="git.updatesite.seleniumplus.asset.update,
   	                                          git.release.seleniumplus.upload" />
+	
+  <!--                                                         -->
+  <!--  selenium.lnx.upload                                    -->
+  <!--                                                         -->
+  <!--  Purpose:                                               -->
+  <!--           Update SE+ "Update assets" on github.         -->
+  <!--                                                         -->
+  <!--  Prerequisite :  selenium.lnx.build                     -->
+  <!--                                                         -->
+  <target name="selenium.lnx.upload" depends="git.updatesite.seleniumplus.linux.asset.update" />
 
 </project>  

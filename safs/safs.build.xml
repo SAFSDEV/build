@@ -441,6 +441,7 @@
                      org/safs/Constants*.*,
                      org/safs/JavaConstant*.*,
                      org/safs/StatusCodes*.*,
+      	             org/safs/UtilsIndependent.*,
     	             org/safs/natives/NativeWrapper*.*,
     	             org/safs/natives/WinRegistry*.*,
     	             org/safs/natives/win32/*.*,
