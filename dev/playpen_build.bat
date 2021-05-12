@@ -8,7 +8,7 @@ REM   code plus files from playpen.
 REM
 REM Parameter:
 REM   PlaypenLoc                a network path of the playpen location, WRITABLE by you
-REM                             and READABLE by the build machine, such as \\huanghe\home\username\S1234567
+REM                             and READABLE by the build machine, such as \\fileserver\home\username\S1234567
 REM   Debug                     whatever if provided then show the debug message
 REM
 REM Prerequisite:
@@ -18,12 +18,13 @@ REM   3. New files (source file, jar file) should be added into the GIT stage ar
 REM      they will not be counted.
 REM
 REM Example:
-REM   playpen_build.bat \\huanghe\home\username\S1234567
-REM   playpen_build.bat \\huanghe\home\username\S1234567 debug
+REM   playpen_build.bat \\fileserver\home\username\S1234567
+REM   playpen_build.bat \\fileserver\home\username\S1234567 debug
 REM
 REM Note:
 REM   This script should run in the SAFS Core repository
-REM   1. Run the command "git clone https://github.com/SAFSDEV/Core", 
+REM   1. Run the command 
+REM          "git clone https://github.com/SAFSDEV/Core", 
 REM      we will have a "SAFS Core Project" in the Core directory.
 REM   2. Then, we copy this batch script to Core directory.
 REM   3. Then we modify/delete/add some source codes.
@@ -31,12 +32,12 @@ REM      For the new source codes, we need to use 'git add'
 REM      to add them into git stage area so the script will take them in count.
 REM      DO NOT commit anything to you local repository, otherwise they will be ignored.
 REM   4. Finally, run this batch with our own playpen location, an example as below:
-REM      playpen_build.bat \\huanghe\home\username\S1234567
+REM      playpen_build.bat \\fileserver\home\username\S1234567
 REM   
 REM   User could modify this script to set PLAYPEN_LOCATION_PREFIX, then only a simple
 REM   defect number is en as argument. 
 REM   1. Modify script as below:
-REM      SET PLAYPEN_LOCATION_PREFIX=\\huanghe\home\username\
+REM      SET PLAYPEN_LOCATION_PREFIX=\\fileserver\home\username\
 REM   2. Then simply call as below:
 REM      playpen_build.bat S1234567
 REM      playpen_build.bat S1234567 debug
@@ -44,16 +45,21 @@ REM ============================================================================
 
 SETLOCAL ENABLEDELAYEDEXPANSION
 SET MY_NAME=playpen_build.bat
-SET JENKINS_HOST=http://safsbuild
-SET JENKINS_PORT=81
+SET JENKINS_HOST=http://jenkins.server
+SET JENKINS_PORT=8080
 SET JENKINS_JOB=SeleniumPlus_Development_Debug
-SET JENKINS_TOKEN=JLWEILAFJELWONBHGHAWHANGKWOAHTNWHAOTOQPZNJG
+SET JENKINS_TOKEN=FJELFFDSAWONBHGHAWHAAFSERENGHFASDFAHAOTJWLWRJ
 SET REQUEST_PATH=/jenkins/job/%JENKINS_JOB%/buildWithParameters
 SET JENKINS_REQUEST=%JENKINS_HOST%:%JENKINS_PORT%%REQUEST_PATH%
 SET SRC_LOCATION=src
 SET MODIFIEDFILE_SUMMARY=modified_files_summary.txt
 REM Define PLAYPEN_LOCATION_PREFIX so that only a simple "defect number" is enough as argument.
-REM SET PLAYPEN_LOCATION_PREFIX=\\huanghe\home\username\
+REM SET PLAYPEN_LOCATION_PREFIX=\\fileserver\home\username\
+
+REM Get input parameters
+SET PLAYPEN_LOCATION=%1
+SHIFT
+SET DEBUG=%1
 
 REM Check the environment GIT_HOME
 IF NOT DEFINED GIT_HOME (
@@ -67,18 +73,27 @@ IF NOT DEFINED GIT_HOME (
 )
 
 IF NOT EXIST %CURL% (
+	IF DEFINED DEBUG ECHO %CURL% does not exist
     SET CURL="%GIT_HOME%\mingw32\bin\curl.exe"
     SET USE_OLD_CURL=FALSE
 )
 
-REM Get input parameters
-SET PLAYPEN_LOCATION=%1
-SHIFT
-SET DEBUG=%1
+IF NOT EXIST %CURL% (
+    IF DEFINED DEBUG ECHO %CURL% does not exist
+    SET CURL="%GIT_HOME%\mingw64\bin\curl.exe"
+    SET USE_OLD_CURL=FALSE
+)
+
+IF NOT EXIST %CURL% (
+    IF DEFINED DEBUG ECHO %CURL% does not exist
+	ECHO Abort.
+    ECHO Cannot detected the executable curl.exe
+    GOTO :END
+)
 
 IF NOT DEFINED PLAYPEN_LOCATION (
     ECHO Abort.
-    ECHO Parameter PLAYPEN_LOCATION is missing, please provide it, such as \\safsbuild\public\safs_playpen
+    ECHO Parameter PLAYPEN_LOCATION is missing, please provide it, such as \\fileserver\public\safs_playpen
     ECHO It should be a network directory, which is WRITABLE by you and READABLE by others.
     GOTO :USAGE  
 )
@@ -158,9 +173,11 @@ ECHO Usage:
 ECHO %MY_NAME% PLAYPEN_LOCATION [debug]
 ECHO.
 ECHO Example:
-ECHO %MY_NAME% \\huanghe\home\username\S1234567
-ECHO %MY_NAME% \\huanghe\home\username\S1234567 debug
+ECHO %MY_NAME% \\fileserver\home\username\S1234567
+ECHO %MY_NAME% \\fileserver\home\username\S1234567 debug
 ECHO ==================================================================
+GOTO :END
+
 
 :END
 

@@ -1,0 +1,33 @@
+#=========================================================
+#===  install chrome inside powershell               =====
+#===  install chromedriver inside powershell         =====
+#=========================================================
+
+Write-Verbose "Installing chrome browser ... "  -Verbose
+$TempDir = "${env:SystemRoot}\Temp" 
+$Installer = "chrome_installer.exe"; 
+Invoke-WebRequest "http://dl.google.com/chrome/install/375.126/chrome_installer.exe" -OutFile $TempDir\$Installer; 
+Start-Process -FilePath $TempDir\$Installer -Args "/silent /install" -Verb RunAs -Wait; 
+Remove-Item $TempDir\$Installer
+
+#Get the major version of chrome, for example 81 from 81.0.4044.69, so that we can get the corresponding chromedriver's version
+$VERSION_CHROME=(Get-Item (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe').'(Default)').VersionInfo.ProductVersion
+Write-Verbose "The installed chrome's version: $VERSION_CHROME" -Verbose
+$VERSION_REGEX = '(\d+)\.(.*)'
+$VERSION_CHROME_MAJOR= $VERSION_CHROME | Select-String $VERSION_REGEX -AllMatches | % { $_.Matches[0].Groups[1].value }
+$CHROME_DRIVER_VERSION_URL="https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${VERSION_CHROME_MAJOR}"
+Write-Verbose "Tried to get the matched chromedriver's version by URL $CHROME_DRIVER_VERSION_URL ..." -Verbose
+$CHROME_DRIVER_VERSION=$(Invoke-WebRequest -UseBasicParsing -uri $CHROME_DRIVER_VERSION_URL).Content
+Write-Verbose "Using chromedriver version: $CHROME_DRIVER_VERSION" -Verbose
+
+#Download the chromedriver
+$CHROMEDRIVER_ZIP = "chromedriver_win32.zip"
+$CHROMEDRIVER_URL="https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/${CHROMEDRIVER_ZIP}"
+Write-Verbose "Downloading the latest chromedriver from URL $CHROMEDRIVER_URL ... " -Verbose
+Invoke-WebRequest -uri $CHROMEDRIVER_URL -OutFile $CHROMEDRIVER_ZIP
+
+Write-Verbose "Extracting $CHROMEDRIVER_ZIP to get latest chromedriver and put it into folder $TempDir ... " -Verbose
+Expand-Archive -Force -LiteralPath "$CHROMEDRIVER_ZIP" -DestinationPath "$TempDir"
+Remove-Item $CHROMEDRIVER_ZIP
+
+#==========================================================

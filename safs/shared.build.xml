@@ -3,11 +3,15 @@
 
 <project name="shared_target" basedir=".">
 
-	<!-- Property 'Private.FTPServer.isConnected' is used -->
-	<!-- to test if the private FTP server is reachable. -->
-	<condition property="Private.FTPServer.isConnected">
-		<isreachable host="${private.ftpserver}" timeout="10" />
-	</condition>
+	<!-- Property 'Private.FTPServer.isConnected' is used                                           -->
+	<!-- to test if the private FTP server is reachable.                                            -->
+	<!-- Lei: Comment this global property setting:                                                  -->
+	<!-- If the private FTP server is not reachable, this will show message "Unknown host: xxxx"    -->
+	<!-- and this message will show every time we call a target, it is annoying                     -->
+	<!-- Moved this definition to target 'prepare.download'/'javac.compile'                         -->
+	<!--condition property="Private.FTPServer.isConnected">
+		<isreachable host="${private.ftpserver}" timeout="10"/>
+	</condition-->
 	
 	<!-- Property 'Eclipse.is.Mars' is used to tell us if -->
 	<!-- the embedded Eclipse is Mars or not.             -->
@@ -22,9 +26,26 @@
 	
 	<!-- We used ant <ftp> to download files, now we use ant <get> to download files. -->
 	<!-- Concern: I DO NOT know if the ftp user/password could work with ant <get>    -->
+	<!-- Lei: ant <get> cannot work with public ftp server ftp.cjncreations.com, it fails with 
+	     FtpLoginException: Invalid username/password, even the user/password are correct;
+	     ant <ftp> cannot work with public ftp server neither, it can etablish the connection,
+	     but it downloads 0 files;
+	     It turns out that this problem is caused by 'FTP active mode': FTP server tries to 
+	     connect client machine when transferring data, but client machine is behind a firewall
+	     and does not allow this connection.
+	     "FTP passive mode" can work with client machine behind a firewall, it uses the connection
+	     etablished when authenticating, the performance is not as good as 'active mode'.
+	     Ant <ftp> provide an attribute 'passive', set it to "yes" to let ftp work in passive mode.
+	-->
 	<target name="prepare.download">
-		<!-- comment the setting for FTP Server, using ant <ftp> to download resources -->
-		<!--if>
+		<condition property="Private.FTPServer.isConnected">
+			<isreachable host="${private.ftpserver}" timeout="10"/>
+		</condition>
+		<!-- set 'server', 'userid' and 'passwd' for FTP Server, using ant <ftp> to download resources 
+		     <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.win.java}" server="$server}" userid="$userid}" password="$passwd}" preservelastmodified="true" >
+               <fileset dir="${safsdist}/jre" includes="${JRE_WINDOWS}" /></ftp>
+		-->
+		<if>
 			<isset property="Private.FTPServer.isConnected" />
 			<then>
 				<property name="server"  value="${private.ftpserver}" />
@@ -36,10 +57,13 @@
 				<property name="userid"  value="${public.ftpuserid}" />
 				<property name="passwd"  value="${public.ftppasswd}" />
 			</else>
-		</if-->
-		<!-- currently we are using ant <get> to download resources -->
-		<if>
-			<isset property="Private.FTPServer.isConnecte" />
+		</if>
+		<!-- set 'server', 'userid' and 'passwd' for FTP-Server/Http-Server, using ant <get> to download resources 
+		     <get dest="${safsdist}/jre" username="${userid}" password="${passwd}" usetimestamp="true">
+               <url url="${server}${safsdev.win.java}/${JRE_WINDOWS}"/></get>
+		-->
+		<!--if>
+			<isset property="Private.FTPServer.isConnected" />
 			<then>
 				<property name="server"  value="ftp://${private.ftpserver}" />
 				<property name="userid"  value="${private.ftpuserid}" />
@@ -50,7 +74,7 @@
 				<property name="userid"  value="" />
 				<property name="passwd"  value="" />
 			</else>
-		</if>
+		</if-->
 		<echo>we are using '${server}' as download server.</echo>
 		<!-- echo>userid is ${userid}</echo-->
 		<!-- echo>passwd is ${passwd}</echo-->

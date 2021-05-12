@@ -1,4 +1,3 @@
-
 <!--                                                             -->
 <!-- 2014.08.15  Carl Nagle  Initial Release                         -->
 <!-- 2014.08.19  Carl Nagle  Selenium Include for build.xml Include  -->
@@ -29,6 +28,7 @@
 		     org\safs\model\** 
 		     org\safs\custom\**
 		     *.dat 
+      	     *.xml
 		     *ResourceBundle*.properties 
 		     *ResourceBundle*.properties.txt  
              org\apache\hc\client5\** 
@@ -37,6 +37,7 @@
       		 org\safs\autoit\**
       		 org\safs\auth\**
 		     org\safs\control\**
+		     org\safs\cukes\ai\selenium\**
 		     org\safs\custom\**
 		     org\safs\image\**
 		     org\safs\install\**
@@ -49,6 +50,7 @@
 		     org\safs\robot\**
 		     org\safs\staf\**
 		     org\safs\text\**
+		     org\safs\testrail\**
 		     org\safs\tools\**
 		     org\safs\rmi\engine\**
 		     org\slf4j\impl\**
@@ -83,6 +85,7 @@
 			     safslogs.jar 
 			     safsmaps.jar 
 			     safsupdate.jar
+			     safsdatamodel.jar 
 			     safsvars.jar" />
 			 <fileset dir="${safssource}/install/lib/"
 			 	includes="javax.mail.jar
@@ -93,6 +96,15 @@
              <fileset dir="${safs.dependencies}/saxon/" includes="Saxon-HE-9.7.0-8.jar"/>
              <fileset dir="${safs.dependencies}/httpclient5/" includes="httpc*.jar"/>
              <fileset dir="${safs.dependencies}/groovy/" includes="groovy-all-2.4.7.jar"/>
+      	     <fileset dir="${safs.dependencies}/ekspreso/" includes="ekspreso-event-creator-0.4.24-fat.jar" />
+      	     <fileset dir="${safs.dependencies}/cucumber/" includes="cucumber*.jar
+      	                                                             datatable*.jar
+      	                                                             gherkin*.jar" />
+      	     <fileset dir="${safs.dependencies}/hamcrest/" includes="hamcrest*.jar" />
+      	     <fileset dir="${safs.dependencies}/junit/" includes="junit*.jar" />
+      	     <fileset dir="${safs.dependencies}/cglib/" includes="cglib*jar" />
+	         <fileset dir="${safs.dependencies}/jcommand/" includes="jcommander*jar" />
+	         <fileset dir="${safs.dependencies}/testng/" includes="testng*jar" />
 
 	   </zip>
   </target>
@@ -117,20 +129,14 @@
   <!-- ========================================================================================================= -->
   <target name="seleniumplus.win.dist" depends="safs.test.core.compile,_make.sp.dist, prepare.download" >
 
-      <!-- ftp action="get" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+      <!-- Get JRE and Eclipse -->
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
           <fileset dir="${seleniumdist}/Java" includes="${JDK_WINDOWS}" /></ftp>
-      <ftp action="get" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.win.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
           <fileset dir="${seleniumdist}/Java64" includes="${JRE64_WINDOWS}" /></ftp>
-      <ftp action="get" remotedir="${safsdev.win.eclipse}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
-          <fileset dir="${seleniumdist}/eclipse" includes="${ECLIPSE_WINDOWS}" /></ftp-->
-
-      <get dest="${seleniumdist}/Java" username="${userid}" password="${passwd}" usetimestamp="true">
-          <url url="${server}${safsdev.win.java}/${JDK_WINDOWS}"/></get>   
-      <get dest="${seleniumdist}/Java64" username="${userid}" password="${passwd}" usetimestamp="true">
-          <url url="${server}${safsdev.win.java}/${JRE64_WINDOWS}"/></get>   
-      <get dest="${seleniumdist}/eclipse" username="${userid}" password="${passwd}" usetimestamp="true">
-          <url url="${server}${safsdev.win.eclipse}/${ECLIPSE_WINDOWS}"/></get>   
-          
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.win.eclipse}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/eclipse" includes="${ECLIPSE_WINDOWS}" /></ftp> 
+  	
       <copy todir="${seleniumdist}/extra/automation/bin/" preservelastmodified="true" >
         <fileset dir="${safs.dependencies}/tools/ocr/ocrbin/" />
       </copy>
@@ -160,23 +166,33 @@
                              extra/STAF*.bat
                              sample/
                              buildTestDesigner*.BAT" /></copy>
+      <copy todir="${seleniumdist}/doc" preservelastmodified="true" >
+        <fileset dir="${safssource}/install/" includes="WhatsNewInSAFS.htm" />
+      </copy>
                              
       <copy todir="${seleniumdist}/libs"  preservelastmodified="true" >
-          <fileset dir="${seleniumlibs}"  excludes="*-2.37.0.jar
-						                            *.exe"/>
+          <fileset dir="${seleniumlibs}"  excludes="*.exe"/><!-- only browser drivers are excluded, other files will be included. -->
           <fileset dir="${safsjars}/" includes="safsinput.jar
                                                 safslogs.jar
                                                 safsmaps.jar
                                                 safsupdate.jar
+                                                safsdatamodel.jar
                                                 safsvars.jar
                                                 seleniumplus*.jar
                                                 SPFilterImage*.jar" />
           <fileset dir="${safs.dependencies}/saxon/" includes="Saxon-HE-*.jar"/>
           <fileset dir="${safs.dependencies}/httpclient5/" includes="httpc*.jar"/>
           <fileset dir="${safs.dependencies}/log4j/" includes="log4j*.jar"/>
+          <fileset dir="${safs.dependencies}/ghost4j/" includes="ghost4j-*.jar
+      	                                                         itext-*.jar"/>
           <fileset dir="${safs.dependencies}/groovy/" includes="groovy-all-*.jar"/>
           <fileset dir="${safs.dependencies}/spring-core/" includes="spring-core*.jar"/>
           <fileset dir="${safs.dependencies}/spring-web/" includes="spring-web*.jar"/>
+          <fileset dir="${safs.dependencies}/spring/" includes="spring-*.jar"/>
+          <fileset dir="${safs.dependencies}/aspectj/" includes="aspectjweaver.jar"/>
+          <fileset dir="${safs.dependencies}/commons/" includes="commons*.jar"/>
+          <fileset dir="${safs.dependencies}/hibernate/" includes="hibernate*.jar"/>
+      	  <fileset dir="${safs.dependencies}/ekspreso/" includes="ekspreso-event-creator-0.4.24-fat.jar" />
           <fileset dir="${safssource}/install/lib/" includes="commons-logging-*.jar
                                                               commons-lang*.jar
                                                               ja*.jar
@@ -190,7 +206,17 @@
                                                               javax.mail.jar
                                                               platform.zip
                                                               win32-x86.zip" />
-      	 <fileset dir="${autoitlibs}"  excludes="*.exe" />
+      	  <fileset dir="${safs.dependencies}/cucumber/" includes="cucumber*.jar
+      	                                                          datatable*.jar
+      	                                                          gherkin*.jar" />
+ 	      <fileset dir="${safs.dependencies}/hamcrest/" includes="hamcrest*.jar" />
+ 	      <fileset dir="${safs.dependencies}/junit/" includes="junit*.jar" />
+      	  <fileset dir="${safs.dependencies}/cglib/" includes="cglib*jar" />
+	      <fileset dir="${safs.dependencies}/jcommand/" includes="jcommander*jar" />
+	      <fileset dir="${safs.dependencies}/testng/" includes="testng*jar" />
+      	
+      	  <fileset dir="${autoitlibs}"  excludes="*.exe" />
+      	  <fileset dir="${safssource}/install/maven/" includes="maven*.bat" />
       </copy>
       <copy todir="${seleniumdist}/extra"  preservelastmodified="true" >
 	 	<fileset dir="${seleniumlibs}/" includes="*.exe" />
@@ -206,6 +232,18 @@
           <mapper type="flatten" />
       </unzip>
       -->
+   
+      <!-- Get STAF installer (32bit and 64bit) -->
+      <ftp action="get" verbose="true" passive="yes" remotedir="${tools.staf}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/install" includes="${STAF_WINDOWS}" /></ftp>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${tools.staf}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/install" includes="${STAF64_WINDOWS}" /></ftp>
+  	
+  	
+  	  <!-- GHOSTSCRIPT installation binary -->
+      <copy todir="${seleniumdist}/install" preservelastmodified="true" >
+        <fileset dir="${safs.dependencies}/ghostscript" includes="gs923*.exe" />
+      </copy>
       
       <!--  copy source code of core and seleniumplus_plugin -->
       <copy todir="${seleniumdist}/"  preservelastmodified="true" >
@@ -223,6 +261,9 @@
       <!--
       Run the SeleniumPlus-Plugin test.
       -->
+      <!-- Default the debug port to empty -->
+      <property name="org.safs.seleniumplustest.forked.jvm.debug.port" value="" />
+      <property name="test.timeout" value="300000" /> <!-- 5 min default -->
       <ant
         target="test.compile.and.run.only"
         dir="${basedir}/source/common/eclipse/plugins/Seleniumplus_plugin"
@@ -231,8 +272,14 @@
         <property name="ECLIPSEJARS" location="${ECLIPSEJARS}" />
         <property name="SAFSJARS" location="${basedir}/safsjars" />
         <property name="seleniumdist" location="${seleniumdist}" />
+        <property name="org.safs.seleniumplustest.forked.jvm.debug.port" value="${org.safs.seleniumplustest.forked.jvm.debug.port}" />
+        <property name="test.timeout" value="${test.timeout}" />
       </ant>
 
+	  <antcallback target="maven.deploy.seplus.jars" return="exec.rc, exec.output, exec.error">
+	    <param name="maven.runtime.folder" value="${seleniumdist}/libs" />
+	  </antcallback>
+  	
       <zip destfile="${seleniumdist}/TestDesigner.ZIP"
            basedir="${seleniumdist}"
            includes="Setup.bat
@@ -246,8 +293,506 @@
                      eclipse/**
                      doc/**" />
       
+      <make.hash.file fileToHash="${seleniumdist}/TestDesigner.ZIP" />
+
   </target>
 
+  <!--                                                                                      -->
+  <!--                          maven.deploy.seplus.jars                                    -->
+  <!--                                                                                      -->
+  <!--  Deploy seleniumplus dependency jar files to maven artifactory                       -->
+  <!--                                                                                      -->
+  <!--  Parameters:                                                                         -->
+  <!--  requires:                                                                           -->
+  <!--            ${maven.runtime.folder}                                                   -->
+  <!--                                                                                      -->
+  <!--  We can call like                                                                    -->
+  <!--      1. ant -Dmaven.runtime.folder=dist\libs maven.deploy.seplus.jars                -->	
+  <!--      2. <antcallback> <param name="maven.runtime.folder"></antcallback>              -->	
+  <!--                                                                                      -->
+  <target name="maven.deploy.seplus.jars">
+    <var name="exec.rc" unset="true"/>
+    <var name="exec.output" unset="true"/>
+    <var name="exec.error" unset="true"/>
+  	
+	<if>
+		<isreachable url="${maven.server}" timeout="10"/>
+  		<then>
+		  	<echo>Deploying seleniumplus dependency jar files to maven artifactory "${maven.server}" ...</echo>
+			<exec executable="cmd"
+				  dir="${maven.runtime.folder}"
+				  resultproperty="exec.rc"
+				  outputproperty="exec.output"
+				  errorproperty="exec.error">
+			  <arg value="/c"/>
+			  <arg value="mavenDeploySeplusJars.bat"/>
+			  <arg value="${maven.server}"/>
+			</exec>
+		    <echo>${exec.output}</echo><!-- Show the standard output. -->
+		    <fail message="Deleting all stopped containers: ${exec.error}"><!-- Show the standard error if failed.-->
+			      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+		    </fail>
+  		</then>
+		<else>
+			<echo>The maven server "${maven.server}" is not valid, cannot deploy seleniumplus dependency jar files!</echo>
+		</else>
+  	</if>
+  	
+  </target>
+	
+  <!-- ========================================================================================================= -->
+  <!-- seleniumplus.lnx.dist will                                                                                -->
+  <!--   1. get everything ready in the folder ${seleniumdist}: get embedded Java, get Eclipse, get jar files    -->
+  <!--      and other script files etc.                                                                          -->
+  <!--   2. Run the SeleniumPlus-Plugin test                                                                     -->
+  <!--   3. make a TestDesigner.ZIP                                                                              -->
+  <!--                                                                                                           -->
+  <!-- ========================================================================================================= -->
+  <target name="seleniumplus.lnx.dist" depends="safs.test.core.compile,_make.sp.dist, prepare.download" >
+
+  	  <!-- Get JRE and Eclipse -->
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.lnx.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/Java" includes="${JDK_LINUX}" /></ftp>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.lnx.java}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/Java64" includes="${JDK64_LINUX}" /></ftp>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${safsdev.lnx.eclipse}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/eclipse" includes="${ECLIPSE_LINUX}" /></ftp>
+  	
+      <copy todir="${seleniumdist}/extra/automation/bin/" preservelastmodified="true" >
+        <fileset dir="${safs.dependencies}/tools/ocr/ocrbin/" />
+      </copy>
+      <copy todir="${seleniumdist}/extra/automation/ocr/" preservelastmodified="true" >
+        <fileset dir="${safs.dependencies}/tools/ocr/ocr/" />
+      </copy>
+  	<!-- To keep the file permissions, we will untar file in the Linux install scripts -->
+  	<!--
+      <unzip dest="${seleniumdist}/Java/" >
+          <fileset dir="${seleniumdist}/Java/" includes="${JDK_LINUX}"/>
+      </unzip>
+      <unzip dest="${seleniumdist}/" >
+          <fileset dir="${seleniumdist}/Java64/" includes="${JDK64_LINUX}"/>
+      </unzip>
+      <unzip dest="${seleniumdist}/eclipse/" >
+          <fileset dir="${seleniumdist}/eclipse/" includes="${ECLIPSE_LINUX}"/>
+      </unzip>
+      <untar dest="${seleniumdist}/Java/" compression="gzip">
+          <fileset dir="${seleniumdist}/Java/" includes="${JDK_LINUX}"/>
+      </untar>
+      <untar dest="${seleniumdist}/Java64/" compression="gzip">
+          <fileset dir="${seleniumdist}/Java64/" includes="${JDK64_LINUX}"/>
+      </untar>
+      <untar dest="${seleniumdist}/" compression="gzip">
+          <fileset dir="${seleniumdist}/eclipse/" includes="${ECLIPSE_LINUX}"/>
+      </untar>
+
+      <delete >
+          <fileset dir="${seleniumdist}/Java/" includes="${JDK_LINUX}" />
+	  	  <fileset dir="${seleniumdist}/Java64/" includes="${JDK64_LINUX}" />
+          <fileset dir="${seleniumdist}/eclipse/" includes="${ECLIPSE_LINUX}" />
+      </delete>
+      -->
+      <copy todir="${seleniumdist}/eclipse/plugins"  preservelastmodified="true" >
+          <fileset dir="${safsjars}" includes="Seleniumplus_plugin*.jar" /></copy>
+      <copy todir="${seleniumdist}"  preservelastmodified="true" > 
+      	<fileset dir="${safssource}/org/safs/selenium/install/" 
+                   excludes="eclipse.ini
+                             **/*.bat
+                             **/*.vbs
+                             **/*.wsf
+                             sample/" />
+      </copy>
+      <copy todir="${seleniumdist}/install"  preservelastmodified="true" >
+    	<fileset dir="${safssource}/install/" 
+    		       includes="sharedFunctions.sh
+    		                 sharedVariables.sh
+    			             *SeleniumPlus.sh" />
+      </copy>
+  	
+      <copy todir="${seleniumdist}/doc" preservelastmodified="true" >
+        <fileset dir="${safssource}/install/" includes="WhatsNewInSAFS.htm" />
+      </copy>
+                             
+      <copy todir="${seleniumdist}/libs"  preservelastmodified="true" >
+          <fileset dir="${seleniumlibs}"  excludes="*.exe"/><!-- only browser drivers are excluded, other files will be included. -->
+          <fileset dir="${safsjars}/" includes="safsinput.jar
+                                                safslogs.jar
+                                                safsmaps.jar
+                                                safsupdate.jar
+                                                safsdatamodel.jar
+                                                safsvars.jar
+                                                seleniumplus*.jar
+                                                SPFilterImage*.jar" />
+          <fileset dir="${safs.dependencies}/saxon/" includes="Saxon-HE-*.jar"/>
+          <fileset dir="${safs.dependencies}/httpclient5/" includes="httpc*.jar"/>
+          <fileset dir="${safs.dependencies}/log4j/" includes="log4j*.jar"/>
+          <fileset dir="${safs.dependencies}/ghost4j/" includes="ghost4j-*.jar
+      	                                                         itext-*.jar"/>
+          <fileset dir="${safs.dependencies}/groovy/" includes="groovy-all-*.jar"/>
+          <fileset dir="${safs.dependencies}/spring-core/" includes="spring-core*.jar"/>
+          <fileset dir="${safs.dependencies}/spring-web/" includes="spring-web*.jar"/>
+          <fileset dir="${safs.dependencies}/spring/" includes="spring-*.jar"/>
+          <fileset dir="${safs.dependencies}/aspectj/" includes="aspectjweaver.jar"/>
+          <fileset dir="${safs.dependencies}/commons/" includes="commons*.jar"/>
+          <fileset dir="${safs.dependencies}/hibernate/" includes="hibernate*.jar"/>
+      	  <fileset dir="${safs.dependencies}/ekspreso/" includes="ekspreso-event-creator-0.4.24-fat.jar" />
+          <fileset dir="${safssource}/install/lib/" includes="commons-logging-*.jar
+                                                              commons-lang*.jar
+                                                              ja*.jar
+                                                              JSTAFEmbedded.jar
+                                                              slf4j-api-*.jar
+                                                              spock-core-1.0-groovy-2.4.jar
+                                                              org.json.jar
+                                                              juniversalchardet*.jar
+                                                              jna*.zip
+                                                              jna*.jar
+                                                              javax.mail.jar
+                                                              platform.zip
+                                                              win32-x86.zip" />
+    	  <fileset dir="${safs.dependencies}/cucumber/" includes="cucumber*.jar
+    	                                                          datatable*.jar
+    	                                                          gherkin*.jar" />
+ 	      <fileset dir="${safs.dependencies}/hamcrest/" includes="hamcrest*.jar" />
+ 	      <fileset dir="${safs.dependencies}/junit/" includes="junit*.jar" />
+      	  <fileset dir="${safs.dependencies}/cglib/" includes="cglib*jar" />
+	      <fileset dir="${safs.dependencies}/jcommand/" includes="jcommander*jar" />
+	      <fileset dir="${safs.dependencies}/testng/" includes="testng*jar" />
+      	  <fileset dir="${autoitlibs}"  excludes="*.exe" />
+      </copy>
+      <copy todir="${seleniumdist}/extra"  preservelastmodified="true" >
+	 	<fileset dir="${safs.dependencies}/selenium/linux/" includes="*"/>
+      	<!--fileset dir="${autoitlibs}/" includes="*.exe" /-->
+      </copy>
+      <!-- Stop distributing due to sel-ser-stand.jar covers all jars 
+      <unzip dest="${seleniumdist}/libs/" >
+          <patternset>
+             <include name="selenium-*/libs/*.jar" />
+          </patternset>
+          <fileset dir="${seleniumdist}/libs/"
+                   includes="selenium-java-*.zip" />
+          <mapper type="flatten" />
+      </unzip>
+      -->
+   
+      <!-- Get STAF installer (32bit and 64bit) -->
+      <ftp action="get" verbose="true" passive="yes" remotedir="${tools.staf}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/install" includes="${STAF_LINUX}" /></ftp>
+      <ftp action="get" verbose="true" passive="yes" remotedir="${tools.staf}" server="${server}" userid="${userid}" password="${passwd}"  preservelastmodified="true" >
+          <fileset dir="${seleniumdist}/install" includes="${STAF64_LINUX}" /></ftp>
+  	  	
+  	  <!-- TODO: GHOSTSCRIPT installation binary: For Linux -->
+      <!--copy todir="${seleniumdist}/install" preservelastmodified="true" >
+        <fileset dir="${safs.dependencies}/ghostscript" includes="gs923*.exe" />
+      </copy-->
+      
+      <!--  copy source code of core and seleniumplus_plugin -->
+      <copy todir="${seleniumdist}/"  preservelastmodified="true" >
+          <fileset dir="${safsjars}" includes="${source_core.zip}
+                                               ${source_seplusplugin.zip}"/></copy>
+      
+      <!--  copy resource bundle properties files to custom location -->
+      <copy todir="${seleniumdist}/eclipse/configuration/com.sas.seleniumplus" preservelastmodified="true" >
+        <fileset dir="${safssource}/eclipse/plugins/Seleniumplus_plugin/" includes="preferences.properties"/>
+      </copy>
+
+      <!-- TODO:  Run the Core tests.  They require the seleniumdist/extra/automation directory. -->
+      <!--safs.test.core /-->
+
+      <!--
+      TODO: Run the SeleniumPlus-Plugin test.
+      -->
+      <!-- Default the debug port to empty -->
+      <property name="org.safs.seleniumplustest.forked.jvm.debug.port" value="" />
+      <property name="test.timeout" value="300000" /> <!-- 5 min default -->
+      <!--ant
+        target="test.compile.and.run.only"
+        dir="${basedir}/source/common/eclipse/plugins/Seleniumplus_plugin"
+        useNativeBasedir="true"
+        >
+        <property name="ECLIPSEJARS" location="${ECLIPSEJARS}" />
+        <property name="SAFSJARS" location="${basedir}/safsjars" />
+        <property name="seleniumdist" location="${seleniumdist}" />
+        <property name="org.safs.seleniumplustest.forked.jvm.debug.port" value="${org.safs.seleniumplustest.forked.jvm.debug.port}" />
+        <property name="test.timeout" value="${test.timeout}" />
+      </ant-->
+
+      <tar destfile="${seleniumdist}/TestDesigner.tar"
+           basedir="${seleniumdist}"
+           includes="*.sh
+      	             *.bin
+                     InstallInstructions.txt
+                     libs/**
+                     install/**
+                     uninstall/**
+                     Java/**
+		             Java64/**
+                     extra/**
+                     eclipse/**
+                     doc/**" />
+  	  <gzip destfile="${seleniumdist}/TestDesigner.tar.gz" src="${seleniumdist}/TestDesigner.tar"/>
+  	  <!-- delete the TestDesigner.tar to save disk space-->
+  	  <delete file="${seleniumdist}/TestDesigner.tar"/>
+      
+      <make.hash.file fileToHash="${seleniumdist}/TestDesigner.tar.gz" />
+
+  </target>
+
+  <!-- ========================================================================================================= -->
+  <!-- Prerequist:                                                                                               -->
+  <!--   The "docker desktop" should be already installed and should be running as Linux containers              -->
+  <!-- seleniumplus.docker.image.linux                                                                           -->
+  <!--   All the selleniumplus-linux docker image build files locate at folders                                  -->
+  <!--     ${seleniumdocker.linux}/base/                                                                         -->
+  <!--     ${seleniumdocker.linux}/standalone/                                                                   -->
+  <!--     ${seleniumdocker.linux}/hub/                                                                          -->
+  <!--     ${seleniumdocker.linux}/node/                                                                         -->
+  <!--   This target will                                                                                        -->	
+  <!--   1. run docker build to make image ${image.tag.name.linux.base} and push it into repositry               -->
+  <!--   2. run docker build to make image ${image.tag.name.linux.standalone} and push it into repositry         -->
+  <!--   3. run docker build to make image ${image.tag.name.linux.hub} and push it into repositry                -->
+  <!--   4. run docker build to make image ${image.tag.name.linux.node} and push it into repositry               -->
+  <!--                                                                                                           -->
+  <!-- ========================================================================================================= -->
+  <target name="seleniumplus.docker.image.linux">
+  	<!-- build the seplus base image -->
+  	<delete dir="${seleniumdocker.runtime}" />
+  	<mkdir dir="${seleniumdocker.runtime}" />
+    <copy todir="${seleniumdocker.runtime}"  preservelastmodified="true" overwrite="true">
+	 	<fileset dir="${seleniumdocker.linux}/base/" includes="*"/>
+    </copy>
+	<antcallback target="seleniumplus.docker.image.build" return="exec.rc, exec.output, exec.error">
+	  <param name="build.runtime.folder" value="${seleniumdocker.runtime}" />
+	  <param name="image.tag.name" value="${image.tag.name.linux.base}" />
+	</antcallback>
+
+  	<!-- build the seplus standalone image -->
+  	<delete dir="${seleniumdocker.runtime}" />
+  	<mkdir dir="${seleniumdocker.runtime}" />
+    <copy todir="${seleniumdocker.runtime}"  preservelastmodified="true" overwrite="true">
+	 	<fileset dir="${seleniumdocker.linux}/base/" includes="*"/>
+    </copy>
+    <copy todir="${seleniumdocker.runtime}"  preservelastmodified="true" overwrite="true">
+    	<fileset dir="${seleniumdocker.linux}/standalone/" includes="*"/>
+    </copy>
+	<antcallback target="seleniumplus.docker.image.build" return="exec.rc, exec.output, exec.error">
+	  <param name="build.runtime.folder" value="${seleniumdocker.runtime}" />
+	  <param name="image.tag.name" value="${image.tag.name.linux.standalone}" />
+	</antcallback>
+  	
+  	<!-- build the seplus hub image -->
+  	<delete dir="${seleniumdocker.runtime}" />
+  	<mkdir dir="${seleniumdocker.runtime}" />
+    <copy todir="${seleniumdocker.runtime}"  preservelastmodified="true" overwrite="true">
+	 	<fileset dir="${seleniumdocker.linux}/base/" includes="*"/>
+    </copy>
+    <copy todir="${seleniumdocker.runtime}"  preservelastmodified="true" overwrite="true">
+    	<fileset dir="${seleniumdocker.linux}/hub/" includes="*"/>
+    </copy>
+	<antcallback target="seleniumplus.docker.image.build" return="exec.rc, exec.output, exec.error">
+	  <param name="build.runtime.folder" value="${seleniumdocker.runtime}" />
+	  <param name="image.tag.name" value="${image.tag.name.linux.hub}" />
+	</antcallback>  	
+  	
+  	<!-- build the seplus node image -->
+  	<delete dir="${seleniumdocker.runtime}" />
+  	<mkdir dir="${seleniumdocker.runtime}" />
+    <copy todir="${seleniumdocker.runtime}"  preservelastmodified="true" overwrite="true">
+	 	<fileset dir="${seleniumdocker.linux}/base/" includes="*"/>
+    </copy>
+    <copy todir="${seleniumdocker.runtime}"  preservelastmodified="true" overwrite="true">
+    	<fileset dir="${seleniumdocker.linux}/node/" includes="*"/>
+    </copy>
+	<antcallback target="seleniumplus.docker.image.build" return="exec.rc, exec.output, exec.error">
+	  <param name="build.runtime.folder" value="${seleniumdocker.runtime}" />
+	  <param name="image.tag.name" value="${image.tag.name.linux.node}" />
+	</antcallback>
+  	
+  </target>
+
+  <!-- ========================================================================================================= -->
+  <!-- Prerequist:                                                                                               -->
+  <!--   The "docker desktop" should be already installed and should be running as window containers             -->
+  <!-- seleniumplus.docker.image.windows                                                                         -->
+  <!--   All the selleniumplus-linux docker image build files locate at folders                                  -->
+  <!--     ${seleniumdocker.windows}/base/                                                                       -->
+  <!--     ${seleniumdocker.windows}/standalone/                                                                 -->
+  <!--     ${seleniumdocker.windows}/hub/                                                                        -->
+  <!--     ${seleniumdocker.windows}/node/                                                                       -->
+  <!--   This target will                                                                                        -->	
+  <!--   1. run docker build to make image ${image.tag.name.win.base} and push it into repositry                 -->
+  <!--   2. run docker build to make image ${image.tag.name.win.standalone} and push it into repositry           -->
+  <!--   3. run docker build to make image ${image.tag.name.win.hub} and push it into repositry                  -->
+  <!--   4. run docker build to make image ${image.tag.name.win.node} and push it into repositry                 -->
+  <!--                                                                                                           -->
+  <!-- ========================================================================================================= -->
+  <target name="seleniumplus.docker.image.windows">
+  	
+  	<!-- build the seplus base image -->
+  	<delete dir="${seleniumdocker.runtime}" />
+  	<mkdir dir="${seleniumdocker.runtime}" />
+    <copy todir="${seleniumdocker.runtime}"  preservelastmodified="true" overwrite="true">
+	 	<fileset dir="${seleniumdocker.windows}/base/" includes="*"/>
+    </copy>
+	<antcallback target="seleniumplus.docker.image.build" return="exec.rc, exec.output, exec.error">
+	  <param name="build.runtime.folder" value="${seleniumdocker.runtime}" />
+	  <param name="image.tag.name" value="${image.tag.name.win.base}" />
+	</antcallback>
+	
+  </target>
+
+  <!--                                                                                      -->
+  <!--                          seleniumplus.docker.image.build                             -->
+  <!--                                                                                      -->
+  <!--  Build SeleniumPlus docker image and push it into registry ${docker.registry.url}    -->
+  <!--                                                                                      -->
+  <!--  Parameters:                                                                         -->
+  <!--  requires:                                                                           -->
+  <!--            ${build.runtime.folder}                                                   -->
+  <!--            ${image.tag.name}                                                         -->
+  <!--                                                                                      -->
+  <!--  Notes:                                                                              -->
+  <!--    Suppose that all the necessary docker build files are already in folder           -->
+  <!--    ${build.runtime.folder}                                                           -->
+  <!--                                                                                      -->
+  <!--                                                                                      -->
+  <target name="seleniumplus.docker.image.build" description="build seleniumplus docker image" >
+	
+  	<echo>Building seleniumplus docker image '${image.tag.name}' ...</echo>
+    <!-- we MUST clean the value of some global variables.-->
+    <var name="exec.rc" unset="true"/>
+    <var name="exec.output" unset="true"/>
+    <var name="exec.error" unset="true"/>
+  	<!-- docker build -pull -no-cache -add-host dl-ssl.google.com:172.217.194.91 -t seplus . -->
+	<exec executable="docker"
+		  dir="${build.runtime.folder}"
+		  resultproperty="exec.rc"
+		  outputproperty="exec.output"
+		  errorproperty="exec.error">
+	  <arg value="build"/>
+	  <arg value="--pull"/><!-- Always attempt to pull a newer version of the image -->
+	  <arg value="--no-cache"/><!-- Do not use cache when building the image -->
+	  <!--arg value="-add-host"/--><!-- Add a custom host-to-IP mapping (host:ip) -->
+	  <!--arg value="dl-ssl.google.com:172.217.194.91"/--><!-- we might need to change the IP if '172.217.194.91' cannot be accessed. -->
+      <arg value="-t"/>
+	  <arg value="${image.tag.name}"/>
+	  <arg value="."/>
+	</exec>
+    <echo>${exec.output}</echo><!-- Show the standard output. -->
+    <fail message="Build seleniumplus docker image failed: ${exec.error}"><!-- Show the standard error if failed.-->
+      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+    </fail>
+	
+  	<echo>Taging seleniumplus docker image '${image.tag.name}' to '${docker.registry}/${image.tag.name}'</echo>
+  	<!-- docker image tag seplus ghcr.io/safsdev/seplus, ghcr.io is the public github registry server -->
+    <var name="exec.rc" unset="true"/>
+    <var name="exec.output" unset="true"/>
+    <var name="exec.error" unset="true"/>
+	<exec executable="docker"
+		  dir="${build.runtime.folder}"
+		  resultproperty="exec.rc"
+		  outputproperty="exec.output"
+		  errorproperty="exec.error">
+	  <arg value="image"/>
+	  <arg value="tag"/>
+	  <arg value="${image.tag.name}"/>
+      <arg value="${docker.registry}/${image.tag.name}"/>
+	</exec>
+    <echo>${exec.output}</echo><!-- Show the standard output. -->
+    <fail message="Tag seleniumplus docker image failed: ${exec.error}"><!-- Show the standard error if failed.-->
+      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+    </fail>
+
+  	<echo>Logging on public docker image registry '${docker.registry.url}' by user '${docker.registry.user}' ...</echo>
+	<!-- we need to login the docker image registry server before we can push image -->
+  	<!-- docker login -u githubUser -p ****** ghcr.io -->
+    <var name="exec.rc" unset="true"/>
+    <var name="exec.output" unset="true"/>
+    <var name="exec.error" unset="true"/>
+	<exec executable="docker"
+		  dir="${build.runtime.folder}"
+		  resultproperty="exec.rc"
+		  outputproperty="exec.output"
+		  errorproperty="exec.error">
+	  <arg value="login"/>
+	  <arg value="-u"/>
+	  <arg value="${docker.registry.user}"/>
+	  <arg value="-p"/>
+	  <arg value="${docker.registry.pass}"/>
+	  <arg value="${docker.registry.url}"/>
+	</exec>
+    <echo>${exec.output}</echo><!-- Show the standard output. -->
+    <fail message="Logging SAS public registry failed: ${exec.error}"><!-- Show the standard error if failed.-->
+      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+    </fail>
+  	
+  	<echo>Pushing seleniumplus docker image '${image.tag.name}' into registry '${docker.registry}' ...</echo>
+  	<!-- docker push ghcr.io/safsdev/seplus -->
+    <var name="exec.rc" unset="true"/>
+    <var name="exec.output" unset="true"/>
+    <var name="exec.error" unset="true"/>
+	<exec executable="docker"
+		  dir="${build.runtime.folder}"
+		  resultproperty="exec.rc"
+		  outputproperty="exec.output"
+		  errorproperty="exec.error">
+	  <arg value="push"/>
+	  <arg value="${docker.registry}/${image.tag.name}"/>
+	</exec>
+    <echo>${exec.output}</echo><!-- Show the standard output. -->
+    <fail message="Pushing seleniumplus docker image failed: ${exec.error}"><!-- Show the standard error if failed.-->
+      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+    </fail>
+
+  </target>
+	
+  <!-- ========================================================================================================= -->
+  <!-- Purpose:                                                                                                  -->
+  <!--               Clean the remain stopped containers and dangling images after build seplus image            -->
+  <!-- seleniumplus.docker.clean                                                                                 -->
+  <!-- This should be called after target 'seleniumplus.docker.image.linux'/seleniumplus.docker.image.windows    -->
+  <!--                                                                                                           -->
+  <!-- ========================================================================================================= -->
+  <target name="seleniumplus.docker.clean">
+  	    <echo>Cleaning the remain stopped containers ...</echo>
+	  	<!-- docker container prune -f -->
+	    <var name="exec.rc" unset="true"/>
+	    <var name="exec.output" unset="true"/>
+	    <var name="exec.error" unset="true"/>
+	  	<echo>Deleting all stopped containers ...</echo>
+		<exec executable="docker"
+			  dir="${seleniumdocker}"
+			  resultproperty="exec.rc"
+			  outputproperty="exec.output"
+			  errorproperty="exec.error">
+		  <arg value="container"/>
+		  <arg value="prune"/>
+		  <arg value="--force"/>
+		</exec>
+	    <echo>${exec.output}</echo><!-- Show the standard output. -->
+	    <fail message="Deleting all stopped containers: ${exec.error}"><!-- Show the standard error if failed.-->
+	      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+	    </fail>
+   	
+  	    <echo>Cleaning the remain dangling images ...</echo>
+	  	<!-- docker image prune -f -->
+	    <var name="exec.rc" unset="true"/>
+	    <var name="exec.output" unset="true"/>
+	    <var name="exec.error" unset="true"/>
+	  	<echo>Deleting all stopped containers ...</echo>
+		<exec executable="docker"
+			  dir="${seleniumdocker}"
+			  resultproperty="exec.rc"
+			  outputproperty="exec.output"
+			  errorproperty="exec.error">
+		  <arg value="image"/>
+		  <arg value="prune"/>
+		  <arg value="--force"/>
+		</exec>
+	    <echo>${exec.output}</echo><!-- Show the standard output. -->
+	    <fail message="Deleting all stopped containers: ${exec.error}"><!-- Show the standard error if failed.-->
+	      <condition><not><equals arg1="${exec.rc}" arg2="0"/></not></condition>
+	    </fail>
+  </target>
+	
   <target name="selenium.plugin.build" >
       <java jar="${ECLIPSEJARS}/${ECLIPSELAUNCHER}"
             fork="true"
@@ -281,7 +826,19 @@
 	  </fail>
   </target>
   
-  <target name="run.regression.test" depends="seleniumplus.lib.update.runtime, git.clone.se.regression">
+  <!-- Kill the running "Selenium Server" left behind the test -->	
+  <target name="kill.selenium.server">
+	<exec executable="cmd"
+		  dir="${SELENIUM_PLUS}/extra"
+		  resultproperty="exec.rc"
+		  outputproperty="exec.output"
+		  errorproperty="exec.error">
+	  <arg value="/c"/>
+	  <arg value="RemoteServerTerminate.bat"/>
+	</exec>
+  </target>
+	
+  <target name="run.regression.test" depends="kill.selenium.server, seleniumplus.lib.update.runtime, git.clone.se.regression">
   	<!-- TODO: use java task instead of batch script to avoid OS dependency -->
 	
 	<!-- The variable 'TestBrowserNameParam' here is supposed to be defined by Jenkins when   -->
@@ -312,6 +869,8 @@
 	  <arg value="runAutomation.bat"/>
 	  <arg value="${TestBrowserNamePrefix}" />
 	  <arg value="${TestBrowserNameParam}"/>
+	  <arg value="/vmparams"/>
+	  <arg value="${vmparams}"/>
 	</exec>
   	
   	<property name="current.dir" location="." />

@@ -70,9 +70,10 @@
   <!--                                                                               -->
   <!-- Update the GitHub SAFSDEV UpdateSite "seleniumplus" release with assets:      -->
   <!--                                                                               -->
-  <!--                                                SEPLUS.LIB.UPDATE.ZIP          -->
-  <!--                                                SEPLUS.PLUGIN.UPDATE.ZIP       -->
-  <!--                                                source_all.zip                 -->
+  <!--                                             SEPLUS.LIB.UPDATE.ZIP             -->
+  <!--                                             SEPLUS.PLUGIN.UPDATE.ZIP          -->
+  <!--                                             SeleniumPlusReleaseCandidate.ZIP  -->
+  <!--                                             source_all.zip                    -->
   <!--                                                                               -->
   <target name="git.updatesite.seleniumplus.asset.update" description="Update asset of SELENIUMPLUS release at GitHub SAFSDEV/UpdateSite" >
   	<!-- SEPLUS.LIB.UPDATE.ZIP -->
@@ -98,7 +99,19 @@
 	<var name="git.release.asset.type" value="${git.release.updatesite.seleniumplus.asset.plugin.type}" />
 	<var name="git.release.asset.data" value="${git.release.updatesite.seleniumplus.asset.plugin.data}" />
 	<antcall target="git.release.upload.asset" />
-  	  	
+  	
+  	<!-- SeleniumPlusReleaseCandidate.ZIP -->
+  	<!-- delete the asset-->
+    <var name="git.release.id" value="${git.release.updatesite.seleniumplus.id}" />
+	<var name="git.release.asset.name" value="${git.release.updatesite.seleniumplus.asset.release.name}" />
+  	<antcallback target="git.get.asset.id" return="exec.rc, exec.output, exec.error, git.asset.id"/>
+  	<antcall target="git.release.delete.asset"/>
+  	<!-- upload asset -->
+	<var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
+	<var name="git.release.asset.type" value="${git.release.updatesite.seleniumplus.asset.release.type}" />
+	<var name="git.release.asset.data" value="${git.release.updatesite.seleniumplus.asset.release.data}" />
+	<antcall target="git.release.upload.asset" />
+  	
     <!-- source_all.zip -->
     <!-- delete the asset-->
     <var name="git.release.id" value="${git.release.updatesite.seleniumplus.id}" />
@@ -110,6 +123,39 @@
     <var name="git.release.asset.type" value="${source_all.type}" />
     <var name="git.release.asset.data" value="${source}/${source_all.zip}" />
     <antcall target="git.release.upload.asset" />
+  </target>
+	
+  <!--                                                                                     -->
+  <!-- Update the GitHub SAFSDEV UpdateSite "seleniumplus" linux release with assets:      -->
+  <!--                                                                                     -->
+  <!--                                             TestDesigner.tar.gz                     -->
+  <!--                                             source_all.zip                          -->
+  <!--                                                                                     -->
+  <target name="git.updatesite.seleniumplus.linux.asset.update" description="Update asset of SELENIUMPLUS linux release at GitHub SAFSDEV/UpdateSite" >	
+  	<!-- TestDesigner.tar.gz -->
+  	<!-- delete the asset-->
+    <var name="git.release.id" value="${git.release.updatesite.seleniumplus.linux.id}" />
+	<var name="git.release.asset.name" value="${git.release.updatesite.seleniumplus.linux.asset.release.name}" />
+  	<antcallback target="git.get.asset.id" return="exec.rc, exec.output, exec.error, git.asset.id"/>
+  	<antcall target="git.release.delete.asset"/>
+  	<!-- upload asset -->
+	<var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
+	<var name="git.release.asset.type" value="${git.release.updatesite.seleniumplus.linux.asset.release.type}" />
+	<var name="git.release.asset.data" value="${git.release.updatesite.seleniumplus.linux.asset.release.data}" />
+	<antcall target="git.release.upload.asset" />
+
+    <!-- source_all.zip -->
+    <!-- delete the asset-->
+    <var name="git.release.id" value="${git.release.updatesite.seleniumplus.linux.id}" />
+    <var name="git.release.asset.name" value="${source_all.zip}" />
+    <antcallback target="git.get.asset.id" return="exec.rc, exec.output, exec.error, git.asset.id"/>
+    <antcall target="git.release.delete.asset"/>
+    <!-- upload asset -->
+    <var name="git.release.uploads.url" value="${git.release.uploads.updatesite.url}" />
+    <var name="git.release.asset.type" value="${source_all.type}" />
+    <var name="git.release.asset.data" value="${source}/${source_all.zip}" />
+    <antcall target="git.release.upload.asset" />
+  	
   </target>
 	
   <!--                                                                           -->
@@ -435,11 +481,13 @@
       <!-- We need to first find the portion of the response for our specific content.filename            -->
       <!-- Then we must find the "sha": value for that content filename.                                  -->
       <!-- This is only complicated by the fact that there can be more than 1 file in the response array. -->
-  	
+  	  <echo>Searching 'git.asset.id' for git asset "${git.release.asset.name}"</echo>
+  	  <!-- use regex to search asset id, there are probably mutilple lines between the "id" and "name"    -->
+  	  <!-- (.*\n.*){1,5} to match 0 to 4 lines, if more than 4 lines, need to modify the regex pattern    -->
       <propertyregex property="git.asset.id"
       	      override="true"
               input="${exec.output}"
-              regexp='"id": (\d+),.*\n.*"name": "${git.release.asset.name}",'
+              regexp='"id": (\d+),(.*\n.*){1,5}"name": "${git.release.asset.name}",'
               select="\1"
               casesensitive="false" />
 

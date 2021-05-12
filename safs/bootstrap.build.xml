@@ -1,10 +1,10 @@
 
 <!--                                                          -->
-<!-- 2015.08.03  Carl Nagle  Initial Release                      -->
+<!-- 2015.08.03  Carl Nagle  Initial Release                  -->
 <!--                                                          -->
 <project name="boostrap_build" basedir="." >
 <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
-  
+
   <!--                                                -->
   <!--              _git.checkout                     -->
   <!--   renamed    _internal.checkout                -->
@@ -12,27 +12,38 @@
   <!-- Get/Update all sourcecode from GitHUb          -->
   <!--                                                -->
   <target name="bootstrapbuild" depends="git.clone.build" >
+      <delete dir="buildLib" />
       <move todir="." preservelastmodified="true" >
-          <fileset dir="safsdev.build/safs" includes="*.xml, *.properties, *.java, *.vbs"/>
+          <fileset dir="safsdev.build/safs" includes="*.xml, *.properties, *.java, *.vbs, buildLib/*.jar"/>
+      </move>
+      <move todir="./docker" preservelastmodified="true" >
+          <fileset dir="safsdev.build/docker" includes="**/*"/>
       </move>
       <delete dir="safsdev.build" />
   </target>
-                                           
+
+  <!-- Set the default properties if they are not set yet -->
+  <condition property="git.wdir.build" value="safsdev.build">
+  	<not><isset property="git.wdir.build"/></not>
+  </condition>
+  <condition property="git.repo.url.prefix" value="git@github.com:SAFSDEV/">
+  	<not><isset property="git.repo.url.prefix"/></not>
+  </condition>
+  <condition property="git.repo.build" value="build">
+  	<not><isset property="git.repo.build"/></not>
+  </condition>
+  <condition property="git.branch.build" value="master">
+  	<not><isset property="git.branch.build"/></not>
+  </condition>
+  <condition property="git.repo.suffix" value=".git">
+  	<not><isset property="git.repo.suffix"/></not>
+  </condition>
+
   <target name="git.clone.build" description="Clone from GitHub SAFSDEV/build" >
-  
-      <!-- Set properties to defaults if they have not already been set -->
-      <property name="git.repo.tree" value="safsdev.build" />
-      <!-- Note: for testing with a local repo, set the url prefix to something like
-           file://c:\Users\userid\git\
-           Make sure it ends with a trailing "\" or "/". -->
-      <property name="git.repo.url.prefix" value="git://github.com/SAFSDEV/" />
-      <property name="git.repo.name" value="build" />
-      <property name="git.repo.branch" value="master" />
-  
-      <var name="git.repo.tree" value="${git.repo.tree}" />
+      <var name="git.repo.tree" value="${git.wdir.build}" />
       <var name="git.repo.url.prefix" value="${git.repo.url.prefix}" />
-      <var name="git.repo.name" value="${git.repo.name}" />
-      <var name="git.repo.branch" value="${git.repo.branch}" />
+      <var name="git.repo.name" value="${git.repo.build}" />
+      <var name="git.repo.branch" value="${git.branch.build}" />
       <antcall target="git.repo.clone" />
   </target>
 
@@ -56,13 +67,14 @@
   <!--                                                                                                             -->
   <target name="git.repo.clone"                                  
           description="Clone a Repository from a Git URL" >
-  	<!--echo>git -work-tree ${git.repo.tree} clone ${git.repo.url.prefix}${git.repo.name} -b ${git.repo.branch}</echo-->
+  	
+  	<!--echo>git -work-tree ${git.repo.tree} clone ${git.repo.url.prefix}${git.repo.name}${git.repo.suffix} -b ${git.repo.branch}</echo-->
   	
     <!-- delete the hidden repository folder and the late remain working folder -->
     <!-- which will cause the current clone fail -->
   	<delete dir="${git.repo.name}" />
   	<delete dir="${git.repo.tree}" />
-  	
+
   	<!-- clone the repository to local machine -->
   	<exec executable="git" 
           failifexecutionfails="true"
@@ -72,7 +84,7 @@
           <arg value="--work-tree"           />  
           <arg value="${git.repo.tree}"      />
           <arg value="clone"                 />  
-          <arg value="${git.repo.url.prefix}${git.repo.name}" />
+          <arg value="${git.repo.url.prefix}${git.repo.name}${git.repo.suffix}" />
           <arg value="-b"                    />
           <arg value="${git.repo.branch}"    />
           

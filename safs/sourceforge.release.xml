@@ -73,11 +73,18 @@
 
 		<mkdir dir="${dir.temp}/lib" />
 		<mkdir dir="${dir.temp}/samples/Selenium2.0/extra" />
+		<!-- Update Java from 7 to 8, later we will stop publishing them to the update zip, they are too big-->
+		<mkdir dir="${dir.temp}/jre" />
 
-		<!-- safs lib files -->
+		<!-- Update Java from 7 to 8-->
+		<copy todir="${dir.temp}/jre" preservelastmodified="true" >
+			<fileset dir="${dir.dist}/jre" includes="**" />
+		</copy>
+	
+		<!-- prepare files in safs' lib folder, begin -->
 		<unzip src="${dir.safsjars}/${safs.zip._lib}" dest="${dir.temp}/lib" />
 
-		<!-- copy selenium stuff -->
+		<!-- copy selenium standalone server jar file -->
 		<timestampselector property="sel.latest.modified">
 			<path>
 				<fileset dir="${dir.selenium}">
@@ -85,35 +92,58 @@
 				</fileset>
 			</path>
 		</timestampselector>
-
 		<copy file="${sel.latest.modified}" todir="${dir.temp}/lib" preservelastmodified="true" />
-		
+
+		<!-- prepare files in safs' lib folder -->
 		<copy todir="${dir.temp}/lib" preservelastmodified="true">
-						<fileset dir="${dir.selenium}/" includes="SeInterpreter.jar" />															
+						<fileset dir="${dir.selenium}/" includes="SeInterpreter.jar
+							                                      selenium-server-safs-2.52.jar" /> <!-- selenium legacy RC jar -->															
 						<fileset dir="${dir.autoit}/" includes="*.dll
 																AutoItX4Java.jar
 																jacob.jar" />
 						<fileset dir="${dir.libs}/saxon/" includes="Saxon-HE-*.jar" />															
 						<fileset dir="${dir.libs}/httpclient5/" includes="httpc*.jar" />															
-						<fileset dir="${dir.libs}/log4j/" includes="log4j*.jar" />															
+						<fileset dir="${dir.libs}/log4j/" includes="log4j*.jar" />
+						<fileset dir="${dir.libs}/ghost4j/" includes="ghost4j-*.jar
+                                                                      itext-*.jar"/>
 						<fileset dir="${dir.libs}/groovy/" includes="groovy-all*.jar" />
 						<fileset dir="${dir.libs}/spring-core/" includes="spring-core*.jar" />
 						<fileset dir="${dir.libs}/spring-web/" includes="spring-web*.jar" />
+	                    <fileset dir="${dir.libs}/spring/" includes="spring-*.jar"/>
+	                    <fileset dir="${dir.libs}/aspectj/" includes="aspectjweaver.jar"/>
+						<fileset dir="${dir.libs}/commons/" includes="commons*.jar" />
+						<fileset dir="${dir.libs}/hibernate/" includes="hibernate*.jar" />
+						<fileset dir="${dir.libs}/ekspreso/" includes="ekspreso-event-creator-0.4.24-fat.jar" />
+	      	            <fileset dir="${dir.libs}/cucumber/" includes="cucumber*.jar
+	      	                                                          datatable*.jar
+	      	                                                          gherkin*.jar" />
+     	                <fileset dir="${dir.libs}/hamcrest/" includes="hamcrest*.jar" />
+     	                <fileset dir="${dir.libs}/junit/" includes="junit*.jar" />
+			            <fileset dir="${dir.libs}/cglib/" includes="cglib*jar" />
+	 	                <fileset dir="${dir.libs}/jcommand/" includes="jcommander*jar" />
+	 	                <fileset dir="${dir.libs}/testng/" includes="testng*jar" />
 						<fileset dir="${dir.libs}/" includes="commons-lang*.jar
-							                                  slf4j-api*.jar" />
+							                                  slf4j-api*.jar
+							                                  jna*.jar" />
+		</copy>
+		
+		<!--  Include all the "TCAFS project files"  -->
+		<copy todir="${dir.temp}/TCAFS" preservelastmodified="true">
+			<fileset dir="${dir.dist}/TCAFS"/>
 		</copy>
 		
 		<copy todir="${dir.temp}/install" preservelastmodified="true">
 			<fileset dir="${dir.dist}/install" includes="SetupTCAFS.wsf" />
+			<fileset dir="${dir.dist}/install" includes="gs923*.exe" />
 		</copy>
 
 		<copy todir="${dir.temp}/extra" preservelastmodified="true">
-			<fileset dir="${dir.selenium}/" includes="chromedriver.exe
-													IEDriverServer.exe
-													MicrosoftWebDriver.exe" />
+			<fileset dir="${dir.selenium}/" includes="*.exe" /> <!-- includes all drivers: chromedriver.exe, IEDriverServer.exe, geckodriver*.exe, MicrosoftWebDriver.exe -->
 			<fileset dir="${dir.autoit}/" includes="Au3Info*.exe" />
 			<fileset dir="${source}/common/org/safs/selenium/install/extra" includes="*.bat
-				                                                                      *.vbs" />
+				                                                                      *.vbs
+				                                                                      *.sh
+				                                                                      *.crx" />
 		</copy>
 		
 		<!--  Get ready the "Library Update zip files"  -->
@@ -147,17 +177,26 @@
 	<!--    	 Prepare ZIP files for Upload		             -->
 	<!--                                                         -->
 
-	<target name="selenium.lib.update.zip" depends="prework">
+	<target name="selenium.lib.update.zip" depends="prework,groovy.init">
 
 		<mkdir dir="${dir.temp}/libs" />
 		<mkdir dir="${dir.temp}/extra" />
+		<!-- Update Java from 7 to 8, later we will stop publishing them to the update zip, they are too big-->
+		<mkdir dir="${dir.temp}/Java" />
 		<mkdir dir="${dir.temp}/Java64" />
 
-		<!-- safs lib files -->
+		<!-- Update Java from 7 to 8-->
+		<copy todir="${dir.temp}/Java" preservelastmodified="true" >
+			<fileset dir="${dir.dist}/Java" includes="**" />
+		</copy>
+		<copy todir="${dir.temp}/Java64" preservelastmodified="true" >
+			<fileset dir="${dir.dist}/Java64" includes="**" />
+		</copy>
+
+		<!-- prepare files in selenium's libs folder, begin -->
 		<unzip src="${dir.safsjars}/${selenium.zip._lib}" dest="${dir.temp}/libs" />
 
-
-		<!-- copy selenium stuff -->
+		<!-- copy selenium standalone server jar file -->
 		<timestampselector property="sel.latest.modified">
 			<path>
 				<fileset dir="${dir.selenium}">
@@ -165,34 +204,52 @@
 				</fileset>
 			</path>
 		</timestampselector>
-
-		<!-- Stop publish java64 for update site 
-			<copy todir="${dir.temp}/Java64" preservelastmodified="true" >
-			<fileset dir="${dir.dist}/Java64" includes="**" />
-		</copy> -->
 		<copy file="${sel.latest.modified}" todir="${dir.temp}/libs" preservelastmodified="true" />
+		
 		<copy todir="${dir.temp}/libs" preservelastmodified="true">
-				<fileset dir="${dir.selenium}/" includes="SeInterpreter.jar" />															
+				<fileset dir="${dir.selenium}/" includes="SeInterpreter.jar
+			                                              selenium-server-safs-2.52.jar" /> <!-- selenium legacy RC jar -->	
 				<fileset dir="${dir.autoit}/" includes="*.dll
 														AutoItX4Java.jar
 														jacob.jar" />
 				<fileset dir="${dir.libs}/saxon/" includes="Saxon-HE-*.jar" />															
 				<fileset dir="${dir.libs}/httpclient5/" includes="httpc*.jar" />
 				<fileset dir="${dir.libs}/log4j/" includes="log4j*.jar" />
+			    <fileset dir="${dir.libs}/ghost4j/" includes="ghost4j-*.jar
+                                                              itext-*.jar"/>
 			    <fileset dir="${dir.libs}/groovy/" includes="groovy-all*.jar" />
 			    <fileset dir="${dir.libs}/spring-core/" includes="spring-core*.jar" />
                 <fileset dir="${dir.libs}/spring-web/" includes="spring-web*.jar" />
+                <fileset dir="${dir.libs}/spring/" includes="spring-*.jar"/>
+                <fileset dir="${dir.libs}/aspectj/" includes="aspectjweaver.jar"/>
+				<fileset dir="${dir.libs}/commons/" includes="commons*.jar" />
+				<fileset dir="${dir.libs}/hibernate/" includes="hibernate*.jar" />
+				<fileset dir="${dir.libs}/ekspreso/" includes="ekspreso-event-creator-0.4.24-fat.jar" />
+	            <fileset dir="${dir.libs}/cucumber/" includes="cucumber*.jar
+	                                                          datatable*.jar
+	                                                          gherkin*.jar" />
+                <fileset dir="${dir.libs}/hamcrest/" includes="hamcrest*.jar" />
+                <fileset dir="${dir.libs}/junit/" includes="junit*.jar" />
+			    <fileset dir="${dir.libs}/cglib/" includes="cglib*jar" />
+                <fileset dir="${dir.libs}/jcommand/" includes="jcommander*jar" />
+                <fileset dir="${dir.libs}/testng/" includes="testng*jar" />
 			    <fileset dir="${dir.libs}/" includes="commons-lang*.jar
-                                                      slf4j-api*.jar" />
+                                                      slf4j-api*.jar
+		                                              jna*.jar" />
 		</copy>
+		<!-- prepare files in selenium's libs folder, end. -->
 		
 		<copy todir="${dir.temp}/extra" preservelastmodified="true">
-			<fileset dir="${dir.selenium}/" includes="chromedriver.exe
-													IEDriverServer.exe
-													MicrosoftWebDriver.exe" />
+			<fileset dir="${dir.selenium}/" includes="*.exe" /> <!-- includes all drivers: chromedriver.exe, IEDriverServer.exe, geckodriver*.exe, MicrosoftWebDriver.exe -->
 			<fileset dir="${dir.autoit}/" includes="Au3Info*.exe" />
 			<fileset dir="${source}/common/org/safs/selenium/install/extra" includes="*.bat
-				                                                                      *.vbs" />
+				                                                                      *.vbs
+				                                                                      *.sh
+				                                                                      *.crx" />
+		</copy>
+
+		<copy todir="${dir.temp}/extra/automation" preservelastmodified="true">
+			<fileset dir="${source}/common/org/safs/selenium/install/extra/automation" includes="safstid.ini" />
 		</copy>
 		
 		<!-- includes the custom resource bundle properties files for seleniumplus-plugin -->
@@ -210,6 +267,7 @@
 		<copy todir="${dir.temp}/install" preservelastmodified="true">
 	         <fileset dir="${dir.dist}/install" includes="_SharedFunctions.vbs
 	         	                                          CreateSeleniumPlusProgramGroup.wsf" />
+	         <fileset dir="${dir.dist}/install" includes="gs923*.exe"/>
 		</copy>
 		
 		<!-- includes the VB script for deleting SeleniumPlus/STAF shortcuts in Program Group -->
@@ -238,13 +296,11 @@
     	      tofile="${dir.updatesite}/${dir.plugin}/${build.date}_${build.time}/${selenium.zip.plugin}" 
     	      preservelastmodified="true"/>
 
-	    <!--  Get ready the "Release zip files"  -->		
-		<copy file="${dir.dist}/${selenium.zip.designer}"
-              tofile="${dir.updatesite}/${dir.release}/${dir.latest}/${selenium.zip.release}" 
-              preservelastmodified="true"/>
-		<copy file="${dir.updatesite}/${dir.release}/${dir.latest}/${selenium.zip.release}"
-              tofile="${dir.updatesite}/${dir.release}/${build.date}_${build.time}/${selenium.zip.release}" 
-              preservelastmodified="true"/>
+	    <!--  Get ready the "Release zip files"  -->
+	        <copy.file.and.hash.file file="${dir.dist}/${selenium.zip.designer}"
+              tofile="${dir.updatesite}/${dir.release}/${dir.latest}/${selenium.zip.release}" />
+                <copy.file.and.hash.file file="${dir.updatesite}/${dir.release}/${dir.latest}/${selenium.zip.release}"
+              tofile="${dir.updatesite}/${dir.release}/${build.date}_${build.time}/${selenium.zip.release}" />
 		
         <!--  Get ready the "Source zip files"  -->
         <copy todir="${dir.updatesite}/${dir.source}/${dir.latest}" preservelastmodified="true">
@@ -258,78 +314,6 @@
 
 	<!--========================================================================================================================-->
 	<!--====================    END of Prepare SAFS/SeleniumPlus update assets.                            =====================-->
-	<!--========================================================================================================================-->
-
-
-	<!--========================================================================================================================-->
-	<!--====================    Upload SAFS/SeleniumPlus Release & Update to sourceforge                   =====================-->
-	<!--====================                                  SAFSWinReleaseCandidate.ZIP                  =====================-->
-	<!--====================                                  SeleniumPlusReleaseCandidate.ZIP             =====================-->
-	<!--====================                                  SAFS.LIB.UPDATE.ZIP                          =====================-->
-	<!--====================                                  SEPLUS.LIB.UPDATE.ZIP                        =====================-->
-	<!--====================                                  SEPLUS.PLUGIN.UPDATE.ZIP                     =====================-->
-	<!--====================    Targets could be called directly:                                          =====================-->
-	<!--====================                                  safs.sourceforge.upload                      =====================-->
-	<!--====================                                  selenium.sourceforge.upload                  =====================-->
-	<!--====================    Prerequisite :  SAFS/SeleniumPlus Release & Update zip files ready         =====================-->
-	<!--====================                    safs.lib.update.zip                                        =====================-->
-	<!--====================                    selenium.lib.update.zip                                    =====================-->
-	<!--========================================================================================================================-->
-	<!--                                                         -->
-	<!--                  SAFS SOURCEFORGE.UPLOAD                -->
-	<!--                                                         -->
-	<!--  Prerequisite :  safs.lib.update.zip                    -->
-	<!--                                                         -->
-	<target name="safs.sourceforge.upload">
-		<scp
-	   	trust="true"
-	   	todir="${sfuser}@frs.sourceforge.net:/home/frs/project/safsdev/SAFS Updates/LibraryUpdates/" 
-	   	keyfile="${rsaid}"
-	   	preservelastmodified="true"
-	   	sftp="true">
-			<fileset dir="${dir.updatesite}/${dir.lib}"/>
-		</scp>
-		<scp
-     	trust="true"
-     	todir="${sfuser}@frs.sourceforge.net:/home/frs/project/safsdev/SAFS Win/ReleaseCandidates/" 
-     	keyfile="${rsaid}"
-     	preservelastmodified="true"
-     	sftp="true">
-			<fileset dir="${dir.updatesite}/${dir.release}"/>
-		</scp>
-	</target>
-
-	<!--                                                         -->
-	<!--           SeleniumPlus SOURCEFORGE.UPLOAD               -->
-	<!--                                                         -->
-	<!--  Prerequisite :  selenium.lib.update.zip                -->
-	<!--                                                         -->
-	<target name="selenium.sourceforge.upload">
-		<scp
-	   	trust="true"
-	   	todir="${sfuser}@frs.sourceforge.net:/home/pfs/project/safsdev/SeleniumPlusUpdates/LibraryUpdates/" 
-	   	keyfile="${rsaid}"
-	   	preservelastmodified="true">
-			<fileset dir="${dir.updatesite}/${dir.lib}"/>
-		</scp>
-		<scp
-     	trust="true"
-     	todir="${sfuser}@frs.sourceforge.net:/home/pfs/project/safsdev/SeleniumPlusUpdates/PlugInUpdates/" 
-     	keyfile="${rsaid}"
-     	preservelastmodified="true">
-			<fileset dir="${dir.updatesite}/${dir.plugin}"/>
-		</scp>
-		<scp
-     	trust="true"
-     	todir="${sfuser}@frs.sourceforge.net:/home/frs/project/safsdev/SeleniumPlus Win/Release Candidates/" 
-     	keyfile="${rsaid}"
-     	preservelastmodified="true"
-     	sftp="true">
-			<fileset dir="${dir.updatesite}/${dir.release}"/>
-		</scp>
-	</target>
-	<!--========================================================================================================================-->
-	<!--====================    END of Upload SAFS/SeleniumPlus Release & Update to sourceforge.           =====================-->
 	<!--========================================================================================================================-->
 
 </project>

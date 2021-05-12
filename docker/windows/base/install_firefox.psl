@@ -1,0 +1,99 @@
+#=========================================================
+#===  install latest firefox inside powershell       =====
+#===  install latest geckodriver inside powershell   =====
+#=========================================================
+
+#-----------------------------  Install the latest firefox ------------------------
+Write-Verbose "Installing firefox browser ... " -Verbose
+
+$StartDTM = (Get-Date)
+$Vendor = "Mozilla"
+$Product = "FireFox"
+$PackageName = "FirefoxInstaller"
+$InstallerType = "exe"
+$Executable = "$PackageName" + "." + "$InstallerType"
+$TempDir = "${env:SystemRoot}\Temp" 
+$LogPS = "$TempDir\$Vendor $Product $Version PS Wrapper.log"
+$UnattendedArgs = "/SILENT MaintenanceService=false"
+
+Start-Transcript $LogPS
+
+#"win32","win64"
+IF ( "$ENV:PROCESSOR_ARCHITECTURE" -eq "AMD64" ) {
+  Write-Verbose "the OS is 64 bits" -Verbose
+  $architecture="win64"
+} ELSE {
+  Write-Verbose "the OS is 32 bits" -Verbose
+  $architecture="win32" 
+}
+
+#"bn-BD","bn-IN","en-CA","en-GB","en-ZA","es-AR","es-CL","es-ES","es-MX"
+$local = "en-US"
+# JSON that provide details on Firefox versions
+$uriSource = "https://product-details.mozilla.org/1.0/firefox_versions.json"
+
+# Read the JSON and convert to a PowerShell object which is something like a map
+# To avoid problem "Invoke-WebRequest : The response content cannot be parsed because the Internet Explorer engine is not available"
+# We need to add option "-UseBasicParsing"
+$firefoxVersions = (Invoke-WebRequest -UseBasicParsing -uri $uriSource).Content | ConvertFrom-Json
+$Version = $firefoxVersions.LATEST_FIREFOX_VERSION
+$URL = "https://download-installer.cdn.mozilla.net/pub/firefox/releases/$($Version)/$($architecture)/$($local)/Firefox%20Setup%20$($Version).exe"
+
+if( -Not (Test-Path -Path $Version ) )
+{
+    New-Item -ItemType directory -Path $Version
+}
+
+CD $Version
+
+Write-Verbose "Downloading $Vendor $Product $Version from URL $URL ..." -Verbose
+If (!(Test-Path -Path $Executable)) {
+	Invoke-WebRequest -uri $URL -OutFile $Executable
+}
+Else {
+    Write-Verbose "File exists. Skipping Download." -Verbose
+}
+
+Write-Verbose "Starting Installation of $Vendor $Product $Version" -Verbose
+(Start-Process "$Executable" "$UnattendedArgs" -Verb RunAs -Wait -Passthru).ExitCode
+Remove-Item $Executable
+
+Write-Verbose "Customization" -Verbose
+sc.exe config MozillaMaintenance start=disabled
+
+Write-Verbose "Firefox installation finished." -Verbose
+#----------------------------------------------------------------------------------------
+
+#-----------------------------  Download the latest geckodriver ------------------------
+Write-Verbose "Downloading the latest geckodriver ... " -Verbose
+# Invoking url "https://github.com/mozilla/geckodriver/tags", 
+# Problem1: "The request was aborted: Could not create SSL/TLS secure channel", we have to set the protocol as "Tls12"
+# Problem2: The response content cannot be parsed because the Internet Explorer engine is not available", We need to add option "-UseBasicParsing"
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$GECKODRIVER_TAGS_HTML=Invoke-WebRequest -UseBasicParsing -uri "https://github.com/mozilla/geckodriver/tags"
+#use regex to get all lines matched string "/mozilla/geckodriver/releases/tag/v0.26.0" from the html page content
+$VERSION_TAG_REGEX = '(/mozilla/geckodriver/releases/tag/)(v\d+\.\d+\.\d+)'
+# $_.Matches[0]: it gives the first line, we suppose the first line is the latest version
+# Groups[2]: matches the second group in the regex, which the group part (v\d+\.\d+\.\d+)
+$GECKODRIVER_LATEST_VERSION=$GECKODRIVER_TAGS_HTML.Content | Select-String $VERSION_TAG_REGEX -AllMatches | % { $_.Matches[0].Groups[2].value }
+Write-Verbose "Got the latest geckodriver's version: $GECKODRIVER_LATEST_VERSION " -Verbose
+
+$GECKODRIVER_ZIP = "geckodriver-$($GECKODRIVER_LATEST_VERSION)-$($architecture).zip"
+$GECKODRIVER_URL = "https://github.com/mozilla/geckodriver/releases/download/$($GECKODRIVER_LATEST_VERSION)/$($GECKODRIVER_ZIP)"
+
+Write-Verbose "Downloading the latest geckodriver from URL $GECKODRIVER_URL ... " -Verbose
+Invoke-WebRequest -uri $GECKODRIVER_URL -OutFile $GECKODRIVER_ZIP
+Write-Verbose "Extracting $GECKODRIVER_ZIP to get latest geckodriver ... " -Verbose
+Expand-Archive -Force -LiteralPath "$GECKODRIVER_ZIP" -DestinationPath "$TempDir"
+Remove-Item $GECKODRIVER_ZIP
+Write-Verbose "Geckodriver installation finished." -Verbose
+#----------------------------------------------------------------------------------------
+
+
+Write-Verbose "Stop logging" -Verbose
+$EndDTM = (Get-Date)
+Write-Verbose "Elapsed Time: $(($EndDTM-$StartDTM).TotalSeconds) Seconds" -Verbose
+Write-Verbose "Elapsed Time: $(($EndDTM-$StartDTM).TotalMinutes) Minutes" -Verbose
+Stop-Transcript
+
+#==============================================
